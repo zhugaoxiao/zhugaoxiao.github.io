@@ -45,7 +45,7 @@
 <meta property="og:url" content="zhugaoxiao.github.io/2015/05/01/hexo-guide/index.html">
 <meta property="og:site_name" content="高校的小站">
 <meta property="og:description" content="什么是 HexoHexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文主要内容来源官网：https://hexo.io/zh-cn/docs/。">
-<meta property="og:updated_time" content="2015-11-10T11:53:05.033Z">
+<meta property="og:updated_time" content="2015-11-10T12:18:51.631Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo部署静态博客">
 <meta name="twitter:description" content="什么是 HexoHexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文主要内容来源官网：https://hexo.io/zh-cn/docs/。">
@@ -282,9 +282,11 @@
 <li><p>添加ssh地址到_config.yml</p>
 <figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="attribute">deploy</span>:</span><br><span class="line">  <span class="attribute">type</span>: git</span><br><span class="line">  <span class="attribute">repo</span>: git<span class="variable">@github</span>.<span class="attribute">com</span>:zhugaoxiao/zhugaoxiao.github.io.git</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>设置SSH keys<br>ssh-keygen -t rsa -C “zhugaoxiao@gmail.com”<br>ssh-agent -s<br>ssh-add ~/.ssh/id_rsa<br>#如果报错，执行下面两条命令<br>eval <code>ssh-agent -s</code><br>ssh-add</p>
+<li><p>设置SSH keys</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"zhugaoxiao@gmail.com"</span></span><br><span class="line">ssh-agent <span class="operator">-s</span></span><br><span class="line">ssh-add ~/.ssh/id_rsa</span><br><span class="line"><span class="comment">#如果报错，执行下面两条命令</span></span><br><span class="line"><span class="built_in">eval</span> `ssh-agent <span class="operator">-s</span>`</span><br><span class="line">ssh-add</span><br><span class="line">clip &lt; ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
 </li>
-<li>添加SSH keys到github，完成后测试下<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">ssh</span> -T git<span class="variable">@github</span>.com</span><br></pre></td></tr></table></figure>
+<li><p>添加SSH keys到github，完成后测试下</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">ssh</span> -T git<span class="variable">@github</span>.com</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h1 id="域名和DNS">域名和DNS</h1><p>后续更新</p>
