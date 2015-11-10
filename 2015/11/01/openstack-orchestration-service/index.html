@@ -1,0 +1,737 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="heat,openstack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="Orchestration module concepts
+Orchestration模块提供了一个基于模板的orchestration，用于描述云的应用，通过运行的OpenStack API调用生成运行的云应用。软件和OpenStack其他核心组件集成为一个单一文件的模板系统。模板允许用户创建大多数的OpenStack资源类型，诸如实例，floating IP,卷，安全组，用户等，它也提供高级功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack之kilo安装 Orchestration服务">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/11/01/openstack-orchestration-service/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="Orchestration module concepts
+Orchestration模块提供了一个基于模板的orchestration，用于描述云的应用，通过运行的OpenStack API调用生成运行的云应用。软件和OpenStack其他核心组件集成为一个单一文件的模板系统。模板允许用户创建大多数的OpenStack资源类型，诸如实例，floating IP,卷，安全组，用户等，它也提供高级功">
+<meta property="og:updated_time" content="2015-11-09T14:14:29.399Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack之kilo安装 Orchestration服务">
+<meta name="twitter:description" content="Orchestration module concepts
+Orchestration模块提供了一个基于模板的orchestration，用于描述云的应用，通过运行的OpenStack API调用生成运行的云应用。软件和OpenStack其他核心组件集成为一个单一文件的模板系统。模板允许用户创建大多数的OpenStack资源类型，诸如实例，floating IP,卷，安全组，用户等，它也提供高级功">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> openstack之kilo安装 Orchestration服务 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              openstack之kilo安装 Orchestration服务
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-01T00:00:00+08:00" content="2015-11-01">
+            2015-11-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/01/openstack-orchestration-service/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/01/openstack-orchestration-service/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>Orchestration module concepts</p>
+<p>Orchestration模块提供了一个基于模板的orchestration，用于描述云的应用，通过运行的OpenStack API调用生成运行的云应用。软件和OpenStack其他核心组件集成为一个单一文件的模板系统。模板允许用户创建大多数的OpenStack资源类型，诸如实例，floating IP,卷，安全组，用户等，它也提供高级功能，诸如实例高可用，实例自动扩展，以及嵌套的OpenStack,这给OpenStack的核心项目带来了大量的用户基础。</p>
+<p>服务鼓励部署者去直接集成Orchestration模块，或者通过自定义插件实现。</p>
+<p>Orchestration模块通常包含下面的组件:</p>
+<ul>
+<li><p>heat command-line client<br>一个命令行工具，和heat-api通信，以运行AWS CloudFormation API，最终开发者可以直接使用Orchestration REST API。</p>
+</li>
+<li><p>heat-api component<br>一个OpenStack本地 REST API ,发送API请求到heat-engine，通过远程过程调用(RPC)。</p>
+</li>
+<li><p>heat-api-cfn component<br>AWS 队列API，和AWS CloudFormation兼容，发送API请求到heatengine，通过远程过程调用。</p>
+</li>
+<li><p>heat-engine<br>启动模板和提供给API消费者回馈事件。</p>
+</li>
+</ul>
+<blockquote>
+<p>参考：<a href="http://docs.openstack.org/kilo/install-guide/install/yum/content/ch_heat.html" target="_blank" rel="external">Chapter 10. Add the Orchestration module</a></p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Install_and_configure_Orchestration">Install and configure Orchestration</h1><p>heat安装在控制节点。</p>
+<p>创建数据库：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">mysql -u root -p</span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> heat;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">GRANT</span> ALL <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> heat.* <span class="keyword">TO</span> <span class="string">'heat'</span>@<span class="string">'localhost'</span> \</span><br><span class="line">  <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'HEAT_DBPASS'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">GRANT</span> ALL <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> heat.* <span class="keyword">TO</span> <span class="string">'heat'</span>@<span class="string">'%'</span> \</span><br><span class="line">  <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'HEAT_DBPASS'</span>;</span></span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+<p>导入 admin身份凭证以执行管理员用户专有的命令:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>创建 heat user:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack user <span class="built_in">create</span> heat <span class="comment">--password heat</span></span><br></pre></td></tr></table></figure>
+<p>添加 admin role to the heat user:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_ins">add</span> --project service --<span class="built_ins">user</span> heat admin</span><br></pre></td></tr></table></figure>
+<p>创建 heat_stack_owner role:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_in">create</span> heat_stack_owner</span><br></pre></td></tr></table></figure>
+<p>添加 heat_stack_owner role to the demo tenant and user:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_ins">add</span> --project demo --<span class="built_ins">user</span> demo heat_stack_owner</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]<br>You must add the heat_stack_owner role to users that manage stacks.</p>
+</blockquote>
+<p>创建 heat_stack_user role:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_in">create</span> heat_stack_user</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]<br>The Orchestration service automatically assigns the heat_stack_user role to users that it creates during stack deployment. By default, this role restricts API operations. To avoid conflicts, do not add this role to users with the heat_stack_owner role.</p>
+</blockquote>
+<p>创建 heat and heat-cfn service entities:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack service <span class="built_in">create</span> <span class="comment">--name heat \</span></span><br><span class="line">  <span class="comment">--description "Orchestration" orchestration</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack service <span class="built_in">create</span> <span class="comment">--name heat-cfn \</span></span><br><span class="line">  <span class="comment">--description "Orchestration"  cloudformation</span></span><br></pre></td></tr></table></figure>
+<p>创建 Orchestration service API endpoints:</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">openstack endpoint create \</span><br><span class="line">  -<span class="ruby">-publicurl <span class="symbol">http:</span>/<span class="regexp">/controller:8004/v</span>1/%\(tenant_id\)s \</span><br><span class="line"></span>  -<span class="ruby">-internalurl <span class="symbol">http:</span>/<span class="regexp">/controller:8004/v</span>1/%\(tenant_id\)s \</span><br><span class="line"></span>  -<span class="ruby">-adminurl <span class="symbol">http:</span>/<span class="regexp">/controller:8004/v</span>1/%\(tenant_id\)s \</span><br><span class="line"></span>  -<span class="ruby">-region <span class="constant">RegionOne</span> \</span><br><span class="line"></span>  orchestration</span><br></pre></td></tr></table></figure>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">openstack endpoint create \</span><br><span class="line">  -<span class="ruby">-publicurl <span class="symbol">http:</span>/<span class="regexp">/controller:8000/v</span>1 \</span><br><span class="line"></span>  -<span class="ruby">-internalurl <span class="symbol">http:</span>/<span class="regexp">/controller:8000/v</span>1 \</span><br><span class="line"></span>  -<span class="ruby">-adminurl <span class="symbol">http:</span>/<span class="regexp">/controller:8000/v</span>1 \</span><br><span class="line"></span>  -<span class="ruby">-region <span class="constant">RegionOne</span> \</span><br><span class="line"></span>  cloudformation</span><br></pre></td></tr></table></figure>
+<p>安装软件包:</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y openstack-heat-api openstack-heat-api-cfn openstack-heat-engine \</span><br><span class="line">  python-heatclient</span><br></pre></td></tr></table></figure>
+<p>复制 /usr/share/heat/heat-dist.conf 文件到 /etc/heat/heat.conf.</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">cp</span> /usr/share/heat/heat-dist.<span class="keyword">conf</span> /etc/heat/heat.<span class="keyword">conf</span></span><br><span class="line">chown -R hea<span class="variable">t:heat</span> /etc/heat/heat.<span class="keyword">conf</span></span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/heat/heat.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">deferred_auth_method</span> = trusts</span><br><span class="line"><span class="constant">trusts_delegated_roles</span> = heat_stack_owner</span><br><span class="line"><span class="constant">heat_metadata_server_url</span> = http://controller:8000</span><br><span class="line"><span class="constant">heat_waitcondition_server_url</span> = http://controller:8000/v1/waitcondition</span><br><span class="line"><span class="constant">heat_watch_server_url</span> = http://controller:8003</span><br><span class="line"><span class="constant">heat_stack_user_role</span> = heat_stack_user</span><br><span class="line"><span class="comment">#stack_user_domain_id = bd07e0b9203640798b22a8845bb4a465</span></span><br><span class="line"><span class="constant">stack_domain_admin</span> = heat_domain_admin</span><br><span class="line"><span class="constant">stack_domain_admin_password</span> = HEAT_DOMAIN_PASS</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">stack_user_domain_name</span> = heat_user_domain</span><br><span class="line"><span class="constant">verbose</span> = True</span><br><span class="line"></span><br><span class="line">[database]</span><br><span class="line"><span class="constant">connection</span> = mysql://heat:HEAT_DBPASS@controller/heat</span><br><span class="line"></span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_port</span> = 5672</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS</span><br><span class="line"></span><br><span class="line">[ec2authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000/v2.0</span><br><span class="line"></span><br><span class="line">[heat_api]</span><br><span class="line"><span class="constant">bind_host</span> = 0.0.0.0</span><br><span class="line"><span class="constant">bind_port</span> = 8004</span><br><span class="line"></span><br><span class="line">[heat_api_cfn]</span><br><span class="line"><span class="constant">bind_host</span> = 0.0.0.0</span><br><span class="line"><span class="constant">bind_port</span> = 8000</span><br><span class="line"></span><br><span class="line">[keystone_authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000/v2.0</span><br><span class="line"><span class="constant">identity_uri</span> = http://controller:35357</span><br><span class="line"><span class="constant">admin_user</span> = heat</span><br><span class="line"><span class="constant">admin_password</span> = heat</span><br><span class="line"><span class="constant">admin_tenant_name</span> = service"&gt;/etc/heat/heat.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">heat-keystone-setup-domain \</span><br><span class="line">  -<span class="ruby">-stack-user-domain-name heat_user_domain \</span><br><span class="line"></span>  -<span class="ruby">-stack-domain-admin heat_domain_admin \</span><br><span class="line"></span>  -<span class="ruby">-stack-domain-admin-password <span class="constant">HEAT_DOMAIN_PASS</span></span></span><br></pre></td></tr></table></figure>
+<p>完成后将id添加到heat配置文件中。</p>
+<p>同步 Orchestration database:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">su <span class="operator">-s</span> /bin/sh -c <span class="string">"heat-manage db_sync"</span> heat</span><br></pre></td></tr></table></figure>
+<p>启动 Orchestration 服务并将其设置为随系统启动：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">enable</span> <span class="tag">openstack-heat-api</span><span class="class">.service</span> <span class="tag">openstack-heat-api-cfn</span><span class="class">.service</span> \</span><br><span class="line">  <span class="tag">openstack-heat-engine</span><span class="class">.service</span></span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">start</span> <span class="tag">openstack-heat-api</span><span class="class">.service</span> <span class="tag">openstack-heat-api-cfn</span><span class="class">.service</span> \</span><br><span class="line">  <span class="tag">openstack-heat-engine</span><span class="class">.service</span></span><br></pre></td></tr></table></figure>
+<h1 id="Verify_operation">Verify operation</h1><p>下面是如何验证 Orchestration 模块 (heat) 的操作。</p>
+<p>Source the demo tenant credentials:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> demo-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>The Orchestration module uses templates to describe stacks. To learn about the template language, see the Template Guide in the Heat developer documentation.</p>
+<p>Create a test template in the test-stack.yml file with the following content:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">echo "heat_template_version: 2014-10-16</span><br><span class="line">description: A simple server.</span><br><span class="line"></span><br><span class="line">parameters:</span><br><span class="line">  ImageID:</span><br><span class="line">    type: string</span><br><span class="line">    description: Image <span class="operator"><span class="keyword">use</span> <span class="keyword">to</span> boot a <span class="keyword">server</span></span><br><span class="line">  NetID:</span><br><span class="line">    <span class="keyword">type</span>: <span class="keyword">string</span></span><br><span class="line">    description: Network <span class="keyword">ID</span> <span class="keyword">for</span> the <span class="keyword">server</span></span><br><span class="line"></span><br><span class="line">resources:</span><br><span class="line">  <span class="keyword">server</span>:</span><br><span class="line">    <span class="keyword">type</span>: OS::Nova::<span class="keyword">Server</span></span><br><span class="line">    properties:</span><br><span class="line">      image: &#123; get_param: ImageID &#125;</span><br><span class="line">      flavor: m1.tiny</span><br><span class="line">      networks:</span><br><span class="line">      - network: &#123; get_param: NetID &#125;</span><br><span class="line"></span><br><span class="line">outputs:</span><br><span class="line">  private_ip:</span><br><span class="line">    description: IP address <span class="keyword">of</span> the <span class="keyword">server</span> <span class="keyword">in</span> the <span class="keyword">private</span> network</span><br><span class="line">    <span class="keyword">value</span>: &#123; get_attr: [ <span class="keyword">server</span>, first_address ] &#125;<span class="string">"&gt;test-stack.yml</span></span></span><br></pre></td></tr></table></figure>
+<p>使用heat stack-create命令行以模板创建一个栈：</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">NET_ID=$(nova <span class="keyword">net</span>-<span class="keyword">list</span> | awk '/ demo-<span class="keyword">net</span> / &#123; <span class="keyword">print</span> <span class="label">$2</span> &#125;')</span><br><span class="line">#</span><br><span class="line">heat <span class="keyword">stack</span>-create -f <span class="keyword">test</span>-<span class="keyword">stack</span>.yml \</span><br><span class="line">  -P <span class="string">"ImageID=cirros-0.3.4-x86_64;NetID=$NET_ID"</span> testStack</span><br></pre></td></tr></table></figure>
+<p>使用heat stack-list命令行来验证栈的创建是否成功：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">heat <span class="built_in">stack</span>-<span class="built_in">list</span></span><br></pre></td></tr></table></figure>
+<p>删除：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">heat <span class="built_in">stack</span>-<span class="keyword">delete</span> testStack</span><br></pre></td></tr></table></figure></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/heat/" rel="tag">#heat</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/02/openstack-telemetry-service/" rel="prev">openstack之kilo安装 监控服务</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/31/openstack-object-service/" rel="next">openstack之kilo安装 对象存储服务</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/11/01/openstack-orchestration-service/"
+                   data-title="openstack之kilo安装 Orchestration服务" data-url="zhugaoxiao.github.io/2015/11/01/openstack-orchestration-service/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_Orchestration"><span class="nav-number">1.</span> <span class="nav-text">Install and configure Orchestration</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Verify_operation"><span class="nav-number">2.</span> <span class="nav-text">Verify operation</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

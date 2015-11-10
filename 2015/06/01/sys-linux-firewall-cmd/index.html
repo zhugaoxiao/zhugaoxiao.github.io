@@ -1,0 +1,804 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="firewall-cmd,linux," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="firewalld简介Redhat Enterprise Linux7开始默认使用firewalld作为防火墙，基于iptables的防火墙被默认不启动，但仍然保留下来。The dynamic firewall daemon firewalld provides a dynamically managed firewall with support for network “zones” to a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-firewall-cmd">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/06/01/sys-linux-firewall-cmd/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="firewalld简介Redhat Enterprise Linux7开始默认使用firewalld作为防火墙，基于iptables的防火墙被默认不启动，但仍然保留下来。The dynamic firewall daemon firewalld provides a dynamically managed firewall with support for network “zones” to a">
+<meta property="og:updated_time" content="2015-11-10T06:44:10.380Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux-firewall-cmd">
+<meta name="twitter:description" content="firewalld简介Redhat Enterprise Linux7开始默认使用firewalld作为防火墙，基于iptables的防火墙被默认不启动，但仍然保留下来。The dynamic firewall daemon firewalld provides a dynamically managed firewall with support for network “zones” to a">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> Linux-firewall-cmd | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Linux-firewall-cmd
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-06-01T00:00:00+08:00" content="2015-06-01">
+            2015-06-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/linux/" itemprop="url" rel="index">
+                  <span itemprop="name">linux</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/06/01/sys-linux-firewall-cmd/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/01/sys-linux-firewall-cmd/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="firewalld简介">firewalld简介</h1><p>Redhat Enterprise Linux7开始默认使用firewalld作为防火墙，基于iptables的防火墙被默认不启动，但仍然保留下来。<br>The dynamic firewall daemon firewalld provides a dynamically managed firewall with support for network “zones” to assign a level of trust to a network and its associated connections and interfaces. It has support for IPv4 and IPv6 firewall settings. It supports Ethernet bridges and has a separation of runtime and permanent configuration options. It also has an interface for services or applications to add firewall rules directly.</p>
+<p>The configuration for firewalld is stored in various XML files in /usr/lib/firewalld/ and /etc/firewalld/. This allows a great deal of flexibility as the files can be edited, written to, backed up, used as templates for other installations and so on.</p>
+<p>Other applications can communicate with firewalld using D-bus.</p>
+<blockquote>
+<p>参考：<a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Using_Firewalls.html" target="_blank" rel="external">4.5. USING FIREWALLS</a></p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Understanding_Network_Zones">Understanding Network Zones</h1><p>Firewalls can be used to separate networks into different zones based on the level of trust the user has decided to place on the devices and traffic within that network. NetworkManager informs firewalld to which zone an interface belongs. An interface’s assigned zone can be changed by NetworkManager or via the firewall-config tool which can open the relevant NetworkManager window for you.<br>The zone settings in /etc/firewalld/ are a range of preset settings which can be quickly applied to a network interface. They are listed here with a brief explanation:</p>
+<ul>
+<li>drop<br>Any incoming network packets are dropped, there is no reply. Only outgoing network connections are possible.</li>
+<li>block<br>Any incoming network connections are rejected with an icmp-host-prohibited message for IPv4 and icmp6-adm-prohibited for IPv6. Only network connections initiated from within the system are possible.</li>
+<li>public<br>For use in public areas. You do not trust the other computers on the network to not harm your computer. Only selected incoming connections are accepted.</li>
+<li>external<br>For use on external networks with masquerading enabled especially for routers. You do not trust the other computers on the network to not harm your computer. Only selected incoming connections are accepted.</li>
+<li>dmz<br>For computers in your demilitarized zone that are publicly-accessible with limited access to your internal network. Only selected incoming connections are accepted.</li>
+<li>work<br>For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</li>
+<li>home<br>For use in home areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</li>
+<li>internal<br>For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted.</li>
+<li>trusted<br>All network connections are accepted.</li>
+</ul>
+<p>It is possible to designate one of these zones to be the default zone. When interface connections are added to NetworkManager, they are assigned to the default zone. On installation, the default zone in firewalld is set to be the public zone.</p>
+<h1 id="安装firewalld">安装firewalld</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">yum <span class="operator"><span class="keyword">install</span> -y firewalld firewall-config</span><br><span class="line">systemctl <span class="keyword">disable</span> firewalld</span><br><span class="line">systemctl <span class="keyword">stop</span> firewalld</span><br><span class="line">systemctl <span class="keyword">start</span>  firewalld</span><br><span class="line">systemctl <span class="keyword">status</span> firewalld</span><br><span class="line">#或者</span><br><span class="line">firewall-cmd <span class="comment">--state</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="Configuring_the_Firewall">Configuring the Firewall</h1><p>firewall-cmd随firewalld安装，查看版本：<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-cmd <span class="comment">--version</span></span><br></pre></td></tr></table></figure></p>
+<p>查看帮助:<br><figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-<span class="built_in">cmd</span> --<span class="built_in">help</span></span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>man firewall-cmd</code> 查看更多。</p>
+<blockquote>
+<p>NOTE<br>In order to make a command permanent or persistent, add the –permanent option to all commands apart from the –direct commands (which are by their nature temporary). Note that this not only means the change will be permanent but that the change will only take effect after firewall reload, service restart, or after system reboot. Settings made with firewall-cmd without the –permanent option take effect immediately, but are only valid till next firewall reload, system boot, or firewalld service restart. Reloading the firewall does not in itself break connections, but be aware you are discarding temporary changes by doing so.</p>
+</blockquote>
+<h1 id="查看Firewall配置">查看Firewall配置</h1><p>To get a text display of the state of firewalld, enter the following command:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-cmd <span class="comment">--state</span></span><br></pre></td></tr></table></figure></p>
+<p>To view the list of active zones, with a list of the interfaces currently assigned to them, enter the following command:<br><figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-cmd --<span class="keyword">get</span>-active-zones</span><br><span class="line"><span class="keyword">public</span></span><br><span class="line">  interfaces: em1</span><br></pre></td></tr></table></figure></p>
+<p>To find out the zone that an interface, for example em1, is currently assigned to, enter the following command:<br><figure class="highlight cs"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-cmd --<span class="keyword">get</span>-zone-of-<span class="keyword">interface</span>=em1</span><br><span class="line"><span class="keyword">public</span></span><br></pre></td></tr></table></figure></p>
+<p>To find out all the interfaces assigned to a zone, for example the public zone, enter the following command as root:<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --zone=<span class="keyword">public</span> --<span class="built_in">list</span>-interfaces</span><br><span class="line">em1 wlan0</span><br></pre></td></tr></table></figure></p>
+<p>This information is obtained from NetworkManager and only shows interfaces, not connections.<br>To find out all the settings of a zone, for example the public zone, enter the following command as root:<br><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">firewall-cmd --zone=public --<span class="keyword">list</span>-<span class="keyword">all</span></span><br><span class="line">public</span><br><span class="line">  interface<span class="variable">s:</span></span><br><span class="line">  service<span class="variable">s:</span> mdns dhcpv6-client ssh</span><br><span class="line">  port<span class="variable">s:</span></span><br><span class="line">  forward-port<span class="variable">s:</span></span><br><span class="line">  icmp-block<span class="variable">s:</span> <span class="keyword">source</span>-quench</span><br></pre></td></tr></table></figure></p>
+<p>To view the list of services currently loaded, enter the following command as root:<br><figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --get-services</span><br><span class="line">cluster-suite pop3s bacula-<span class="keyword">client</span> smtp ipp radius bacula ftp mdns samba dhcpv6-<span class="keyword">client</span> dns openvpn imaps samba-<span class="keyword">client</span> http https ntp vnc-<span class="keyword">server</span> telnet libvirt ssh ipsec ipp-<span class="keyword">client</span> amanda-<span class="keyword">client</span> tftp-<span class="keyword">client</span> nfs tftp libvirt-tls</span><br></pre></td></tr></table></figure></p>
+<p>This will list the names of the predefined services loaded from /usr/lib/firewalld/services/ as well as any custom services that are currently loaded. Note that the configuration files themselves are named service-name.xml.<br>If custom services have been created but not loaded, they can be listed as follows:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --permanent --<span class="keyword">get</span>-services</span><br></pre></td></tr></table></figure></p>
+<p>This will list all services, including custom services configured in /etc/firewalld/services/, even if they are not yet loaded.</p>
+<h1 id="Change_the_Firewall_Settings">Change the Firewall Settings</h1><ul>
+<li><p>Drop All Packets (Panic Mode)</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--panic-on</span></span><br><span class="line">firewall-cmd <span class="comment">--panic-off</span></span><br><span class="line">firewall-cmd <span class="comment">--query-panic</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Reload the Firewall</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--reload</span></span><br><span class="line">firewall-cmd <span class="comment">--complete-reload</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加Interface到Zone</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-<span class="built_ins">cmd</span> --zone=public --<span class="built_ins">add</span>-interface=em1</span><br><span class="line"><span class="comment">#To make this setting permanent, add the --permanent option and reload the firewall.</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置 Default Zone<br>As root, open /etc/firewalld/firewalld.conf and edit the file as follows:</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"> <span class="comment"># default zone</span></span><br><span class="line"> <span class="comment"># The default zone used if an empty zone string is used.</span></span><br><span class="line"> <span class="comment"># Default: public</span></span><br><span class="line"> DefaultZone=home</span><br><span class="line"></span><br><span class="line"><span class="comment">#Reload the firewall, This will reload the firewall without losing state information (TCP sessions will not be interrupted).</span></span><br><span class="line">firewall-cmd <span class="comment">--reload</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置 Default Zone</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --<span class="keyword">set</span>-<span class="keyword">default</span>-zone=<span class="keyword">public</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开 Ports<br>List all open ports for a zone, for example dmz, by entering the following command as root:</p>
+<figure class="highlight oxygene"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">firewall-cmd --zone=<span class="keyword">public</span> --list-ports</span><br><span class="line">#Note that this will <span class="keyword">not</span> show ports opened <span class="keyword">as</span> a <span class="keyword">result</span> <span class="keyword">of</span> the --<span class="keyword">add</span>-services command.</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>To add a port to a zone, for example to allow TCP traffic to port 8080 to the dmz zone:<br><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-<span class="built_ins">cmd</span> --zone=public --<span class="built_ins">add</span>-port=8080/tcp</span><br><span class="line"><span class="comment">#To make this setting permanent, add the --permanent option and reload the firewall.</span></span><br></pre></td></tr></table></figure></p>
+<p>To add a range of ports to a zone, for example to allow the ports from 5060 to 5061 to the public zone, enter the following command as root:<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --zone=<span class="keyword">public</span> --add-port=<span class="number">5060</span>-<span class="number">5061</span>/udp</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>添加服务到 Zone<br>To add a service to a zone, for example to allow SMTP to the work zone, enter the following command as root:<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-<span class="built_ins">cmd</span> --zone=work --<span class="built_ins">add</span>-service=smtp</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>To make this setting permanent, add the –permanent option and reload the firewall.</p>
+<ul>
+<li>从Zone中删除服务<br>To remove a service from a zone, for example to remove SMTP from the work zone:<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--zone=work --remove-service=smtp</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Add the –permanent option to make the change persist after system boot. If using this option and you wish to make the change immediate, reload the firewall, by entering the following command as root:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--reload</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Note, this will not break established connections. If that is your intention, you could use the –complete-reload option but this will break all established connections not just for the service you have removed.</p>
+</blockquote>
+<ul>
+<li>Configure IP Address Masquerading<br>To check if IP masquerading is enabled, for example for the external zone, enter the following command as root:<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--zone=external --query-masquerade</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Prints yes with exit status 0, if enabled, prints no with exit status 1 otherwise. If zone is omitted, the default zone will be used.<br>To enable IP masquerading, enter the following command as root:<br><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-<span class="built_ins">cmd</span> --zone=external --<span class="built_ins">add</span>-masquerade</span><br></pre></td></tr></table></figure></p>
+<p>To make this setting permanent, add the –permanent option and reload the firewall.<br>To disable IP masquerading, enter the following command as root:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--zone=external --remove-masquerade</span></span><br></pre></td></tr></table></figure></p>
+<p>To make this setting permanent, add the –permanent option and reload the firewall.</p>
+<ul>
+<li>配置 Port Forwarding<br>To forward inbound network packets from one port to an alternative port or address, first enable IP address masquerading for a zone, for example external, by entering the following command as root:<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-<span class="built_ins">cmd</span> --zone=external --<span class="built_ins">add</span>-masquerade</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>To forward packets to a local port, that is to say to a port on the same system, enter the following command as root:<br><figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd --zone=external --add-forward-port=port=<span class="number">22</span><span class="symbol">:proto=tcp</span><span class="symbol">:toport=</span><span class="number">3753</span></span><br></pre></td></tr></table></figure></p>
+<p>In this example, the packets intended for port 22 are now forwarded to port 3753. The original destination port is specified with the port option. This option can be a port, or port range, together with a protocol. The protocol, if specified, must be one of either tcp or udp. The new local port, the port or range of ports to which the traffic is being forwarded to, is specified with the toport option. To make this setting permanent, add the –permanent option and reload the firewall.<br>To forward packets to another IPv4 address, usually an internal address, without changing the destination port, enter the following command as root:<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --zone=external --add-forward-port=port=<span class="number">22</span>:proto=tcp:toaddr=<span class="number">192.0</span><span class="number">.2</span><span class="number">.55</span></span><br></pre></td></tr></table></figure></p>
+<p>In this example, the packets intended for port 22 are now forwarded to the same port at the address given with the toaddr. The original destination port is specified with the port. This option can be a port, or port range, together with a protocol. The protocol, if specified, must be one of either tcp or udp. The new destination port, the port or range of ports to which the traffic is being forwarded to, is specified with the toport. To make this setting permanent, add the –permanent option and reload the firewall.<br>To forward packets to another port at another IPv4 address, usually an internal address, enter the following command as root:<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --zone=external /</span><br><span class="line">      --add-forward-port=port=<span class="number">22</span>:proto=tcp:toport=<span class="number">2055</span>:toaddr=<span class="number">192.0</span><span class="number">.2</span><span class="number">.55</span></span><br></pre></td></tr></table></figure></p>
+<p>In this example, the packets intended for port 22 are now forwarded to port 2055 at the address given with the toaddr option. The original destination port is specified with the port option. This option can be a port, or port range, together with a protocol. The protocol, if specified, must be one of either tcp or udp. The new destination port, the port or range of ports to which the traffic is being forwarded to, is specified with the toport. To make this setting permanent, add the –permanent option and reload the firewall.</p>
+<h1 id="Using_the_Direct_Interface">Using the Direct Interface</h1><p>It is possible to add and remove chains during runtime by using the –direct option with the firewall-cmd tool. A few examples are presented here, see the firewall-cmd(1) man page for more information.<br>It is dangerous to use the direct interface if you are not very familiar with iptables as you could inadvertently cause a breach in the firewall.<br>The direct interface mode is intended for services or applications to add specific firewall rules during runtime. The rules can be made permanent by adding the –permanent option using the firewall-cmd –permanent –direct command or by modifying /etc/firewalld/direct.xml. See man firewalld.direct(5) for information on the /etc/firewalld/direct.xml file.</p>
+<ul>
+<li>Adding a Custom Rule Using the Direct Interface</li>
+</ul>
+<p>To add a custom rule to the chain “IN_public_allow”, issuing a command as root in the following format:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--direct --add-rule ipv4 filter IN_public_allow \</span></span><br><span class="line">      <span class="number">0</span> -m tcp -p tcp <span class="comment">--dport 666 -j ACCEPT</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option if you want to make it persistent.</p>
+<ul>
+<li>Removing a Custom Rule Using the Direct Interface</li>
+</ul>
+<p>To remove a custom rule from the chain “IN_public_allow”, issuing a command as root in the following format:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--direct --remove-rule ipv4 filter IN_public_allow \</span></span><br><span class="line">      <span class="number">0</span> -m tcp -p tcp <span class="comment">--dport 666 -j ACCEPT</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option if you want to make it persistent.</p>
+<ul>
+<li>Listing Custom Rules Using the Direct Interface</li>
+</ul>
+<p>To list the rules in the chain “IN_public_allow”, issuing a command as root in the following format:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">firewall-cmd --direct --<span class="keyword">get</span>-rules ipv4 filter IN_public_allow</span><br></pre></td></tr></table></figure></p>
+<h1 id="Firewall_Lockdown">Firewall Lockdown</h1><p>Local applications or services are able to change the firewall configuration if they are running as root (for example, libvirt). With this feature, the administrator can lock the firewall configuration so that either no applications, or only applications that are added to the lockdown whitelist, are able to request firewall changes. The lockdown settings default to disabled. If enabled, the user can be sure that there are no unwanted configuration changes made to the firewall by local applications or services.</p>
+<ul>
+<li>Configuring Firewall Lockdown</li>
+</ul>
+<p>Using an editor running as root, add the following line to the /etc/firewalld/firewalld.conf file as follows:<br>Lockdown=yes<br>Reload the firewall using the following command as root:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--reload</span></span><br></pre></td></tr></table></figure></p>
+<p>Try to enable the service imaps in the default zone using the following command as an administrative user, that is to say, a user in group wheel (usually the first user on system). You will be prompted for the user password:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-cmd <span class="comment">--add-service=imaps</span></span><br><span class="line">Error: ACCESS_DENIED: lockdown <span class="keyword">is</span> enabled</span><br></pre></td></tr></table></figure></p>
+<p>To enable the use of firewall-cmd, issue the following command as root:<br><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-<span class="built_ins">cmd</span> --<span class="built_ins">add</span>-lockdown-whitelist-command='/usr/bin/python -Es /usr/bin/firewall-<span class="built_ins">cmd</span>*'</span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option if you want to make it persistent.<br>Reload the firewall as root:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--reload</span></span><br></pre></td></tr></table></figure></p>
+<p>Try to enable the imaps service again in the default zone by entering the following command as an administrative user. You will be prompted for the user password:<br><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">firewall-<span class="built_ins">cmd</span> --<span class="built_ins">add</span>-service=imaps</span><br></pre></td></tr></table></figure></p>
+<p>This time the command succeeds.</p>
+<ul>
+<li>Configure Lockdown with the Command Line Client</li>
+</ul>
+<p>To query whether lockdown is enabled, enter the following command as root:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">firewall-cmd <span class="comment">--query-lockdown</span></span><br></pre></td></tr></table></figure></p>
+<p>Prints yes with exit status 0, if lockdown is enabled, prints no with exit status 1 otherwise.<br>To enable lockdown, enter the following command as root:<br><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">firewall</span>-cmd --lockdown-<span class="literal">on</span></span><br></pre></td></tr></table></figure></p>
+<p>To disable lockdown, enter the following command as root:<br><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">firewall</span>-cmd --lockdown-<span class="literal">off</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Configure Lockdown Whitelist Options with the Command Line</li>
+</ul>
+<p>The lockdown whitelist can contain commands, security contexts, users and user IDs. If a command entry on the whitelist ends with an asterisk “<em>”, then all command lines starting with that command will match. If the “</em>” is not there then the absolute command including arguments must match.<br>The context is the security (SELinux) context of a running application or service. To get the context of a running application use the following command:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">ps -e <span class="comment">--context</span></span><br></pre></td></tr></table></figure></p>
+<p>That command returns all running applications. Pipe the output through the grep tool to get the application of interest. For example:<br><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line"> <span class="keyword">ps</span> -<span class="keyword">e</span> --context | <span class="keyword">grep</span> example_program</span><br></pre></td></tr></table></figure></p>
+<p>To list all command lines that are on the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --list-lockdown-whitelist-commands</span></span><br></pre></td></tr></table></figure></p>
+<p>To add a command command to the whitelist, enter the following command as root:<br><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"># firewall-cmd --<span class="built_in">add</span>-lockdown-whitelist-<span class="keyword">command</span>=<span class="string">'/usr/bin/python -Es /usr/bin/command'</span></span><br></pre></td></tr></table></figure></p>
+<p>To remove a command command from the whitelist, enter the following command as root:<br><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"># firewall-cmd --<span class="built_in">remove</span>-lockdown-whitelist-<span class="keyword">command</span>=<span class="string">'/usr/bin/python -Es /usr/bin/command'</span></span><br></pre></td></tr></table></figure></p>
+<p>To query whether the command command is on the whitelist, enter the following command as root:<br><figure class="highlight autoit"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --query-lockdown-whitelist-command=<span class="string">'/usr/bin/python -Es /usr/bin/command'</span></span></span><br></pre></td></tr></table></figure></p>
+<p>Prints yes with exit status 0, if true, prints no with exit status 1 otherwise.<br>To list all security contexts that are on the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --list-lockdown-whitelist-contexts</span></span><br></pre></td></tr></table></figure></p>
+<p>To add a context context to the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --add-lockdown-whitelist-context=context</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option to make it persistent.<br>To remove a context context from the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --remove-lockdown-whitelist-context=context</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option to make it persistent.<br>To query whether the context context is on the whitelist, enter the following command root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --query-lockdown-whitelist-context=context</span></span><br></pre></td></tr></table></figure></p>
+<p>Prints yes with exit status 0, if true, prints no with exit status 1 otherwise.<br>To list all user IDs that are on the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --list-lockdown-whitelist-uids</span></span><br></pre></td></tr></table></figure></p>
+<p>To add a user ID uid to the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --add-lockdown-whitelist-uid=uid</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option to make it persistent.<br>To remove a user ID uid from the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --remove-lockdown-whitelist-uid=uid</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option to make it persistent.<br>To query whether the user ID uid is on the whitelist, enter the following command:<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$ firewall-cmd <span class="comment">--query-lockdown-whitelist-uid=uid</span></span><br></pre></td></tr></table></figure></p>
+<p>Prints yes with exit status 0, if true, prints no with exit status 1 otherwise.<br>To list all user names that are on the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --list-lockdown-whitelist-users</span></span><br></pre></td></tr></table></figure></p>
+<p>To add a user name user to the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --add-lockdown-whitelist-user=user</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option to make it persistent.<br>To remove a user name user from the whitelist, enter the following command as root:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor"># firewall-cmd --remove-lockdown-whitelist-user=user</span></span><br></pre></td></tr></table></figure></p>
+<p>Add the –permanent option to make it persistent.<br>To query whether the user name user is on the whitelist, enter the following command:<br><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">$ firewall-<span class="built_ins">cmd</span> --query-lockdown-whitelist-<span class="built_ins">user</span>=<span class="built_ins">user</span></span><br></pre></td></tr></table></figure></p>
+<p>Prints yes with exit status 0, if true, prints no with exit status 1 otherwise.</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/firewall-cmd/" rel="tag">#firewall-cmd</a>
+          
+            <a href="/tags/linux/" rel="tag">#linux</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/02/sys-linux-hostnamectl/" rel="prev">Linux设置主机名</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/01/hexo-guide/" rel="next">Hexo部署静态博客</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/06/01/sys-linux-firewall-cmd/"
+                   data-title="Linux-firewall-cmd" data-url="zhugaoxiao.github.io/2015/06/01/sys-linux-firewall-cmd/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#firewalld简介"><span class="nav-number">1.</span> <span class="nav-text">firewalld简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Understanding_Network_Zones"><span class="nav-number">2.</span> <span class="nav-text">Understanding Network Zones</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装firewalld"><span class="nav-number">3.</span> <span class="nav-text">安装firewalld</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Configuring_the_Firewall"><span class="nav-number">4.</span> <span class="nav-text">Configuring the Firewall</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看Firewall配置"><span class="nav-number">5.</span> <span class="nav-text">查看Firewall配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Change_the_Firewall_Settings"><span class="nav-number">6.</span> <span class="nav-text">Change the Firewall Settings</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Using_the_Direct_Interface"><span class="nav-number">7.</span> <span class="nav-text">Using the Direct Interface</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Firewall_Lockdown"><span class="nav-number">8.</span> <span class="nav-text">Firewall Lockdown</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

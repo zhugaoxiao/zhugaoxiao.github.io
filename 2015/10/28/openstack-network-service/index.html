@@ -1,0 +1,812 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="neutron,openstack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="这周在折腾openstack，下面是过程小记。
+
+参考：Chapter 6. Add a networking component
+
+neutron服务安装在控制节点、网络节点、计算节点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack之kilo安装 网络服务">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/28/openstack-network-service/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="这周在折腾openstack，下面是过程小记。
+
+参考：Chapter 6. Add a networking component
+
+neutron服务安装在控制节点、网络节点、计算节点。">
+<meta property="og:image" content="http://docs.openstack.org/kilo/install-guide/install/yum/content/figures/3/a/common/figures/installguide-neutron-initialnetworks.png">
+<meta property="og:updated_time" content="2015-11-06T02:27:52.614Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack之kilo安装 网络服务">
+<meta name="twitter:description" content="这周在折腾openstack，下面是过程小记。
+
+参考：Chapter 6. Add a networking component
+
+neutron服务安装在控制节点、网络节点、计算节点。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> openstack之kilo安装 网络服务 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              openstack之kilo安装 网络服务
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-28T00:00:00+08:00" content="2015-10-28">
+            2015-10-28
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/28/openstack-network-service/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/28/openstack-network-service/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>这周在折腾openstack，下面是过程小记。</p>
+<blockquote>
+<p>参考：<a href="http://docs.openstack.org/kilo/install-guide/install/yum/content/ch_networking.html" target="_blank" rel="external">Chapter 6. Add a networking component</a></p>
+</blockquote>
+<p>neutron服务安装在控制节点、网络节点、计算节点。</p>
+<a id="more"></a>
+<h1 id="Install_and_configure_controller_node">Install and configure controller node</h1><p>创建数据库:<br><figure class="highlight oxygene"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">mysql -u root -p</span><br><span class="line"></span><br><span class="line">MariaDB [(none)]&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE neutron;</span><br><span class="line"></span><br><span class="line">GRANT ALL PRIVILEGES <span class="keyword">ON</span> neutron.* <span class="keyword">TO</span> <span class="string">'neutron'</span>@<span class="string">'localhost'</span> \</span><br><span class="line">  IDENTIFIED <span class="keyword">BY</span> <span class="string">'NEUTRON_DBPASS'</span>;</span><br><span class="line">GRANT ALL PRIVILEGES <span class="keyword">ON</span> neutron.* <span class="keyword">TO</span> <span class="string">'neutron'</span>@<span class="string">'%'</span> \</span><br><span class="line">  IDENTIFIED <span class="keyword">BY</span> <span class="string">'NEUTRON_DBPASS'</span>;</span><br><span class="line"><span class="keyword">EXIT</span></span><br></pre></td></tr></table></figure></p>
+<p>导入 admin身份凭证以执行管理员用户专有的命令：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure></p>
+<p>创建neutron user:<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack user <span class="built_in">create</span> neutron <span class="comment">--password neutron</span></span><br></pre></td></tr></table></figure></p>
+<p>添加admin role to the neutron user:<br><figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_ins">add</span> --project service --<span class="built_ins">user</span> neutron admin</span><br></pre></td></tr></table></figure></p>
+<p>创建neutron service entity:<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack service <span class="built_in">create</span> <span class="comment">--name neutron \</span></span><br><span class="line">  <span class="comment">--description "OpenStack Networking" network</span></span><br></pre></td></tr></table></figure></p>
+<p>创建Networking service API endpoint:<br><figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">openstack endpoint create \</span><br><span class="line">  -<span class="ruby">-publicurl <span class="symbol">http:</span>/<span class="regexp">/controller:9696 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-adminurl http:/</span><span class="regexp">/controller:9696 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-internalurl http:/</span><span class="regexp">/controller:9696 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-region RegionOne \</span><br><span class="line"></span></span>  network</span><br></pre></td></tr></table></figure></p>
+<p>安装网络组件：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum install -y openstack-neutron openstack-neutron-ml2 python-neutronclient <span class="built_in">which</span></span><br></pre></td></tr></table></figure></p>
+<p>编辑 /etc/neutron/neutron.conf 文件:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/neutron.conf  /etc/neutron/neutron.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">auth_strategy</span> = keystone</span><br><span class="line"><span class="constant">core_plugin</span> = ml2</span><br><span class="line"><span class="constant">service_plugins</span> = router</span><br><span class="line"><span class="constant">allow_overlapping_ips</span> = True</span><br><span class="line"><span class="constant">notify_nova_on_port_status_changes</span> = True</span><br><span class="line"><span class="constant">notify_nova_on_port_data_changes</span> = True</span><br><span class="line"><span class="constant">nova_url</span> = http://controller:8774/v2</span><br><span class="line"><span class="constant">verbose</span> = True</span><br><span class="line">[database]</span><br><span class="line"><span class="constant">connection</span> = mysql://neutron:NEUTRON_DBPASS@controller/neutron</span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS</span><br><span class="line">[keystone_authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000</span><br><span class="line"><span class="constant">auth_url</span> = http://controller:35357</span><br><span class="line"><span class="constant">auth_plugin</span> = password</span><br><span class="line"><span class="constant">project_domain_id</span> = default</span><br><span class="line"><span class="constant">user_domain_id</span> = default</span><br><span class="line"><span class="constant">project_name</span> = service</span><br><span class="line"><span class="constant">username</span> = neutron</span><br><span class="line"><span class="constant">password</span> = neutron</span><br><span class="line">[nova]</span><br><span class="line"><span class="constant">auth_url</span> = http://controller:35357</span><br><span class="line"><span class="constant">auth_plugin</span> = password</span><br><span class="line"><span class="constant">project_domain_id</span> = default</span><br><span class="line"><span class="constant">user_domain_id</span> = default</span><br><span class="line"><span class="constant">region_name</span> = RegionOne</span><br><span class="line"><span class="constant">project_name</span> = service</span><br><span class="line"><span class="constant">username</span> = nova</span><br><span class="line"><span class="constant">password</span> = nova"&gt;/etc/neutron/neutron.conf</span><br></pre></td></tr></table></figure></p>
+<p>配置 Modular Layer 2 (ML2) 插件</p>
+<p>ML2 插件使用 Open vSwitch (OVS)机制 (代理) 来为实例构建虚拟网络架构。但是，控制节点不需要 OVS 组件，因为它并不处理实例网络的传输。</p>
+<p>编辑/etc/neutron/plugins/ml2/ml2_conf.ini 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.inibak</span><br><span class="line">echo "[ml2]</span><br><span class="line"><span class="constant">type_drivers</span> = flat,vlan,gre,vxlan</span><br><span class="line"><span class="constant">tenant_network_types</span> = gre</span><br><span class="line"><span class="constant">mechanism_drivers</span> = openvswitch</span><br><span class="line">[ml2_type_gre]</span><br><span class="line"><span class="constant">tunnel_id_ranges</span> = 1:1000</span><br><span class="line">[securitygroup]</span><br><span class="line"><span class="constant">enable_security_group</span> = True</span><br><span class="line"><span class="constant">enable_ipset</span> = True</span><br><span class="line"><span class="constant">firewall_driver</span> = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver"&gt;/etc/neutron/plugins/ml2/ml2_conf.ini</span><br></pre></td></tr></table></figure>
+<p>Networking 服务初始化脚本需要一个链接将 /etc/neutron/plugin.ini指向 ML2插件的配置文件 /etc/neutron/plugins/ml2/ml2_conf.ini。如果这个象征性的链接不存在，请用以下命令创建它：<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">ln -s <span class="regexp">/etc/</span>neutron<span class="regexp">/plugins/m</span>l2<span class="regexp">/ml2_conf.ini /</span>etc<span class="regexp">/neutron/</span>plugin.ini</span><br></pre></td></tr></table></figure></p>
+<p>配置Compute to use Networking</p>
+<p>默认情况下，发行版的包会配置 Compute 使用传统网络。您必需重新配置 Compute 来通过Networking 来管理网络。</p>
+<p>在控制节点编辑/etc/nova/nova.conf file :</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">network_api_class</span> = nova.network.neutronv2.api.API</span><br><span class="line"><span class="constant">security_group_api</span> = neutron</span><br><span class="line"><span class="constant">linuxnet_interface_driver</span> = nova.network.linux_net.LinuxOVSInterfaceDriver</span><br><span class="line"><span class="constant">firewall_driver</span> = nova.virt.firewall.NoopFirewallDriver</span><br><span class="line">[neutron]</span><br><span class="line"><span class="constant">url</span> = http://controller:9696</span><br><span class="line"><span class="constant">auth_strategy</span> = keystone</span><br><span class="line"><span class="constant">admin_auth_url</span> = http://controller:35357/v2.0</span><br><span class="line"><span class="constant">admin_tenant_name</span> = service</span><br><span class="line"><span class="constant">admin_username</span> = neutron</span><br><span class="line"><span class="constant">admin_password</span> = neutron"&gt;&gt;/etc/nova/nova.conf</span><br></pre></td></tr></table></figure>
+<p>同步database:<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">su</span> -s /bin/<span class="keyword">sh</span> -c "neutron-<span class="keyword">db</span>-manage --config-<span class="keyword">file</span> /etc/neutron/neutron.<span class="keyword">conf</span> \</span><br><span class="line">  --config-<span class="keyword">file</span> /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron</span><br></pre></td></tr></table></figure></p>
+<p>重启 Compute services:<br><figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">restart</span> <span class="tag">openstack-nova-api</span><span class="class">.service</span> <span class="tag">openstack-nova-scheduler</span><span class="class">.service</span> \</span><br><span class="line">  <span class="tag">openstack-nova-conductor</span><span class="class">.service</span></span><br></pre></td></tr></table></figure></p>
+<p>启动Networking service and configure it to start when the system boots:<br><figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">systemctl enable neutron-<span class="keyword">server</span>.service</span><br><span class="line">systemctl start neutron-<span class="keyword">server</span>.service</span><br></pre></td></tr></table></figure></p>
+<p>在控制节点验证：<br><figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">source</span> admin-openrc.sh</span><br><span class="line">neutron ext-<span class="keyword">list</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Install_and_configure_network_node">Install and configure network node</h1><p>网络节点主要为虚拟网络处理内部和外部路由及 DHCP服务。<br>编辑 /etc/sysctl.conf 调整内核网络参数:<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">echo "</span><br><span class="line">#<span class="keyword">For</span> openstack</span><br><span class="line"><span class="keyword">net</span>.ipv4.ip_forward=1</span><br><span class="line"><span class="keyword">net</span>.ipv4.<span class="keyword">conf</span>.all.rp_filter=0</span><br><span class="line"><span class="keyword">net</span>.ipv4.<span class="keyword">conf</span>.default.rp_filter=0" &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></span><br><span class="line">#</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure></p>
+<p>安装 Networking components：<br><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y openstack-neutron openstack-neutron-ml2 openstack-neutron-openvswitch</span><br></pre></td></tr></table></figure></p>
+<p>编辑 /etc/neutron/neutron.conf 文件完成网络通用组件配置:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/neutron.conf /etc/neutron/neutron.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS</span><br><span class="line"><span class="constant">auth_strategy</span> = keystone</span><br><span class="line"><span class="constant">core_plugin</span> = ml2</span><br><span class="line"><span class="constant">service_plugins</span> = router</span><br><span class="line"><span class="constant">allow_overlapping_ips</span> = True</span><br><span class="line"><span class="constant">verbose</span> = True</span><br><span class="line">[keystone_authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000</span><br><span class="line"><span class="constant">auth_url</span> = http://controller:35357</span><br><span class="line"><span class="constant">auth_plugin</span> = password</span><br><span class="line"><span class="constant">project_domain_id</span> = default</span><br><span class="line"><span class="constant">user_domain_id</span> = default</span><br><span class="line"><span class="constant">project_name</span> = service</span><br><span class="line"><span class="constant">username</span> = neutron</span><br><span class="line"><span class="constant">password</span> = neutron" &gt;/etc/neutron/neutron.conf</span><br></pre></td></tr></table></figure></p>
+<p>配置 Modular Layer 2 (ML2) 插件</p>
+<p>ML2 插件使用 Open vSwitch (OVS)机制 (代理) 来为实例构建虚拟网络框架。</p>
+<p>编辑/etc/neutron/plugins/ml2/ml2_conf.ini 文件:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.inibak</span><br><span class="line">echo "[ml2]</span><br><span class="line"><span class="constant">type_drivers</span> = flat,vlan,gre,vxlan</span><br><span class="line"><span class="constant">tenant_network_types</span> = gre</span><br><span class="line"><span class="constant">mechanism_drivers</span> = openvswitch</span><br><span class="line">[ml2_type_flat]</span><br><span class="line"><span class="constant">flat_networks</span> = external</span><br><span class="line">[ml2_type_gre]</span><br><span class="line"><span class="constant">tunnel_id_ranges</span> = 1:1000</span><br><span class="line">[securitygroup]</span><br><span class="line"><span class="constant">enable_security_group</span> = True</span><br><span class="line"><span class="constant">enable_ipset</span> = True</span><br><span class="line"><span class="constant">firewall_driver</span> = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver</span><br><span class="line">[ovs]</span><br><span class="line"><span class="constant">local_ip</span> = 10.0.1.21</span><br><span class="line"><span class="comment">#使用网络节点的tunnels network IP 地址</span></span><br><span class="line"><span class="constant">bridge_mappings</span> = external:br-ex</span><br><span class="line">[agent]</span><br><span class="line"><span class="constant">tunnel_types</span> = gre"&gt;/etc/neutron/plugins/ml2/ml2_conf.ini</span><br></pre></td></tr></table></figure></p>
+<p>Networking 服务初始化脚本需要一个象征性的链接将 /etc/neutron/plugin.ini指向 ML2插件的配置文件/etc/neutron/plugins/ml2/ml2_conf.ini。如果这个象征性的链接不存在，请用以下命令创建它：<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">ln -s <span class="regexp">/etc/</span>neutron<span class="regexp">/plugins/m</span>l2<span class="regexp">/ml2_conf.ini /</span>etc<span class="regexp">/neutron/</span>plugin.ini</span><br></pre></td></tr></table></figure></p>
+<p>配置 Layer-3 (L3) 代理</p>
+<p>Layer-3 (L3) 代理为虚拟网络提供路由服务。</p>
+<p>编辑/etc/neutron/l3_agent.ini 文件:<br><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">cp</span> /etc/neutron/l3_agent.ini /etc/neutron/l3_agent.inibak</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"[DEFAULT]</span><br><span class="line"></span>interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver</span><br><span class="line">external_network_bridge = <span class="keyword">br</span>-<span class="keyword">ex</span></span><br><span class="line">router_delete_namespaces = True</span><br><span class="line"><span class="keyword">verbose</span> = True"&gt;/etc/neutron/l3_agent.ini</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>external_network_bridge指定网卡</p>
+</blockquote>
+<p>配置 DHCP 代理</p>
+<p>DHCP 代理为实例提供 DHCP 服务。</p>
+<p>编辑/etc/neutron/dhcp_agent.ini 文件:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/dhcp_agent.ini /etc/neutron/dhcp_agent.inibak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">interface_driver</span> = neutron.agent.linux.interface.OVSInterfaceDriver</span><br><span class="line"><span class="constant">dhcp_driver</span> = neutron.agent.linux.dhcp.Dnsmasq</span><br><span class="line"><span class="constant">dhcp_delete_namespaces</span> = True</span><br><span class="line"><span class="constant">verbose</span> = True"&gt;/etc/neutron/dhcp_agent.ini</span><br></pre></td></tr></table></figure></p>
+<p>类似于GRE的隧道协议包含有额外的数据包头，这些数据包头增加了开销，减少了有效内容或是用户数据的可用空间。在不了解虚拟网络架构的情况下，实例尝试用默认的以太网maximum transmission unit (MTU)1500字节来发送数据包。 Internet protocol (IP)网络利用 path MTU discovery (PMTUD)机制来探测和调整数据包的大小。但是有些操作系统或者是网络阻塞、缺乏对PMTUD的支持等原因会造成性能下降或是连接错误。</p>
+<p>理想情况下，你可以通过在包含有租户虚拟网络的物理网络上开启jumbo frames来避免这些问题。巨型帧(Jumbo frames)支持最大接近9000字节的MTU，它抵消了虚拟网络上GRE开销的影响。但是，很多网络设备缺乏对于巨型帧的支持，Openstack的管理员也经常缺乏对网络架构的控制。考虑到后续的复杂性，也可以选择降低带来GRE开销的实例的MTU大小来避免MTU的问题。确定恰当的MTU值通常需要实验，但是大多数环境下1454字节都可以工作。你可以配置给实例分配IP地址的DHCP服务器来同时调整MTU。</p>
+<blockquote>
+<p>[Note]    Note<br>一些云镜像会忽略 DHCP MTU 选项，在这种情况下，您要配置其使用metadata、一个脚本或其他合适方法。</p>
+</blockquote>
+<p>编辑 /etc/neutron/dhcp_agent.ini 文件:<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">cp <span class="regexp">/etc/</span>neutron<span class="regexp">/dhcp_agent.ini /</span>etc<span class="regexp">/neutron/</span>dhcp_agent.inibak</span><br><span class="line">echo <span class="string">"dnsmasq_config_file = /etc/neutron/dnsmasq-neutron.conf"</span>&gt;&gt;<span class="regexp">/etc/</span>neutron<span class="regexp">/dhcp_agent.ini</span></span><br></pre></td></tr></table></figure></p>
+<p>编辑/etc/neutron/dnsmasq-neutron.conf文件，启用 DHCP MTU 选项 (26) 并配置为 1454 字节：</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo <span class="string">"dhcp-option-force=26,1454"</span><span class="prompt">&gt;&gt;</span>/etc/neutron/dnsmasq-neutron.conf</span><br></pre></td></tr></table></figure>
+<p>Kill any existing dnsmasq processes:<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">pkill</span> dnsmasq</span><br></pre></td></tr></table></figure></p>
+<p>配置 metadata 代理</p>
+<p>metadata agent提供一些配置信息，如实例的凭据。</p>
+<p>编辑/etc/neutron/metadata_agent.ini file and complete the following actions:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/metadata_agent.ini /etc/neutron/metadata_agent.inibak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000</span><br><span class="line"><span class="constant">auth_url</span> = http://controller:35357</span><br><span class="line"><span class="constant">auth_region</span> = RegionOne</span><br><span class="line"><span class="constant">auth_plugin</span> = password</span><br><span class="line"><span class="constant">project_domain_id</span> = default</span><br><span class="line"><span class="constant">user_domain_id</span> = default</span><br><span class="line"><span class="constant">project_name</span> = service</span><br><span class="line"><span class="constant">username</span> = neutron</span><br><span class="line"><span class="constant">password</span> = neutron</span><br><span class="line"><span class="constant">nova_metadata_ip</span> = controller</span><br><span class="line"><span class="constant">metadata_proxy_shared_secret</span> = METADATA_SECRET</span><br><span class="line"><span class="constant">verbose</span> = True"&gt;/etc/neutron/metadata_agent.ini</span><br></pre></td></tr></table></figure></p>
+<p>在控制节点，编辑/etc/nova/nova.conf file and complete the following action:<br><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo <span class="string">"[neutron]</span><br><span class="line">service_metadata_proxy = True</span><br><span class="line">metadata_proxy_shared_secret = METADATA_SECRET"</span><span class="prompt">&gt;&gt;</span>/etc/nova/nova.conf</span><br></pre></td></tr></table></figure></p>
+<p>在控制节点, 重启Compute API service:<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">systemctl</span> restart openstack-nova-api.service</span><br></pre></td></tr></table></figure></p>
+<p>配置 Open vSwitch (OVS) 服务</p>
+<p>OVS 服务为实例提供了底层的虚拟网络框架。整合的桥接 br-int处理内部实例网络在 OVS 中的传输。外部桥接 br-ex处理外部实例网络在 OVS 中的传输。外部桥接需要一个在物理外部网络接口上的端口来为实例提供外部网络的访问。本质上，这个端口连接了您环境中虚拟的和物理的外部网络。</p>
+<p>启动OVS service and并配置开机自启动:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl <span class="built_in">enable</span> openvswitch.service</span><br><span class="line">systemctl start openvswitch.service</span><br></pre></td></tr></table></figure></p>
+<p>创建ovs外部网络网桥：<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "DEVICE=br-ex</span><br><span class="line"><span class="constant">ONBOOT</span>=yes</span><br><span class="line"><span class="constant">BOOTPROTO</span>=static</span><br><span class="line"><span class="constant">TYPE</span>=OVSBridge</span><br><span class="line"><span class="constant">DEVICETYPE</span>=ovs</span><br><span class="line"><span class="constant">USERCTL</span>=yes</span><br><span class="line"><span class="constant">PEERDNS</span>=yes</span><br><span class="line"><span class="constant">IPV6INIT</span>=no</span><br><span class="line"><span class="constant">IPADDR</span>=192.178.102.221</span><br><span class="line"><span class="constant">NETMASK</span>=255.255.255.0</span><br><span class="line"><span class="constant">GATEWAY</span>=192.178.102.254</span><br><span class="line"><span class="constant">DNS1</span>=114.114.114.114"&gt;/etc/sysconfig/network-scripts/ifcfg-br-ex</span><br></pre></td></tr></table></figure></p>
+<p>(此处的IP网络等信息和你的ens224一样)<br>修改ens224配置：<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "<span class="comment"># Generated by dracut initrd</span></span><br><span class="line"><span class="constant">DEVICE</span>=\"ens224\"</span><br><span class="line"><span class="constant">ONBOOT</span>=yes</span><br><span class="line"><span class="constant">NM_CONTROLLED</span>=no</span><br><span class="line"><span class="constant">TYPE</span>=OVSPort</span><br><span class="line"><span class="constant">DEVICETYPE</span>=ovs</span><br><span class="line"><span class="constant">OVS_BRIDGE</span>=br-ex</span><br><span class="line"><span class="constant">HWADDR</span>=\"00:50:56:ab:06:f0\""&gt;/etc/sysconfig/network-scripts/ifcfg-ens224</span><br></pre></td></tr></table></figure></p>
+<p>添加 external bridge:<br><figure class="highlight smali"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">ovs-vsctl<span class="instruction"> add-br </span>br-ex</span><br></pre></td></tr></table></figure></p>
+<p>给一个连接到物理外部网络接口的外部桥接添加端口：<br><figure class="highlight smali"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">ovs-vsctl<span class="instruction"> add-port </span>br-ex ens224,systemctl restart network.service</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>[Note]    Note<br>据您的网络接口驱动，您可能需要禁用 generic receive offload (GRO)来实现您实例和外部网络之间的合适吞吐量。</p>
+</blockquote>
+<p>临时在外部网络接口上暂时地禁用 GRO：<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">ethtool</span> -K ens224 gro <span class="built_in">off</span></span><br></pre></td></tr></table></figure></p>
+<p>由于一个包的缺陷，Open vSwitch 代理初始化脚本会寻找 Open vSwitch 插件的配置文件，而不是指向 ML2 配置文件的象征性链接 /etc/neutron/plugin.ini。执行以下命令来解决这个问题：<br><figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">neutron</span>-<span class="title">openvswitch</span>-<span class="title">agent</span>.<span class="title">service</span> \</span></span><br><span class="line">  /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">neutron</span>-<span class="title">openvswitch</span>-<span class="title">agent</span>.<span class="title">service</span>.<span class="title">orig</span></span></span><br><span class="line">sed -i <span class="string">'s,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g'</span> \</span><br><span class="line">  /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">neutron</span>-<span class="title">openvswitch</span>-<span class="title">agent</span>.<span class="title">service</span></span></span><br></pre></td></tr></table></figure></p>
+<p>启动 Networking 服务并将其配置为随系统启动：<br><figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">enable</span> <span class="tag">neutron-openvswitch-agent</span><span class="class">.service</span> <span class="tag">neutron-l3-agent</span><span class="class">.service</span> \</span><br><span class="line">  <span class="tag">neutron-dhcp-agent</span><span class="class">.service</span> <span class="tag">neutron-metadata-agent</span><span class="class">.service</span> \</span><br><span class="line">  <span class="tag">neutron-ovs-cleanup</span><span class="class">.service</span></span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">restart</span> <span class="tag">neutron-openvswitch-agent</span><span class="class">.service</span> <span class="tag">neutron-l3-agent</span><span class="class">.service</span> \</span><br><span class="line">  <span class="tag">neutron-dhcp-agent</span><span class="class">.service</span> <span class="tag">neutron-metadata-agent</span><span class="class">.service</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>[Note]    Note<br>请勿直接地启动 neutron-ovs-cleanup服务。</p>
+</blockquote>
+<p>在控制节点验证：<br><figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">source</span> admin-openrc.sh</span><br><span class="line">neutron agent-<span class="keyword">list</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Install_and_configure_compute_node">Install and configure compute node</h1><p>计算节点处理实例的连接和安全组。</p>
+<p>编辑 /etc/sysctl.conf 文件，修改网络内核参数:<br><figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">echo</span> "<span class="winutils">net</span>.ipv4.conf.all.rp_filter=<span class="number">0</span></span><br><span class="line"><span class="winutils">net</span>.ipv4.conf.default.rp_filter=<span class="number">0</span></span><br><span class="line"><span class="winutils">net</span>.bridge.bridge-nf-<span class="flow">call</span>-iptables=<span class="number">1</span></span><br><span class="line"><span class="winutils">net</span>.bridge.bridge-nf-<span class="flow">call</span>-ip6tables=<span class="number">1</span>"&gt;&gt;/etc/sysctl.conf</span><br><span class="line">#</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure></p>
+<p>安装 Networking组件：<br><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y openstack-neutron openstack-neutron-ml2 openstack-neutron-openvswitch</span><br></pre></td></tr></table></figure></p>
+<p>编辑/etc/neutron/neutron.conf文件，配置Networking common components:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/neutron.conf /etc/neutron/neutron.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">core_plugin</span> = ml2</span><br><span class="line"><span class="constant">service_plugins</span> = router</span><br><span class="line"><span class="constant">allow_overlapping_ips</span> = True</span><br><span class="line"><span class="constant">verbose</span> = True</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">auth_strategy</span> = keystone</span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS</span><br><span class="line">[keystone_authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000</span><br><span class="line"><span class="constant">auth_url</span> = http://controller:35357</span><br><span class="line"><span class="constant">auth_plugin</span> = password</span><br><span class="line"><span class="constant">project_domain_id</span> = default</span><br><span class="line"><span class="constant">user_domain_id</span> = default</span><br><span class="line"><span class="constant">project_name</span> = service</span><br><span class="line"><span class="constant">username</span> = neutron</span><br><span class="line"><span class="constant">password</span> = neutron"&gt;/etc/neutron/neutron.conf</span><br></pre></td></tr></table></figure></p>
+<p>配置 Modular Layer 2 (ML2) 插件</p>
+<p>ML2 插件使用 Open vSwitch (OVS) 机制 (代理) 来为实例构建虚拟网络框架。</p>
+<p>编辑/etc/neutron/plugins/ml2/ml2_conf.ini文件:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.inibak</span><br><span class="line">echo "[ml2]</span><br><span class="line"><span class="constant">type_drivers</span> = flat,vlan,gre,vxlan</span><br><span class="line"><span class="constant">tenant_network_types</span> = gre</span><br><span class="line"><span class="constant">mechanism_drivers</span> = openvswitch</span><br><span class="line">[ml2_type_gre]</span><br><span class="line"><span class="constant">tunnel_id_ranges</span> = 1:1000</span><br><span class="line">[securitygroup]</span><br><span class="line"><span class="constant">enable_security_group</span> = True</span><br><span class="line"><span class="constant">enable_ipset</span> = True</span><br><span class="line"><span class="constant">firewall_driver</span> = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver</span><br><span class="line">[ovs]</span><br><span class="line"><span class="constant">local_ip</span> = 10.0.1.31</span><br><span class="line">[agent]</span><br><span class="line"><span class="constant">tunnel_types</span> = gre"&gt;/etc/neutron/plugins/ml2/ml2_conf.ini</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意<br>将其中的 INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS替换为计算节点上的实例隧道网络接口的 IP 地址，即local_ip。</p>
+</blockquote>
+<p>Networking 服务初始化脚本需要一个象征性的链接将 /etc/neutron/plugin.ini指向 ML2插件的配置文件/etc/neutron/plugins/ml2/ml2_conf.ini。如果这个象征性的链接不存在，请用以下命令创建它：<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">ln -s <span class="regexp">/etc/</span>neutron<span class="regexp">/plugins/m</span>l2<span class="regexp">/ml2_conf.ini /</span>etc<span class="regexp">/neutron/</span>plugin.ini</span><br></pre></td></tr></table></figure></p>
+<p>配置 Open vSwitch (OVS) 服务</p>
+<p>OVS 服务为实例提供了底层的虚拟网络框架。</p>
+<p>启动 OVS 服务并将其配置为随系统启动：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl <span class="built_in">enable</span> openvswitch.service</span><br><span class="line">systemctl start openvswitch.service</span><br></pre></td></tr></table></figure></p>
+<p>配置 Compute 以使用 Networking</p>
+<p>默认情况下，发行版的包会配置 Compute 使用传统网络。您必需重新配置 Compute 来通过Networking 来管理网络。</p>
+<p>编辑/etc/nova/nova.conf file and complete the following actions:<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/nova/nova.conf /etc/nova/nova.conf</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">network_api_class</span> = nova.network.neutronv2.api.API</span><br><span class="line"><span class="constant">security_group_api</span> = neutron</span><br><span class="line"><span class="constant">linuxnet_interface_driver</span> = nova.network.linux_net.LinuxOVSInterfaceDriver</span><br><span class="line"><span class="constant">firewall_driver</span> = nova.virt.firewall.NoopFirewallDriver</span><br><span class="line">[neutron]</span><br><span class="line"><span class="constant">url</span> = http://controller:9696</span><br><span class="line"><span class="constant">auth_strategy</span> = keystone</span><br><span class="line"><span class="constant">admin_auth_url</span> = http://controller:35357/v2.0</span><br><span class="line"><span class="constant">admin_tenant_name</span> = service</span><br><span class="line"><span class="constant">admin_username</span> = neutron</span><br><span class="line"><span class="constant">admin_password</span> = neutron"&gt;&gt;/etc/nova/nova.conf</span><br></pre></td></tr></table></figure></p>
+<p>Networking 服务初始化脚本需要一个象征性的链接将 /etc/neutron/plugin.ini指向 ML2插件的配置文件 /etc/neutron/plugins/ml2/ml2_conf.ini。如果这个象征性的链接不存在，请用以下命令创建它：<br><figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">neutron</span>-<span class="title">openvswitch</span>-<span class="title">agent</span>.<span class="title">service</span> \</span></span><br><span class="line">  /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">neutron</span>-<span class="title">openvswitch</span>-<span class="title">agent</span>.<span class="title">service</span>.<span class="title">orig</span></span></span><br><span class="line">sed -i <span class="string">'s,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g'</span> \</span><br><span class="line">  /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">systemd</span>/<span class="title">system</span>/<span class="title">neutron</span>-<span class="title">openvswitch</span>-<span class="title">agent</span>.<span class="title">service</span></span></span><br></pre></td></tr></table></figure></p>
+<p>重启Compute service:<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">systemctl</span> restart openstack-nova-compute.service</span><br></pre></td></tr></table></figure></p>
+<p>启动 Open vSwitch (OVS) agent 并配置开机自启动:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl <span class="built_in">enable</span> neutron-openvswitch-agent.service</span><br><span class="line">systemctl start neutron-openvswitch-agent.service</span><br></pre></td></tr></table></figure></p>
+<p>在控制节点验证：<br><figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">source</span> admin-openrc.sh</span><br><span class="line">neutron agent-<span class="keyword">list</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Create_initial_networks">Create initial networks</h1><p>启动您的第一台实例之前，您必须创建虚拟机要连接的必需的虚拟网络基础设施，包括外部网络和租户网络。创建好这些基础设施之后，我们建议您验证连接，并在继续执行之前解决<br>出现的问题。图 “初始网络”提供了一个组件的基本架构预览，网络实现了初始化网络，并展示了网络如何 从实例上流通到外部网络或内部网络中。</p>
+<p><img src="http://docs.openstack.org/kilo/install-guide/install/yum/content/figures/3/a/common/figures/installguide-neutron-initialnetworks.png" alt=""></p>
+<ul>
+<li>External network</li>
+</ul>
+<p>外部网络为您的实例分配互联网连接。该网络一般仅允许通过使用网络地址转换 (NAT)的实例访问 Internet。您可以通过一个浮动IP地址和合适的安全组规则来启用 Internet 的访问到个别实例。admin租户拥有这个网络，因为它为多个租户提供了外部网络的访问。</p>
+<blockquote>
+<p>[Note]    Note<br>Perform these commands on the controller node.</p>
+</blockquote>
+<p>创建external network<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">source admin-openrc.sh</span><br><span class="line">neutron net-<span class="built_in">create</span> ext-net <span class="comment">--router:external \</span></span><br><span class="line">  <span class="comment">--provider:physical_network external --provider:network_type flat</span></span><br></pre></td></tr></table></figure></p>
+<p>如同一个物理网络，一个虚拟网络需要为其分配一个子网。外部网络通过网络节点上的外部接口，分享与物理网络关联的相同的子网和网关。您需要为路由和浮动IP来指定一个此子网上的独有段，以免与外部网络上的其他设备相冲突。</p>
+<p>创建subnet on the external network：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">neutron subnet-create ext-net <span class="number">192.168</span><span class="number">.56</span><span class="number">.0</span>/<span class="number">24</span> --name ext-subnet \</span><br><span class="line">  --allocation-pool start=<span class="number">192.168</span><span class="number">.56</span><span class="number">.50</span>,end=<span class="number">192.168</span><span class="number">.56</span><span class="number">.99</span> \</span><br><span class="line">  --disable-dhcp --gateway <span class="number">192.168</span><span class="number">.56</span><span class="number">.254</span></span><br></pre></td></tr></table></figure></p>
+<p>使用您想用来分配给浮动IP的第一个和最后一个IP地址来替换起始IP地址。用和物理网络相关联的子网替换EXTERNAL_NETWORK_CIDR。 用和物理网络相关联的网关替换 EXTERNAL_NETWORK_GATEWAY常见的是 “.1” IP 地址。应该关闭此子网上的DHCP，因为实例不直接连接到外部网络，并且浮动IP需要手工分配。</p>
+<ul>
+<li>Tenant network</li>
+</ul>
+<p>租户网络为实例提供内部网络连接。架构确保这种网络在不同租户间分离。demo租户拥有这个网络因为其仅仅为其内的实例提供网络连接。</p>
+<p>创建tenant network：</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">source demo-openrc.<span class="keyword">sh</span></span><br><span class="line">neutron <span class="keyword">net</span>-create demo-<span class="keyword">net</span></span><br></pre></td></tr></table></figure>
+<p>类似于外部网络，您的租户网络也需要附加子网。你可以指定任意有效的子网，因为架构分离了租户网络。默认情况下，这个子网会使用 DHCP，因此您的实例可以获取到 IP 地址。</p>
+<p>Example using 192.168.1.0/24:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">neutron subnet-create demo-net <span class="number">192.168</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">24</span> \</span><br><span class="line">    --name demo-subnet --gateway <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+<p>虚拟路由在两个或多个虚拟网络之间传递网络数据。每个路由需要一个或多个接口和/或提供到指定网络连接的网关。在如下部分，您将创建一个路由然后将您的租户网络和外部网络连接到其上。</p>
+<p>在租户网络上创建路由并将外部网络和租户网络附加给它</p>
+<p>创建router:<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">neutron router-<span class="built_in">create</span> demo-router</span><br></pre></td></tr></table></figure></p>
+<p>附加router to the demo tenant subnet:<br><figure class="highlight monkey"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">neutron router-<span class="class"><span class="keyword">interface</span>-<span class="title">add</span> <span class="title">demo</span>-<span class="title">router</span> <span class="title">demo</span>-<span class="title">subnet</span></span></span><br></pre></td></tr></table></figure></p>
+<p>附加router to the external network by setting it as the gateway:<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">neutron router-gateway-<span class="keyword">set</span> demo-router ext-net</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Verify connectivity</li>
+</ul>
+<p>我们建议您在继续进行前验证网络连通性和解决其他任何问题。沿袭外部网络子网使用203.0.113.0/24的例子，租户路由网关应该占用了浮动IP地址范围内的最小IP地址，203.0.113.101。如果您正确的配置了您的外部物理网络和虚拟网络，您应该能够从您的外部物理网络上的任意主机ping这个IP地址。</p>
+<blockquote>
+<p>[Note]    Note<br>如果您在虚拟机上配置您的OpenStack节点，您必须配置管理程序以允许外部网络上的混杂模式。</p>
+</blockquote>
+<p>验证网络的连通性</p>
+<p>Ping 租户路由网关：</p>
+<p>$ ping -c 4 192.168.56.50<br>PING 192.168.56.50 (192.168.56.50) 56(84) bytes of data.<br>64 bytes from 192.168.56.50: icmp_req=1 ttl=64 time=0.619 ms<br>64 bytes from 192.168.56.50: icmp_req=2 ttl=64 time=0.189 ms<br>64 bytes from 192.168.56.50: icmp_req=3 ttl=64 time=0.165 ms<br>64 bytes from 192.168.56.50: icmp_req=4 ttl=64 time=0.216 ms</p>
+<p>— 192.168.56.50 ping statistics —<br>4 packets transmitted, 4 received, 0% packet loss, time 2999ms<br>rtt min/avg/max/mdev = 0.165/0.297/0.619/0.187 ms</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/neutron/" rel="tag">#neutron</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/29/openstack-dashboad-service/" rel="prev">openstack之kilo安装 dashboard服务</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/27/openstack-compute-service/" rel="next">openstack之kilo安装 计算服务</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/28/openstack-network-service/"
+                   data-title="openstack之kilo安装 网络服务" data-url="zhugaoxiao.github.io/2015/10/28/openstack-network-service/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_controller_node"><span class="nav-number">1.</span> <span class="nav-text">Install and configure controller node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_network_node"><span class="nav-number">2.</span> <span class="nav-text">Install and configure network node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_compute_node"><span class="nav-number">3.</span> <span class="nav-text">Install and configure compute node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Create_initial_networks"><span class="nav-number">4.</span> <span class="nav-text">Create initial networks</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

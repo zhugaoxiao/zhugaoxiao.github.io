@@ -1,0 +1,1187 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="CloudStack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CloudStack在实验室实践过程，安装配置部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudStack系列4 管理节点安装">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/04/cloudstack4-install/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="CloudStack在实验室实践过程，安装配置部分。">
+<meta property="og:image" content="zhugaoxiao.github.io/images/Advanced-Zone.png">
+<meta property="og:updated_time" content="2015-10-23T13:51:04.661Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudStack系列4 管理节点安装">
+<meta name="twitter:description" content="CloudStack在实验室实践过程，安装配置部分。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> CloudStack系列4 管理节点安装 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              CloudStack系列4 管理节点安装
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-04T20:46:25+08:00" content="2015-10-04">
+            2015-10-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/云计算/" itemprop="url" rel="index">
+                  <span itemprop="name">云计算</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/04/cloudstack4-install/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/04/cloudstack4-install/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>CloudStack在实验室实践过程，安装配置部分。</p>
+<a id="more"></a>
+<h1 id="环境要求">环境要求</h1><h2 id="管理节点OS版本及软件版本">管理节点OS版本及软件版本</h2><ul>
+<li>RHEL versions 6.3, 6.5, 6.6 and 7.0</li>
+<li>CentOS versions 6.6, 7.0</li>
+<li>Ubuntu 14.04 LTS</li>
+<li>Java 1.7</li>
+<li>MySQL 5.6 (RHEL 7)</li>
+<li>MySQL 5.1 (RHEL 6.x)</li>
+</ul>
+<h2 id="虚拟化版本">虚拟化版本</h2><ul>
+<li>LXC Host Containers on RHEL 7</li>
+<li>Windows Server 2012 R2 (with Hyper-V Role enabled)</li>
+<li>Hyper-V 2012 R2</li>
+<li>CentOS 6.2+ with KVM</li>
+<li>Red Hat Enterprise Linux 6.2 with KVM</li>
+<li>XenServer versions 6.1, 6.2 SP1 and 6.5 with latest hotfixes</li>
+<li>VMware versions 5.0 Update 3a, 5.1 Update 2a, and 5.5 Update 2</li>
+<li>Bare metal hosts are supported, which have no hypervisor.<br>These hosts can run the following operating systems:</li>
+<li><p>RHEL or CentOS, v6.2 or 6.3</p>
+<blockquote>
+<p>Note：Use libvirt version 0.9.10 for CentOS 6.3</p>
+</blockquote>
+</li>
+<li><p>Fedora 17</p>
+</li>
+<li>Ubuntu 12.04</li>
+</ul>
+<h2 id="外部设备">外部设备</h2><ul>
+<li>Netscaler VPX and MPX versions 9.3, 10.1e and 10.5</li>
+<li>Netscaler SDX version 9.3, 10.1e and 10.5</li>
+<li>SRX (Model srx100b) versions 10.3 to 10.4 R7.5</li>
+<li>F5 11.X</li>
+<li>Force 10 Switch version S4810 for Baremetal Advanced Networks</li>
+</ul>
+<h2 id="浏览器">浏览器</h2><ul>
+<li>Internet Explorer versions 10 and 11</li>
+<li>Firefox version 31 or later</li>
+<li>Google Chrome version 36.0.1985</li>
+<li>Safari 6+</li>
+</ul>
+<h1 id="环境规划">环境规划</h1><h2 id="设备配置说明">设备配置说明</h2><h3 id="路由器">路由器</h3><p>路由器连接公网和内部网络，路由器内部ip地址为192.168.6.1 ，与三层交换机g0/1连接。</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th style="text-align:left">物理接口</th>
+<th style="text-align:center">地址</th>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>路由器</td>
+<td style="text-align:left">e0/0</td>
+<td style="text-align:center">172.28.23.1</td>
+<td style="text-align:center">连接internet</td>
+<td style="text-align:center">内部地址，非公网</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align:left">e0/1</td>
+<td style="text-align:center">192.168.0.1/24</td>
+<td style="text-align:center">内部接口，连接交换机</td>
+<td style="text-align:center">内部地址</td>
+</tr>
+</tbody>
+</table>
+<h3 id="交换机">交换机</h3><p>三层交换机负责物理网络vlan划分，开启vlan间路由器，交换机的g0/1属于vlan 2，和路由器内网接口连接，vlan 2 ip地址为：192.168.6.254<br>（二层交换机也可以，但是需要在路由器上做单臂路由）。</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th style="text-align:center">vlan</th>
+<th style="text-align:center">vlan  ip 网关</th>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>交换机</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">192.168.0.254/24</td>
+<td style="text-align:center">连接出口路由器</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">192.168.20.1/24</td>
+<td style="text-align:center">Storage&amp;Manage Network</td>
+<td style="text-align:center">计算节点出口网关</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align:center">30</td>
+<td style="text-align:center">192.168.30.1/24</td>
+<td style="text-align:center">Public Network</td>
+<td style="text-align:center">公共网络，可以配置多个</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align:center">300-999</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Guest Network</td>
+<td style="text-align:center">来宾网络，用户自定义</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>接口序号</th>
+<th>vlan</th>
+<th style="text-align:center">接口模式</th>
+<th style="text-align:center">连接设备</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>g0/24</td>
+<td>2</td>
+<td style="text-align:center">Access</td>
+<td style="text-align:center">路由器g0/1</td>
+<td style="text-align:center">路由器内网接口</td>
+</tr>
+<tr>
+<td>g0/1</td>
+<td>1</td>
+<td style="text-align:center">Trunk</td>
+<td style="text-align:center">Pod0 g0/24</td>
+<td style="text-align:center">Pod0交换机（管理节点所在机柜）</td>
+</tr>
+<tr>
+<td>g0/2</td>
+<td>1</td>
+<td style="text-align:center">Trunk</td>
+<td style="text-align:center">Pod1 g0/24</td>
+<td style="text-align:center">Pod1交换机</td>
+</tr>
+<tr>
+<td>g0/3</td>
+<td>1</td>
+<td style="text-align:center">Trunk</td>
+<td style="text-align:center">Pod2 g0/24</td>
+<td style="text-align:center">Pod2交换机</td>
+</tr>
+</tbody>
+</table>
+<h3 id="流量分类规划">流量分类规划</h3><table>
+<thead>
+<tr>
+<th>流量类型</th>
+<th>VLAN</th>
+<th style="text-align:left">CIDR</th>
+<th style="text-align:center">网关</th>
+<th style="text-align:center">起始IP</th>
+<th style="text-align:center">结束IP</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public Network</td>
+<td>30</td>
+<td style="text-align:left">192.168.30.0/24</td>
+<td style="text-align:center">192.168.30.1</td>
+<td style="text-align:center">192.168.30.10</td>
+<td style="text-align:center">192.168.20.250</td>
+<td style="text-align:left">公共流量</td>
+</tr>
+<tr>
+<td>Manage Network</td>
+<td>20</td>
+<td style="text-align:left">192.168.21.0/24</td>
+<td style="text-align:center">192.168.21.1</td>
+<td style="text-align:center">192.168.21.200</td>
+<td style="text-align:center">192.168.11.229</td>
+<td style="text-align:left">提供点，内部系统用的IP，如系统vm</td>
+</tr>
+<tr>
+<td>Guest Network</td>
+<td>300-999</td>
+<td style="text-align:left">10.1.1.0/24</td>
+<td style="text-align:center">10.1.1.1</td>
+<td style="text-align:center">10.1.1.10</td>
+<td style="text-align:center">10.1.1.250</td>
+<td style="text-align:left">来宾流量，用户vm使用</td>
+</tr>
+<tr>
+<td>Storage Network</td>
+<td>20</td>
+<td style="text-align:left">192.168.20.0/24</td>
+<td style="text-align:center">192.168.20.1</td>
+<td style="text-align:center">192.168.20.170</td>
+<td style="text-align:center">192.168.20.199</td>
+<td style="text-align:left">存储流量</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>高级区域配置成功后，客户vm将获得一个10.1.1.0网段的私有ip地址；</li>
+<li>系统将建立一个虚拟路由器Vrouter，这个虚拟路由器将作为用户vm 10.1.2.0 guest网段网关；</li>
+<li>虚拟路由器还将获得一个public的网段的ip地址；</li>
+<li>vm将通过Vrouter nat功能实现外部通信和对外提供服务。</li>
+</ul>
+<p>Guest vm(10.1.1.x)→(10.1.1.1)Vrouter-nat(192.168.30.x) → (192.168.30.1)三层交换机(192.168.0.254）→（192.168.0.1）路由器(nat)→wan</p>
+<h2 id="主机规划">主机规划</h2><p>交换机连接计算节点的端口配置为trunk模式，允许所有vlan通过。</p>
+<table>
+<thead>
+<tr>
+<th>机柜</th>
+<th>设备名称</th>
+<th style="text-align:left">IP地址</th>
+<th style="text-align:center">网关</th>
+<th style="text-align:center">vlan</th>
+<th style="text-align:center">用途</th>
+<th style="text-align:center">系统</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod0</td>
+<td>cs</td>
+<td style="text-align:left">192.168.20.100</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">管理节点</td>
+<td style="text-align:center">centos6.6 x64</td>
+<td style="text-align:center">8核，8G，120G</td>
+</tr>
+<tr>
+<td>Pod0</td>
+<td>nfs</td>
+<td style="text-align:left">192.168.20.101</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">二级存储</td>
+<td style="text-align:center">centos6.6 x64</td>
+<td style="text-align:center">8核，8G，500G</td>
+</tr>
+<tr>
+<td>Pod0</td>
+<td>nfs1</td>
+<td style="text-align:left">192.168.20.102</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">机柜1主存储</td>
+<td style="text-align:center">centos6.6 x64</td>
+<td style="text-align:center">8核，8G，1024G</td>
+</tr>
+<tr>
+<td>Pod0</td>
+<td>nfs2</td>
+<td style="text-align:left">192.168.20.103</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">机柜2主存储</td>
+<td style="text-align:center">centos6.6 x64</td>
+<td style="text-align:center">8核，8G，1024G</td>
+</tr>
+<tr>
+<td>Pod0</td>
+<td>nfs3</td>
+<td style="text-align:left">192.168.20.104</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">机柜2主存储</td>
+<td style="text-align:center">centos6.6 x64</td>
+<td style="text-align:center">8核，,8G，1024G</td>
+</tr>
+<tr>
+<td>Pod0</td>
+<td>vcenter</td>
+<td style="text-align:left">192.168.20.105</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">vcenter</td>
+<td style="text-align:center">VMWARE vCenter5.5U2</td>
+<td style="text-align:center">16核,8G</td>
+</tr>
+<tr>
+<td>Pod1</td>
+<td>nr1r01n05</td>
+<td style="text-align:left">192.168.20.5</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">8核,8G</td>
+</tr>
+<tr>
+<td>Pod1</td>
+<td>nr1r01n19</td>
+<td style="text-align:left">192.168.20.19</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">8核,8G</td>
+</tr>
+<tr>
+<td>Pod2</td>
+<td>nr1r02n09</td>
+<td style="text-align:left">192.168.20.20</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">12核,8G</td>
+</tr>
+<tr>
+<td>Pod2</td>
+<td>nr1r02n28</td>
+<td style="text-align:left">192.168.20.27</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">12核,8G</td>
+</tr>
+<tr>
+<td>Pod3</td>
+<td>nr1r03n05</td>
+<td style="text-align:left">192.168.20.30</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">12核,64G</td>
+</tr>
+<tr>
+<td>Pod3</td>
+<td>nr1r03n10</td>
+<td style="text-align:left">192.168.20.35</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">12核,64G</td>
+</tr>
+<tr>
+<td>Pod4</td>
+<td>nr1r04n05</td>
+<td style="text-align:left">192.168.20.40</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">80核,128G</td>
+</tr>
+<tr>
+<td>Pod4</td>
+<td>nr1r04n14</td>
+<td style="text-align:left">192.168.20.49</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">80核,128G</td>
+</tr>
+<tr>
+<td>Pod5</td>
+<td>nr1r05n05</td>
+<td style="text-align:left">192.168.20.50</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">32核,64G</td>
+</tr>
+<tr>
+<td>Pod5</td>
+<td>nr1r05n10</td>
+<td style="text-align:left">192.168.20.55</td>
+<td style="text-align:center">192.168.20.254</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">计算节点</td>
+<td style="text-align:center">VMWARE esxi 5.5U2</td>
+<td style="text-align:center">32核,64G</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Basic_Zone">Basic Zone</h2><p>Basic Zone需要配置3种网络流量类型，分别为Management Network、Guest Network、Storage Network，具体规划信息如下表：</p>
+<table>
+<thead>
+<tr>
+<th>流量类型</th>
+<th>VLAN</th>
+<th style="text-align:left">CIDR</th>
+<th style="text-align:center">网关</th>
+<th style="text-align:center">起始IP</th>
+<th style="text-align:center">结束IP</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public Network</td>
+<td>30</td>
+<td style="text-align:left">192.168.30.0/24</td>
+<td style="text-align:center">192.168.30.1</td>
+<td style="text-align:center">192.168.30.10</td>
+<td style="text-align:center">192.168.30.250</td>
+<td style="text-align:left">公共流量,</td>
+</tr>
+<tr>
+<td>Manage Network</td>
+<td>20</td>
+<td style="text-align:left">192.168.20.0/24</td>
+<td style="text-align:center">192.168.20.1</td>
+<td style="text-align:center">192.168.20.200</td>
+<td style="text-align:center">192.168.20.229</td>
+<td style="text-align:left">提供点，内部系统用的IP，如系统vm</td>
+</tr>
+<tr>
+<td>Guest Network</td>
+<td>300-999</td>
+<td style="text-align:left">10.1.1.0/24</td>
+<td style="text-align:center">10.1.1.1</td>
+<td style="text-align:center">10.1.1.10</td>
+<td style="text-align:center">10.1.1.250</td>
+<td style="text-align:left">来宾流量，用户vm使用,</td>
+</tr>
+<tr>
+<td>Storage Network</td>
+<td>20</td>
+<td style="text-align:left">192.168.20.0/24</td>
+<td style="text-align:center">192.168.20.1</td>
+<td style="text-align:center">192.168.20.230</td>
+<td style="text-align:center">192.168.20.249</td>
+<td style="text-align:left">存储流量</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Advanced_Zone">Advanced Zone</h2><table>
+<thead>
+<tr>
+<th>流量类型</th>
+<th>VLAN</th>
+<th style="text-align:left">CIDR</th>
+<th style="text-align:center">网关</th>
+<th style="text-align:center">起始IP</th>
+<th style="text-align:center">结束IP</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public Network</td>
+<td>30</td>
+<td style="text-align:left">192.168.30.0/24</td>
+<td style="text-align:center">192.168.30.1</td>
+<td style="text-align:center">192.168.30.10</td>
+<td style="text-align:center">192.168.30.250</td>
+<td style="text-align:left">公共流量，后期可继续添加</td>
+</tr>
+<tr>
+<td>Manage Network</td>
+<td>20</td>
+<td style="text-align:left">192.168.20.0/24</td>
+<td style="text-align:center">192.168.10.1</td>
+<td style="text-align:center">192.168.10.120</td>
+<td style="text-align:center">192.168.10.169</td>
+<td style="text-align:left">提供点，内部系统用的IP，如系统vm</td>
+</tr>
+<tr>
+<td>Guest Network</td>
+<td>300-999</td>
+<td style="text-align:left">10.1.1.0/24</td>
+<td style="text-align:center">10.1.1.1</td>
+<td style="text-align:center">10.1.1.10</td>
+<td style="text-align:center">10.1.1.250</td>
+<td style="text-align:left">来宾流量，用户vm使用</td>
+</tr>
+<tr>
+<td>Storage Network</td>
+<td>20</td>
+<td style="text-align:left">192.168.20.0/24</td>
+<td style="text-align:center">192.168.20.1</td>
+<td style="text-align:center">192.168.20.170</td>
+<td style="text-align:center">192.168.20.199</td>
+<td style="text-align:left">存储流量，后期可继续添加</td>
+</tr>
+</tbody>
+</table>
+<p>连接示意图如下图所示：<br><img src="/images/Advanced-Zone.png" alt=""></p>
+<h1 id="部署CloudStack">部署CloudStack</h1><h2 id="配置系统相关服务">配置系统相关服务</h2><h3 id="1-_配置IP">1. 配置IP</h3><figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo <span class="string">"IPADDR=192.168.20.100</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=192.168.20.254"</span> &gt;&gt; <span class="regexp">/etc/sysconfig</span><span class="regexp">/network-scripts/ifcfg</span>-eth<span class="number">0</span></span><br><span class="line">sed -i <span class="string">'s/dhcp/static'</span> /etc/sysconfig/network-script/ifcfg-eth<span class="number">0</span></span><br><span class="line">sed -i <span class="string">'s/ONBOOT=no/ONBOOT=yes'</span> /etc/sysconfig/network-script/ifcfg-eth<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-_配置主机名">2. 配置主机名</h3><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"cs"</span>&gt; /etc/sysconfig/network</span><br><span class="line"><span class="built_in">hostname</span> -F /etc/sysconfig/network</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"192.168.20.100   cs cs.cloud.com"</span>&gt;&gt; /etc/hosts</span><br><span class="line"><span class="built_in">hostname</span> --fqdn</span><br></pre></td></tr></table></figure>
+<h3 id="3-_关闭_selinux">3. 关闭 selinux</h3><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">getenforce</span><br><span class="line"><span class="preprocessor">#查看当前 selinux 状态</span></span><br><span class="line">setenforce <span class="number">0</span></span><br><span class="line"><span class="preprocessor">#临时设置 selinux 状态</span></span><br><span class="line">sed -i <span class="string">'s/enforcing/disabled/'</span> /etc/selinux/config</span><br><span class="line"><span class="preprocessor">#修改 selinux 配置文件，重启永久禁用</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-_配置系统的本地_yum_源">4. 配置系统的本地 yum 源</h3><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">yum</span> clean <span class="literal">all</span> &amp; yum makecache</span><br></pre></td></tr></table></figure>
+<h3 id="5-_配置_ntp_服务器">5. 配置 ntp 服务器</h3><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">yum install ntp  -y</span><br><span class="line">vi /etc/ntp.conf</span><br><span class="line"><span class="preprocessor">#编辑 ntp 配置文件，将服务器替换成可用对时服务器。</span></span><br><span class="line">service ntpd restart</span><br><span class="line">chkconfig ntpd on</span><br><span class="line"><span class="preprocessor">#重启 ntp 服务，并且设置其开机启动</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-_确认java版本">6. 确认java版本</h3><p>管理节点不能安装JDK6或者其他较低的版本，如有安装，先卸载该JDK，再进行进行下面的步骤。（cs4.4开始改用JDK7）<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">java -<span class="property">version</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="安装CloudStack">安装CloudStack</h2><h3 id="1-_配置cloudstack的yum源">1. 配置cloudstack的yum源</h3><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "[cloudstack-source]</span><br><span class="line"><span class="constant">name</span>=cloudstack</span><br><span class="line"><span class="constant">baseurl</span>=http://192.178.102.249/cloudstack/centos/4.5/</span><br><span class="line"><span class="constant">enabled</span>=1</span><br><span class="line"><span class="constant">gpgcheck</span>=0" &gt; /etc/yum.repos.d/cloudstack.repo</span><br></pre></td></tr></table></figure>
+<p>实验室已将yum源同步到本地，不同版本配置不同，具体配置时以实际版本为准。</p>
+<h3 id="2-_安装cloudstack">2. 安装cloudstack</h3><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y cloudstack-management</span><br></pre></td></tr></table></figure>
+<p>4.5版本目前已经发布4.5.1和4.5.2，默认会安装4.5.2，可以通过指定版本安装4.5.1。</p>
+<h3 id="3-_安装cloudstack-agent">3. 安装cloudstack-agent</h3><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y cloudstack-agent</span><br></pre></td></tr></table></figure>
+<p>仅在KVM主机节点安装。</p>
+<h2 id="安装数据库">安装数据库</h2><h3 id="1-_安装mysql">1. 安装mysql</h3><figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">yum install -y mysql-<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+<p>CloudStack使用mysql管理数据，但安装cloudstack-management时没有包含mysql，需要手动安装，并导入数据。数据库可以被安装到其它机器上。</p>
+<h3 id="2-_修改mysql配置">2. 修改mysql配置</h3><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">echo "[mysqld]</span><br><span class="line">datadir=/<span class="keyword">var</span>/lib/mysql</span><br><span class="line">socket=/<span class="keyword">var</span>/lib/mysql/mysql.sock</span><br><span class="line">user=mysql</span><br><span class="line"># Disabling symbolic-links is recommended to prevent assorted security risks</span><br><span class="line">symbolic-links=0</span><br><span class="line">innodb_rollback_on_timeout=1</span><br><span class="line">innodb_lock_wait_timeout=600</span><br><span class="line">max_connections=350</span><br><span class="line"><span class="keyword">log</span>-bin=mysql-bin</span><br><span class="line">binlog-<span class="keyword">format</span> = 'ROW'</span><br><span class="line">[mysqld_safe]</span><br><span class="line"><span class="keyword">log</span>-<span class="keyword">error</span>=/<span class="keyword">var</span>/<span class="keyword">log</span>/mysqld.<span class="literal">log</span></span><br><span class="line">pid-<span class="keyword">file</span>=/<span class="keyword">var</span>/<span class="keyword">run</span>/mysqld/mysqld.pid" &gt;/etc/my.cnf</span><br></pre></td></tr></table></figure>
+<p>max_connections 的参数应设置 350 乘以你准备部署的管理节点的数量。这里假定只安装一个管理节点。</p>
+<h3 id="3-_修改mysql安全">3. 修改mysql安全</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">service mysqld <span class="operator"><span class="keyword">start</span></span><br><span class="line">chkconfig mysqld <span class="keyword">on</span></span><br><span class="line">mysql_secure_installation</span><br><span class="line">service mysqld restart</span><br><span class="line">#</span><br><span class="line">/sbin/iptables -<span class="keyword">I</span> <span class="keyword">INPUT</span> -<span class="keyword">p</span> tcp <span class="comment">--dport 3306 -j ACCEPT</span></span><br><span class="line">/etc/rc.<span class="keyword">d</span>/init.<span class="keyword">d</span>/iptables <span class="keyword">save</span></span></span><br></pre></td></tr></table></figure>
+<p>缺省安装的 mysql 安全级别比较低，需要手工设置 mysql 下密码、禁用远程访问，删除无用账户及测试数据库。<br>注意：可允许远程mysql连接，方便以后查找问题</p>
+<h3 id="4-_导入数据">4. 导入数据</h3><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cloudstack-setup-databases cloud:cloud@localhost <span class="comment">--deploy-as=root:111111</span></span><br></pre></td></tr></table></figure>
+<p>数据库准备好后，需导入 CloudStack 的表及基础数据，这样云平台才能正常使用。如果没有意外的话，最后会输出 CloudStack has successfully initialized database<br>字样，表示数据库已经准备好了。</p>
+<h2 id="启动CloudStack">启动CloudStack</h2><h3 id="1-_配置管理服务器服务并启动服务，检查数据库版本，检查服务状态。">1. 配置管理服务器服务并启动服务，检查数据库版本，检查服务状态。</h3><figure class="highlight cs"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">cloudstack-setup-management</span><br><span class="line">service cloudstack-management status</span><br><span class="line">mysql&gt; <span class="keyword">select</span> * <span class="keyword">from</span> version;</span><br><span class="line">tail -n <span class="number">200</span> -f /<span class="keyword">var</span>/log/cloudstack/management/catalina.<span class="keyword">out</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置系统模版">配置系统模版</h2><h3 id="1-_确定模版版本">1. 确定模版版本</h3><p>  CloudStack使用一组系统虚机来提供访问虚机控台，各种网络服务和管理存储的功能。当你引导云的时候，该步骤会获取这些准备用于部署的系统镜像。现在我们要从刚刚挂载的共享存储上面下载虚机模板并部署它们。管理服务器上有一个脚本来操作这些系统虚机镜像。这里的模版已装好的数据库中看到系统使用的模版地址，下载对应版本即可：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">mysql&gt; SELECT NAME,URL FROM vm_template;</span><br></pre></td></tr></table></figure></p>
+<p>直接下载即可：<br><figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">wget <span class="symbol">http:</span>/<span class="regexp">/download.cloud.com/templates</span><span class="regexp">/4.5/systemvm</span>64template-<span class="number">4.5</span>-vmware.ova</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-_挂载nfs">2. 挂载nfs</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">mount -t nfs <span class="number">192.168</span><span class="number">.20</span><span class="number">.111</span>:/<span class="keyword">export</span>/secondary /mnt</span><br></pre></td></tr></table></figure>
+<p>在管理服务器上挂载二级存储.</p>
+<h3 id="3-_导入系统模版">3. 导入系统模版</h3><figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="comment">/usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt \</span></span><br><span class="line">-<span class="ruby">m /mnt \</span><br><span class="line"></span>-<span class="ruby">u <span class="symbol">http:</span>/<span class="regexp">/192.178.102.249/cloudstack</span><span class="regexp">/systemvm/</span><span class="number">4.5</span>/systemvm64template-<span class="number">4.5</span>-vmware.ova \</span><br><span class="line"></span>-<span class="ruby">h vmware \</span><br><span class="line"></span>-<span class="ruby"><span class="constant">F</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="配置项">配置项</h2><ul>
+<li>二级存储网段<br>在 CloudStack 管理页面上，选择“全局设置”，在右上边的搜索框中输入 sites 搜索。<br>修改secstorage.allowed.internal.sites为二级存储当前网段，如 192.168.0.0/24</li>
+<li>本地存储启用<br>搜索 local，修改system.vm.use.local.storage为 true，允许系统虚机使用本地存储。<br>重启 CloudStack 生效。<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">service</span> cloudstack-management restart</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CloudStack/" rel="tag">#CloudStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/05/cloudstack5-option/" rel="prev">CloudStack系列5 可选安装和配置</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/03/cloudstack3-storage-setup/" rel="next">CloudStack系列3 存储配置</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/04/cloudstack4-install/"
+                   data-title="CloudStack系列4 管理节点安装" data-url="zhugaoxiao.github.io/2015/10/04/cloudstack4-install/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境要求"><span class="nav-number">1.</span> <span class="nav-text">环境要求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#管理节点OS版本及软件版本"><span class="nav-number">1.1.</span> <span class="nav-text">管理节点OS版本及软件版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟化版本"><span class="nav-number">1.2.</span> <span class="nav-text">虚拟化版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外部设备"><span class="nav-number">1.3.</span> <span class="nav-text">外部设备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器"><span class="nav-number">1.4.</span> <span class="nav-text">浏览器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#环境规划"><span class="nav-number">2.</span> <span class="nav-text">环境规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设备配置说明"><span class="nav-number">2.1.</span> <span class="nav-text">设备配置说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#路由器"><span class="nav-number">2.1.1.</span> <span class="nav-text">路由器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#交换机"><span class="nav-number">2.1.2.</span> <span class="nav-text">交换机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流量分类规划"><span class="nav-number">2.1.3.</span> <span class="nav-text">流量分类规划</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主机规划"><span class="nav-number">2.2.</span> <span class="nav-text">主机规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic_Zone"><span class="nav-number">2.3.</span> <span class="nav-text">Basic Zone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Advanced_Zone"><span class="nav-number">2.4.</span> <span class="nav-text">Advanced Zone</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署CloudStack"><span class="nav-number">3.</span> <span class="nav-text">部署CloudStack</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置系统相关服务"><span class="nav-number">3.1.</span> <span class="nav-text">配置系统相关服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_配置IP"><span class="nav-number">3.1.1.</span> <span class="nav-text">1. 配置IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_配置主机名"><span class="nav-number">3.1.2.</span> <span class="nav-text">2. 配置主机名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_关闭_selinux"><span class="nav-number">3.1.3.</span> <span class="nav-text">3. 关闭 selinux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_配置系统的本地_yum_源"><span class="nav-number">3.1.4.</span> <span class="nav-text">4. 配置系统的本地 yum 源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-_配置_ntp_服务器"><span class="nav-number">3.1.5.</span> <span class="nav-text">5. 配置 ntp 服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-_确认java版本"><span class="nav-number">3.1.6.</span> <span class="nav-text">6. 确认java版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装CloudStack"><span class="nav-number">3.2.</span> <span class="nav-text">安装CloudStack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_配置cloudstack的yum源"><span class="nav-number">3.2.1.</span> <span class="nav-text">1. 配置cloudstack的yum源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_安装cloudstack"><span class="nav-number">3.2.2.</span> <span class="nav-text">2. 安装cloudstack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_安装cloudstack-agent"><span class="nav-number">3.2.3.</span> <span class="nav-text">3. 安装cloudstack-agent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装数据库"><span class="nav-number">3.3.</span> <span class="nav-text">安装数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_安装mysql"><span class="nav-number">3.3.1.</span> <span class="nav-text">1. 安装mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_修改mysql配置"><span class="nav-number">3.3.2.</span> <span class="nav-text">2. 修改mysql配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_修改mysql安全"><span class="nav-number">3.3.3.</span> <span class="nav-text">3. 修改mysql安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_导入数据"><span class="nav-number">3.3.4.</span> <span class="nav-text">4. 导入数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动CloudStack"><span class="nav-number">3.4.</span> <span class="nav-text">启动CloudStack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_配置管理服务器服务并启动服务，检查数据库版本，检查服务状态。"><span class="nav-number">3.4.1.</span> <span class="nav-text">1. 配置管理服务器服务并启动服务，检查数据库版本，检查服务状态。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置系统模版"><span class="nav-number">3.5.</span> <span class="nav-text">配置系统模版</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_确定模版版本"><span class="nav-number">3.5.1.</span> <span class="nav-text">1. 确定模版版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_挂载nfs"><span class="nav-number">3.5.2.</span> <span class="nav-text">2. 挂载nfs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_导入系统模版"><span class="nav-number">3.5.3.</span> <span class="nav-text">3. 导入系统模版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置项"><span class="nav-number">3.6.</span> <span class="nav-text">配置项</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

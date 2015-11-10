@@ -1,0 +1,724 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="CloudStack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CloudStack在实验室实践过程，可选安装配置部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudStack系列5 可选安装和配置">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/05/cloudstack5-option/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="CloudStack在实验室实践过程，可选安装配置部分。">
+<meta property="og:updated_time" content="2015-10-23T13:51:10.823Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudStack系列5 可选安装和配置">
+<meta name="twitter:description" content="CloudStack在实验室实践过程，可选安装配置部分。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> CloudStack系列5 可选安装和配置 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              CloudStack系列5 可选安装和配置
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-05T20:46:25+08:00" content="2015-10-05">
+            2015-10-05
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/云计算/" itemprop="url" rel="index">
+                  <span itemprop="name">云计算</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/05/cloudstack5-option/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/05/cloudstack5-option/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>CloudStack在实验室实践过程，可选安装配置部分。<br><a id="more"></a></p>
+<h1 id="数据库复制（可选）">数据库复制（可选）</h1><p>CloudStack支持MySQL节点间的数据库复制。通过标准的MySQL复制功能来实现。这样做可能希望防止MySQL服务器或者存储损坏。MySQL复制使用master/slave的模型。master节点是直接为管理服务器所使用。slave节点为备用，接收来自master节点的所有写操作，并将它应用于本地冗余数据库。以下是实施数据库复制的步骤。</p>
+<blockquote>
+<p>注： 创建复制并不等同于备份策略，你需要另外建立有别于复制的MySQL数据的备份机制。</p>
+</blockquote>
+<h2 id="1-配置主节点">1.配置主节点</h2><p>确保这是一个全新安装且没有数据的master数据库节点。<br>编辑master数据库的my.cnf，在[mysqld]的datadir下增加如下部分。</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="setting">log_bin=<span class="value">mysql-bin</span></span></span><br><span class="line"><span class="setting">server_id=<span class="value"><span class="number">1</span></span></span></span><br></pre></td></tr></table></figure>
+<p>考虑到其他的服务器，服务器id必须是唯一的。推荐的方式是将master的ID设置为1，后续的每个slave节点序号大于1，使得所有服务器编号如：1，2，3等。<br>重启MySQL服务。如果是RHEL/CentOS系统，命令为：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">service</span> mysqld restart</span><br></pre></td></tr></table></figure>
+<p>如果是Debian/Ubuntu系统，命令为：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">service</span> mysql restart</span><br></pre></td></tr></table></figure>
+<p>在master上创建一个用于复制的账户，并赋予权限。我们创建用户”cloud-repl”，密码为”password”。假设master和slave都运行在172.16.1.0/24网段。</p>
+<figure class="highlight oxygene"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">mysql -u root</span><br><span class="line">mysql&gt; <span class="keyword">create</span> user <span class="string">'cloud-repl'</span>@<span class="string">'172.16.1.%'</span> identified <span class="keyword">by</span> <span class="string">'password'</span>;</span><br><span class="line">mysql&gt; grant replication slave <span class="keyword">on</span> *.* <span class="keyword">TO</span> <span class="string">'cloud-repl'</span>@<span class="string">'172.16.1.%'</span>;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; flush tables <span class="keyword">with</span> <span class="keyword">read</span> lock;</span><br></pre></td></tr></table></figure>
+<p>离开当前正在运行的MySQL会话,在新的shell中打开第二个MySQL会话。检索当前数据库的位置点。</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">mysql -u root</span><br><span class="line"><span class="header">mysql&gt; show master status;</span><br><span class="line">+------------------+----------+--------------+------------------+</span></span><br><span class="line"><span class="header">| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB |</span><br><span class="line">+------------------+----------+--------------+------------------+</span></span><br><span class="line"><span class="header">| mysql-bin.000001 |      412 |              |                  |</span><br><span class="line">+------------------+----------+--------------+------------------+</span></span><br></pre></td></tr></table></figure>
+<p>注意你数据库实例所返回的文件及位置点,退出该会话。完成master安装。返回到master的第一个会话，取消锁定并退出MySQL。</p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">mysql&gt; unlock tables<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-配置从节点">2.配置从节点</h2><p>安装并配置slave节点。在slave服务器上，运行如下命令。</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum install mysql-server</span><br><span class="line">chkconfig mysqld <span class="function_start"><span class="keyword">on</span></span></span><br></pre></td></tr></table></figure>
+<p>编辑my.cnf，在[mysqld]的datadir下增加如下部分。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">server_id=<span class="number">2</span></span><br><span class="line">innodb_rollback_on_timeout=<span class="number">1</span></span><br><span class="line">innodb_lock_wait_timeout=<span class="number">600</span></span><br></pre></td></tr></table></figure>
+<p>重启MySQL。对于RHEL/CentOS系统，使用”mysqld”</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">service</span> mysqld restart</span><br></pre></td></tr></table></figure>
+<p>对于Ubuntu/Debian系统，使用”mysql.”</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">service</span> mysql restart</span><br></pre></td></tr></table></figure>
+<p>引导slave连接master并进行复制。使用上面步骤中得到数据来替换IP地址，密码，日志文件，以及位置点。</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">mysql&gt; change master to</span><br><span class="line">    -<span class="ruby">&gt; master_host=<span class="string">'172.16.1.217'</span>,</span><br><span class="line"></span>    -<span class="ruby">&gt; master_user=<span class="string">'cloud-repl'</span>,</span><br><span class="line"></span>    -<span class="ruby">&gt; master_password=<span class="string">'password'</span>,</span><br><span class="line"></span>    -<span class="ruby">&gt; master_log_file=<span class="string">'mysql-bin.000001'</span>,</span><br><span class="line"></span>    -<span class="ruby">&gt; master_log_pos=<span class="number">412</span>;</span></span><br></pre></td></tr></table></figure>
+<p>在slave上启动复制功能。</p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">mysql&gt; start slave<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>在slave上可能需要开启3306端口。这对复制来说不是必须的。但如果没有做，当需要进行数据库切换时，你仍然需要去做。</p>
+<h2 id="故障切换">故障切换</h2><p>这将为管理服务器提供一个复制的数据库，用于实现手动故障切换。管理员将CloudStack从一个故障MySQL实例切换到另一个。当数据库失效发生时，你应该：</p>
+<h3 id="1-停止管理服务器：">1.停止管理服务器：</h3><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">service cloudstack-management <span class="built_in">stop</span></span><br></pre></td></tr></table></figure>
+<p>将数据库的副本服务器修改为master并重启，确保数据库的副本服务器的3306端口开放给管理服务器。<br>更改使得管理服务器使用这个新的数据库。最简单的操作是在管理服务器的/etc/cloudstack/management/db.properties文件中写入新的数据库IP地址。</p>
+<h3 id="2-重启管理服务器：">2.重启管理服务器：</h3><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">service cloudstack-management <span class="built_in">start</span></span><br></pre></td></tr></table></figure>
+<h1 id="安装Usage服务（可选）">安装Usage服务（可选）</h1><p>管理服务器配置完毕后，你可以选择安装Usage服务器。Usage服务器从系统事件中提取数据，便于对账户进行使用计费。</p>
+<p>当存在多台管理服务器时，可以选择在它们上面安装任意数量的Usage服务器。Usage服务器会协调处理。考虑到高可用性，所以最少在两台管理服务器中安装Usage服务器。</p>
+<h2 id="安装Usage服务器的要求">安装Usage服务器的要求</h2><ul>
+<li>Usage服务器安装时，管理服务器必须在运行状态。</li>
+<li><p>Usage服务器必须与管理服务器安装在同一台服务器中。</p>
+<h2 id="安装Usage服务器的步骤">安装Usage服务器的步骤</h2></li>
+<li><p>RHEL/CentOS系统:</p>
+</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> cloudstack-usage</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Debian/Ubuntu系统：</li>
+</ul>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">apt-<span class="keyword">get</span> install cloudstack-usage</span><br></pre></td></tr></table></figure>
+<p>安装成功后，使用如下命令启动Usage服务器。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">service cloudstack-usage <span class="built_in">start</span></span><br></pre></td></tr></table></figure>
+<h2 id="开机自启动">开机自启动</h2><ul>
+<li>RHEL/CentOS系统:</li>
+</ul>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">chkconfig cloudstack-usage <span class="function_start"><span class="keyword">on</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Debian/Ubuntu系统：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="operator"><span class="keyword">update</span>-rc.<span class="keyword">d</span> cloudstack-<span class="keyword">usage</span> <span class="keyword">defaults</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="SSL_(可选)">SSL (可选)</h1><p>CloudStack默认提供HTTP的访问方式。有许多的技术和网站选择使用SSL。因此，我们先抛下CloudStack所使用的HTTP，假设站点使用SSL是一个典型实践。</p>
+<p>CloudStack使用Tomcat作为服务容器。由于CloudStack网站中断SSL会话，可能会开启Tomcatde的SSL访问。Tomcat的SSL配置描述请查阅： <a href="http://tomcat.apache.org/tomcat-6.0-doc/ssl-howto.html" target="_blank" rel="external">http://tomcat.apache.org/tomcat-6.0-doc/ssl-howto.html</a>.</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CloudStack/" rel="tag">#CloudStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/06/cloudstack6-kvm/" rel="prev">CloudStack系列6 KVM安装和配置</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/04/cloudstack4-install/" rel="next">CloudStack系列4 管理节点安装</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/05/cloudstack5-option/"
+                   data-title="CloudStack系列5 可选安装和配置" data-url="zhugaoxiao.github.io/2015/10/05/cloudstack5-option/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据库复制（可选）"><span class="nav-number">1.</span> <span class="nav-text">数据库复制（可选）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置主节点"><span class="nav-number">1.1.</span> <span class="nav-text">1.配置主节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置从节点"><span class="nav-number">1.2.</span> <span class="nav-text">2.配置从节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#故障切换"><span class="nav-number">1.3.</span> <span class="nav-text">故障切换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-停止管理服务器："><span class="nav-number">1.3.1.</span> <span class="nav-text">1.停止管理服务器：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-重启管理服务器："><span class="nav-number">1.3.2.</span> <span class="nav-text">2.重启管理服务器：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Usage服务（可选）"><span class="nav-number">2.</span> <span class="nav-text">安装Usage服务（可选）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Usage服务器的要求"><span class="nav-number">2.1.</span> <span class="nav-text">安装Usage服务器的要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Usage服务器的步骤"><span class="nav-number">2.2.</span> <span class="nav-text">安装Usage服务器的步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开机自启动"><span class="nav-number">2.3.</span> <span class="nav-text">开机自启动</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSL_(可选)"><span class="nav-number">3.</span> <span class="nav-text">SSL (可选)</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

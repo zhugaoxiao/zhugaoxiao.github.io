@@ -1,0 +1,1054 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="CloudStack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CloudStack在实验室实践过程，安装配置部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudStack系列7 vsphere安装和配置">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/07/cloudstack7-vsphere/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="CloudStack在实验室实践过程，安装配置部分。">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-physical-network.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-increase-ports.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-vswitch-properties.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-mgt-network-properties.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vds-name.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/traffic-type.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/dvswitchconfig.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-iscsi-initiator.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-iscsi-initiator-properties.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-iscsi-general.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-iscsi-target-add.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/vmware-iscsi-datastore.png">
+<meta property="og:updated_time" content="2015-10-23T13:51:24.869Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudStack系列7 vsphere安装和配置">
+<meta name="twitter:description" content="CloudStack在实验室实践过程，安装配置部分。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> CloudStack系列7 vsphere安装和配置 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              CloudStack系列7 vsphere安装和配置
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-07T20:46:25+08:00" content="2015-10-07">
+            2015-10-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/云计算/" itemprop="url" rel="index">
+                  <span itemprop="name">云计算</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/07/cloudstack7-vsphere/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/07/cloudstack7-vsphere/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>CloudStack在实验室实践过程，安装配置部分。</p>
+<a id="more"></a>
+<h1 id="VMware_vSphere要求">VMware vSphere要求</h1><h2 id="vSphere_ESXi软件要求">vSphere ESXi软件要求</h2><ul>
+<li><p>vSphere ESXi 和vSphere vCenter版本,支持4.1、5.0、 5.1 和 5.5，不支持4.0版本，支持vSphere ESX。</p>
+</li>
+<li><p>建议使用vSphere标准版，需要考虑vSphere授权对CPU的限制。价格请参考 <a href="http://www.vmware.com/files/pdf/vsphere_pricing.pdf" target="_blank" rel="external">vsphere_pricing</a> 。</p>
+</li>
+<li><p>保持版本最新，确保安装已发布的所有补丁程序。</p>
+<blockquote>
+<p>警告：安装一切必要的补丁程序，缺乏最新补丁程序可能会导致数据和虚拟机丢失。</p>
+</blockquote>
+</li>
+</ul>
+<p><a name="vSphere ESXi硬件要求"></a></p>
+<h2 id="vSphere_ESXi硬件要求">vSphere ESXi硬件要求</h2><ul>
+<li>主机必须通过vSphere的兼容性认证。请查看<a href="http://www.vmware.com/resources/compatibility/search.php" target="_blank" rel="external">VMware硬件兼容性指南</a>。</li>
+<li>所有主机必须为64位架构并且支持HVM(启用Intel-VT或AMD-V)。</li>
+<li>同一群集中的所有节点必须为同一架构。CPU型号、数量和功能参数必须相同。</li>
+<li>64位x86 CPU(多核性能更佳)</li>
+<li>硬件虚拟化支持</li>
+<li>4GB内存</li>
+<li>36GB本地磁盘空间</li>
+<li>至少一块网卡</li>
+<li><p>静态分配的IP<br><a name="vSphere vCenter要求"></a></p>
+<h2 id="vSphere_vCenter要求">vSphere vCenter要求</h2></li>
+<li><p>处理器 - 2颗2.0GHz的Intel或AMD x86 CPUs或更高。如果数据库跟VC在同一台服务器中，可能会需要更高的处理器。</p>
+</li>
+<li>内存 - 3GB。如果数据库跟VC在同一台服务器中，可能会需要更多内存。</li>
+<li>磁盘空间 - 20GB。如果数据库跟VC在同一台服务器中，可能会需要更多的磁盘空间。</li>
+<li>Microsoft SQL Server 2005 Express磁盘要求。最多需要2GB 的可用磁盘空间解压安装文件。</li>
+<li>网络 - 1Gbit或者10Gbit。</li>
+</ul>
+<p>更多信息，请参考vCenter Server 和 vSphere Client <a href="http://pubs.vmware.com/vsp40/wwhelp/wwhimpl/js/html/wwhelp.htm#href=install/c_vc_hw.html" target="_blank" rel="external">硬件要求</a>。</p>
+<h2 id="其他要求">其他要求</h2><ul>
+<li><p>必须配置vCenter使用443端口与CloudStack管理服务器通讯。</p>
+</li>
+<li><p>如果你计划利用之前安装的主机，那么必须重新安装VMware ESXi。</p>
+</li>
+<li><p>CloudStack 管理网络不能使用独立的虚拟网络。CloudStack使用vCenter的管理网络，并继承vCenter管理网络的配置。 可参考 配置vCenter管理网络..</p>
+</li>
+<li><p>所有用于CloudStack的资源只能被CloudStack使用。CloudStack无法与其他管理控制台共享ESXi实例或存储。请不要与其他不受CloudStack管理的ESXi共享同一个存储卷。</p>
+</li>
+<li><p>将所有目标ESXi hypervisors加入vCenter中独立数据中心之下的群集。</p>
+</li>
+<li><p>将被CloudStack管理的群集中不应该存在任何VM。且不应该在CloudStack管理的群集中运行任何管理服务器、vCenter或者VM。为CloudStack创建一个独立的群集，并确保群集中不存在VM。</p>
+</li>
+<li><p>所有必需的vlan必须通过所有网络交换机端口的trunk模式连接到ESXi hypervisor主机。其中包含管理，存储，vMotion和来宾等VLANs。CloudStack管理一段连续的来宾VLANs范围(高级网络；请参阅 网络设置) 。</p>
+</li>
+</ul>
+<h1 id="VMware的准备工作清单">VMware的准备工作清单</h1><p>为了能顺利地安装，在安装之前请收集以下信息：</p>
+<h2 id="vCenter检查清单">vCenter检查清单</h2><p>你需要关于vCenter的下列信息。</p>
+<table>
+<thead>
+<tr>
+<th>vCenter要求</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter用户</td>
+<td>用户必须拥有管理员权限</td>
+</tr>
+<tr>
+<td>vCenter用户的密码</td>
+<td>上述用户的密码</td>
+</tr>
+<tr>
+<td>vCenter数据库名称</td>
+<td>数据中心名称</td>
+</tr>
+<tr>
+<td>vCenter群集名称</td>
+<td>群集名称</td>
+</tr>
+</tbody>
+</table>
+<h2 id="VMware网络清单">VMware网络清单</h2><table>
+<thead>
+<tr>
+<th>VLAN信息</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESXi VLAN    全部ESXi</td>
+<td>hypervisors主机所在的VLAN。</td>
+</tr>
+<tr>
+<td>ESXi VLAN IP地址</td>
+<td>ESXi VLAN的IP地址范围。每个虚拟路由器使用该范围内的一个IP。</td>
+</tr>
+<tr>
+<td>ESXi VLAN网关IP</td>
+<td>ESXi VLAN子网掩码</td>
+</tr>
+<tr>
+<td>管理服务器VLAN</td>
+<td>CloudStack管理服务器所在的VLAN。</td>
+</tr>
+<tr>
+<td>公共网络VLAN</td>
+<td>公共网络的VLAN</td>
+</tr>
+<tr>
+<td>公共网络VLAN的网关</td>
+<td>公共网络VLAN的子网掩码</td>
+</tr>
+<tr>
+<td>公共VLAN IP地址范围</td>
+<td>CloudStack使用的公共网络IP范围。CloudStack中的虚拟路由器使用这些地址，用于路由专用流量至外部网络。</td>
+</tr>
+<tr>
+<td>客户使用的VLAN范围</td>
+<td>连续的不可路由的VLAN范围。每个用户会分配一个VLAN。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="vSphere_ESXi安装">vSphere ESXi安装</h1><ul>
+<li><p>准备好安装介质。</p>
+</li>
+<li><p>安装过程中：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>要求</th>
+<th>可选项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESXi主机安装</td>
+<td>网卡绑定</td>
+</tr>
+<tr>
+<td>配置主机的物理网络，虚拟交换机，vCenter管理网络和扩展的端口范围</td>
+<td>存储多路径</td>
+</tr>
+<tr>
+<td>准备存储</td>
+<td>iscsi，fc，nfs均可</td>
+</tr>
+<tr>
+<td>在vCenter中配置集群并添加主机，或不使用集群，直接在vCenter中添加主机。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vSphere_ESXi主机配置">vSphere ESXi主机配置</h2><p>所有ESXi主机都应该在BIOS中启用CPU硬件虚拟化支持。</p>
+<ul>
+<li>物理主机网络</li>
+</ul>
+<p>您应该准备一个vSphere主机连接的规划。将主机添加至CloudStack之前，需要合理地配置网络。要配置ESXi主机，可以先用vClient将它作为独立主机添加到vCenter。当您在vCenter的导航树中看到该主机时，点击它，选择配置页。</p>
+<p><img src="/images/vmware-physical-network.png" alt="vSphere client"></p>
+<p>在主机的配置标签页中，点击”硬件/网络”链接转到上图中的网络配置页。</p>
+<ul>
+<li>配置虚拟交换机</li>
+</ul>
+<p>默认情况下，系统会创建虚拟交换机vSwitch0。你可以视额外创建虚拟机交换机。CloudStack要求云中所有ESXi主机中的虚拟交换机都使用相同的名字。如果改变了默认虚拟交换机名称，那么需要改变一个或多个CloudStack配置。</p>
+<ul>
+<li>流量隔离</li>
+</ul>
+<p>CloudStack允许你使用vCenter为每个ESXi主机配置三个独立的网络。CloudStack通过连接到的vSwitch名称识别网络。允许配置的网络分别为公共网络(与公共互联网之间的流量)，来宾网络(来宾-来宾流量)和管理网络(与管理服务器和存储之间的流量)。这3种网络可以使用1个虚拟交换机，也可以另外创建1个或者2个虚拟交换机分别来承载流量。</p>
+<p>如果您想以这样的方式隔离流量，首先应按照vCenter的指南在vCenter中创建并配置虚拟交换机。请记录每种网络使用的虚拟交换机名称。您需要配置CloudStack使用这些虚拟交换机。</p>
+<ul>
+<li>增加端口</li>
+</ul>
+<p>ESXi主机的虚拟交换机默认有56个端口。我们建议设为最大允许数4088，有些可能无法设置，改为允许的最大值即可。要设置该值，请点击虚拟交换机的“属性…”链接(注意，不是网络的属性)。</p>
+<p><img src="/images/vmware-increase-ports.png" alt="vmware-increase-ports"></p>
+<p>在vSwitch属性对话框中，选择vSwitch，点击“编辑”，您将看到以下对话框：</p>
+<p><img src="/images/vmware-vswitch-properties.png" alt="vmware-vswitch-properties"></p>
+<p>在该对话框中，您可以修改端口数量。修改完后，需要重启ESXi主机使配置生效。</p>
+<h2 id="vSphere_vCenter管理网络配置">vSphere vCenter管理网络配置</h2><p>在vSwith属性对话框中，可以看到一个vCenter管理网络。CloudStack的管理网络也使用该网络。CloudStack要求正确配置vCenter的管理网络。在对话框中点击管理网络，然后点击编辑。</p>
+<p><img src="/images/vmware-mgt-network-properties.png" alt="vmware-mgt-network-properties"></p>
+<p>请确保配置以下设置：</p>
+<ul>
+<li>VLAN ID设置为期望的ID</li>
+<li>启用vMotion</li>
+<li>启用管理流量</li>
+</ul>
+<p>如果ESXi主机具有多个VMKernel端口，且ESXi没有使用默认的“Management Network”作为管理网络名称，必须按照以下指南配置管理网络端口组以便CloudStack可以发现管理网络。</p>
+<ul>
+<li>在所有ESXi主机上使用同一个管理网络端口组名称。</li>
+<li>在CloudStack管理界面中，点击配置-全局设置，修改vmware.management.portgroup为ESXi主机管理网络的标签。</li>
+</ul>
+<h2 id="为CloudStack控制台代理扩展端口范围">为CloudStack控制台代理扩展端口范围</h2><blockquote>
+<p>仅适用于VMware vSphere 4.x</p>
+</blockquote>
+<p>为使控制台代理可以和主机一起工作，需要扩展主机的防火墙端口范围。这是为了使控制台代理可以访问VMware的VM。为扩展端口范围，请登录到每台主机的VMware ESX服务控制台，然后执行以下命令：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">esxcfg-firewall -o <span class="number">59000</span>-<span class="number">60000</span>,tcp,in,vncextras</span><br><span class="line">esxcfg-firewall -o <span class="number">59000</span>-<span class="number">60000</span>,tcp,out,vncextras</span><br></pre></td></tr></table></figure>
+<h2 id="配置vSphere的网卡绑定">配置vSphere的网卡绑定</h2><p>vSphere主机的网卡绑定可以按照vSphere安装指南完成。</p>
+<h2 id="配置VMware数据中心使用VMware分布式虚拟交换机">配置VMware数据中心使用VMware分布式虚拟交换机</h2><p>CloudStack支持在VMware vSphere环境中为虚拟网络配置VMware vNetwork分布式交换机（VDS）。本章节能帮助你在CloudStack中配置VMware VDS。每个vCenter服务器实例最多支持128 VDS实例，每个VDS实例最多可以管理500台VMware服务器。</p>
+<p>关于VMware分布式虚拟交换机</p>
+<p>在VMware vCenter服务器中的VMware VDS聚合主机层面虚拟交换机 。各个主机层面的虚拟交换机被抽象处理成一个在数据中心层面上横跨多个主机的大型 VDS，通过一个集中的接口，使用集中配置、管理、监控你的整个数据中心。实际上，VDS可以看作是数据中心层面中一个整体的虚拟交换机，通过VMware vCenter服务器管理数据中心中大量的主机网络。在虚拟机跨多个主机移动时保持其网络运行时状态，支持嵌入式监控和集中式防火墙服务。VDS能与标准虚拟交换机和 Nexus 1000V虚拟交换机一起部署或者独立部署。</p>
+<p>先决条件和指南</p>
+<ul>
+<li>VMware VDS只支持CloudStack中的公共和来宾流量。</li>
+<li>VMware VDS不支持每种流量类型使用多个VDS。如果一个用户有多个VDS交换机，那么来宾网络和公共网络只能各使用一个VDS。</li>
+<li>在同一个zone中可以为每个群集添加任何类型的交换机。当在群集中添加不同类型的交换机时，流量标签会被群集级别的覆盖。</li>
+<li>管理和存储网络不支持使用VDS。因此在这些网络中使用标准交换机。</li>
+<li>当你移除来宾网络时，对应vCenter中的dv端口组不会被移除。你必须手动在vCenter中删除。</li>
+</ul>
+<p>准备工作清单</p>
+<p>为了顺利的配置VMware VDS，在开始之前，请牢记添加到数据中心中的VDS名称：</p>
+<p><img src="/images/vds-name.png" alt="dvSwitch"></p>
+<p>如下需要使用VDS名称：</p>
+<ul>
+<li>在创建zone的过程中配置公共网络和来宾网络时，在编辑流量标签对话框中配置交换机名称。</li>
+</ul>
+<p>在创建zone的过程中配置来宾网络和公共网络流量类型时，请确保你选择了VMware vNetwork Distributed Virtual Switch。</p>
+<p>   <img src="/images/traffic-type.png" alt="traffic-type"></p>
+<ul>
+<li>当添加一个启用了VDS的VMware群集时，则显示公共网络流量vSwitch类型区域。</li>
+<li>当在zone中更新交换机类型时，流量标签所使用的交换机名称。</li>
+</ul>
+<p>在最后一种情况下流量标签格式是<br>[[“Name of vSwitch/dvSwitch/EthernetPortProfile”][,”VLAN ID”[,”vSwitch Type”]]]</p>
+<p>流量标签可以使用如下值：</p>
+<ul>
+<li><p>empty string</p>
+</li>
+<li><p>dvSwitch0</p>
+</li>
+<li><p>dvSwitch0,200</p>
+</li>
+<li><p>dvSwitch1,300,vmwaredvs</p>
+</li>
+<li><p>myEthernetPortProfile,,nexusdvs</p>
+</li>
+<li><p>dvSwitch0,,vmwaredvs</p>
+</li>
+</ul>
+<p>The three fields to fill in are:</p>
+<ul>
+<li>vCenter中 虚拟/分布式 虚拟交换机的名称。</li>
+</ul>
+<p>默认值取决于虚拟交换机的类型：</p>
+<p>   <strong>vSwitch0</strong>: 如果虚拟交换机的类型是VMware vNetwork标准虚拟交换机。</p>
+<p>   <strong>dvSwitch0</strong>: 如果虚拟交换机类型为VMware vNetwork分布式虚拟交换机</p>
+<p>   <strong>epp0</strong>: 如果虚拟交换机类型为Cisco Nexus 1000v分布式虚拟交换机</p>
+<ul>
+<li>任何适用于这个流量的 VLAN ID</li>
+</ul>
+<p>此时，该区域仅用于公共网络流量。来宾网络区域会被忽略并且留空。默认为空字符即假设特定流量类型不填加VLAN标签。</p>
+<ul>
+<li><p>Type of virtual switch. Specified as string.</p>
+<p>合理且有效的值为 vmwaredvs, vmwaresvs, nexusdvs。</p>
+<p><strong>vmwaresvs</strong>: 表示VMware vNetwork 标准虚拟交换机</p>
+<p><strong>vmwaredvs</strong>: 表示VMware vNetwork 标准虚拟交换机</p>
+<p><strong>nexusdvs</strong>: 代表Cisco Nexus 1000v分布式虚拟交换机。</p>
+<p>如果什么都没指定(留空)，基于全局参数指定的值，区域层面默认使用虚拟交换机。</p>
+<p>以下为全局配置参数：</p>
+<p><strong>vmware.use.dvswitch</strong>: 设置为true则是在CloudStack部署时启用任意种类(VMware DVS和Cisco Nexus 1000v) 分布式交换机。如果设置为false，则CloudStack部署时使用的的虚拟交换机是标准虚拟交换机。</p>
+<p><strong>vmware.use.nexus.vswitch</strong>: 如果vmware.use.dvswitch设置为false，则忽略该参数。设置为true则是部署CloudStack时启用Cisco Nexus 1000v分布式交换机。</p>
+</li>
+</ul>
+<h3 id="在CloudStack中启用分布式虚拟交换机">在CloudStack中启用分布式虚拟交换机</h3><p>在部署CloudStack时启用VDS，请在CloudStack管理界面中的全局设置页面中设置vmware.use.dvswitch parameter为true并重启管理服务器。只有启用了vmware.use.dvswitch参数，你才能在管理界面中指定VDS，并且CloudStack会忽略你指定的VDS-specific参数。另外，如果vmware.use.dvswitch参数的值为true且vmware.use.nexus.dvswitch参数的值为false，那么CloudStack中虚拟网络架构使用VDS。另外一个定义VDS配置的全局参数是vmware.ports.per.dvportgroup。它表示在VMware环境里每个VMware dvPortGroup中默认端口数量。默认是256。这个数值直接关系到你创建的来宾网络的数量。</p>
+<p>CloudStack支持混合部署分布式虚拟交换机、标准虚拟交换机和Nexus 1000v虚拟交换机的虚拟网络。</p>
+<h3 id="在CloudStack中配置分布式虚拟交换机">在CloudStack中配置分布式虚拟交换机</h3><p>在创建区域时需要添加必要的资源才能配置VDS。</p>
+<p>另外在群集层面，使用添加群集选项，可以在已经存在并启用VDS的区域中创建附加群集。更多信息请参阅 “添加群集: vSphere”.</p>
+<p>在所有情况下，配置VDS时必须指定下列参数：</p>
+<p><img src="/images/dvswitchconfig.png" alt="Configuring dvSwitch"></p>
+<table>
+<thead>
+<tr>
+<th>参数描述</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>群集名称</td>
+<td>输入在vCenter中创建的群集名称。比如，”cloudcluster”。</td>
+</tr>
+<tr>
+<td>vCenter主机</td>
+<td>输入已经部署VMware VDS的vCenter主机名称或者IP地址。</td>
+</tr>
+<tr>
+<td>vCenter用户名</td>
+<td>输入CloudStack连接到vCenter所使用的用户名。这个用户必须拥有所有管理员权限。</td>
+</tr>
+<tr>
+<td>vCenter 密码</td>
+<td>输入上面用户的密码。</td>
+</tr>
+<tr>
+<td>vCenter数据中心</td>
+<td>输入群集所属的vCenter数据中心名称。比如，”clouddcVM”。</td>
+</tr>
+<tr>
+<td>替代公共流量</td>
+<td>启用该选项时，整个区域中群集的公共流量将被替代。</td>
+</tr>
+<tr>
+<td>公共流量虚拟交换机类型</td>
+<td>在启用替代公共流量时该选项才会显示。选择VMware vNetwork Distributed Virtual Switch。如果全局设置中vmware.use.dvswitch参数为true，则默认选项为VMware vNetwork Distributed Virtual Switch。</td>
+</tr>
+<tr>
+<td>公共流量虚拟交换机名称</td>
+<td>用于公共流量的虚拟交换机名称。</td>
+</tr>
+<tr>
+<td>替代来宾流量</td>
+<td>启用该选项时，整个区域中群集的来宾流量将被替代。</td>
+</tr>
+<tr>
+<td>来宾流量虚拟交换机类型</td>
+<td>在启用替代来宾流量时该选项才会显示。选择VMware vNetwork Distributed Virtual Switch。如果全局设置中vmware.use.dvswitch参数为true，则默认选项为VMware vNetwork Distributed Virtual Switch。</td>
+</tr>
+<tr>
+<td>来宾流量虚拟交换机名称</td>
+<td>用于宾流量的虚拟交换机名称。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vSphere的存储准备(仅限iSCSI)">vSphere的存储准备(仅限iSCSI)</h2><p>使用iSCSI需要在vCenter中做一些准备工作。您必须添加iSCSI目标并创建iSCSI数据存储。</p>
+<p>如果使用NFS，请跳过本章节。</p>
+<h3 id="ESXi主机中启用iSCSI启动器">ESXi主机中启用iSCSI启动器</h3><ul>
+<li><p>在vCenter中，点击主机/集群的配置，点击存储适配器。您将看到：</p>
+<p><img src="/images/vmware-iscsi-initiator.png" alt="iscsi initiator"></p>
+</li>
+<li><p>选择iSCSI软件适配器并点击属性。</p>
+<p><img src="/images/vmware-iscsi-initiator-properties.png" alt="iscsi initiator properties"></p>
+</li>
+<li><p>点击配置…按钮。</p>
+<p> <img src="/images/vmware-iscsi-general.png" alt="iscsi general"></p>
+</li>
+<li><p>勾选启用以便启用启动器。</p>
+</li>
+<li><p>点击 确定 保存。</p>
+</li>
+</ul>
+<h3 id="添加iSCSI目标">添加iSCSI目标</h3><p>在属性对话框中，添加iSCSI目标信息：</p>
+<p><img src="/images/vmware-iscsi-target-add.png" alt="iscsi target add"></p>
+<p>在集群中所有ESXi主机上重复以上步骤。</p>
+<p>创建iSCSI数据存储</p>
+<p>现在您应该创建一个VMFS数据存储。请按照以下步骤：</p>
+<p>选择主页/清单/数据存储。<br>右键点击数据中心节点。<br>选择添加数据存储…命令。<br>按照向导创建iSCSI数据存储。<br>该过程只需要在集群中的一台主机上执行，不需要在所有主机上执行。</p>
+<p><img src="/images/vmware-iscsi-datastore.png" alt="iscsi datastore"></p>
+<h3 id="vSphere多路径(可选)">vSphere多路径(可选)</h3><p>vSphere的存储多路径可以根据vSphere的安装文档配置。</p>
+<h2 id="添加主机或配置集群(vSphere)">添加主机或配置集群(vSphere)</h2><p>使用vCenter创建集群，向其中添加期望的主机。随后您可以将整个集群加入到Cloudstack中。(参考 “添加群集: vSphere”)。</p>
+<h1 id="VMware_vSphere主机安装补丁程序">VMware vSphere主机安装补丁程序</h1><ul>
+<li><p>在CloudStack中断开与VMware vSphere 群集的连接。应断开足够长的时间以便在主机上安装补丁程序。</p>
+<ul>
+<li>使用admin账户登录CloudStack管理界面。</li>
+<li>导航至VMware群集，点击操作-取消管理。</li>
+<li>查看群集状态直到显示未受管理。</li>
+</ul>
+</li>
+<li><p>在集群中每个ESXi主机上执行以下操作：</p>
+<ul>
+<li><p>将集群中每个ESXi都置为维护模式。</p>
+</li>
+<li><p>确保所有的VM已经迁移到群集中的其他主机。</p>
+</li>
+<li><p>如果群集中只有一台主机，关闭所有VMs再将主机置为维护模式。</p>
+</li>
+<li><p>在ESXi主机中应用补丁。</p>
+</li>
+<li><p>如果提示重启，请重启主机。</p>
+</li>
+<li><p>在主机上取消维护模式。</p>
+</li>
+</ul>
+</li>
+<li><p>重新连接该集群到CloudStack:</p>
+<ul>
+<li><p>使用admin账户登录CloudStack管理界面。</p>
+</li>
+<li><p>导航到VMware群集，点击操作-管理。</p>
+</li>
+<li><p>查看状态以确保所有的主机都恢复正常。所有主机都恢复正常可能需要几分钟时间。<br> 或者，确认主机状态在数据库中得到正确同步和更新。</p>
+</li>
+</ul>
+</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CloudStack/" rel="tag">#CloudStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/08/cloudstack-advance_network/" rel="prev">CloudStack 高级网络</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/06/cloudstack6-kvm/" rel="next">CloudStack系列6 KVM安装和配置</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/07/cloudstack7-vsphere/"
+                   data-title="CloudStack系列7 vsphere安装和配置" data-url="zhugaoxiao.github.io/2015/10/07/cloudstack7-vsphere/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware_vSphere要求"><span class="nav-number">1.</span> <span class="nav-text">VMware vSphere要求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere_ESXi软件要求"><span class="nav-number">1.1.</span> <span class="nav-text">vSphere ESXi软件要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere_ESXi硬件要求"><span class="nav-number">1.2.</span> <span class="nav-text">vSphere ESXi硬件要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere_vCenter要求"><span class="nav-number">1.3.</span> <span class="nav-text">vSphere vCenter要求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他要求"><span class="nav-number">1.4.</span> <span class="nav-text">其他要求</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware的准备工作清单"><span class="nav-number">2.</span> <span class="nav-text">VMware的准备工作清单</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vCenter检查清单"><span class="nav-number">2.1.</span> <span class="nav-text">vCenter检查清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VMware网络清单"><span class="nav-number">2.2.</span> <span class="nav-text">VMware网络清单</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vSphere_ESXi安装"><span class="nav-number">3.</span> <span class="nav-text">vSphere ESXi安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere_ESXi主机配置"><span class="nav-number">3.1.</span> <span class="nav-text">vSphere ESXi主机配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere_vCenter管理网络配置"><span class="nav-number">3.2.</span> <span class="nav-text">vSphere vCenter管理网络配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为CloudStack控制台代理扩展端口范围"><span class="nav-number">3.3.</span> <span class="nav-text">为CloudStack控制台代理扩展端口范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置vSphere的网卡绑定"><span class="nav-number">3.4.</span> <span class="nav-text">配置vSphere的网卡绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置VMware数据中心使用VMware分布式虚拟交换机"><span class="nav-number">3.5.</span> <span class="nav-text">配置VMware数据中心使用VMware分布式虚拟交换机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在CloudStack中启用分布式虚拟交换机"><span class="nav-number">3.5.1.</span> <span class="nav-text">在CloudStack中启用分布式虚拟交换机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在CloudStack中配置分布式虚拟交换机"><span class="nav-number">3.5.2.</span> <span class="nav-text">在CloudStack中配置分布式虚拟交换机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vSphere的存储准备(仅限iSCSI)"><span class="nav-number">3.6.</span> <span class="nav-text">vSphere的存储准备(仅限iSCSI)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ESXi主机中启用iSCSI启动器"><span class="nav-number">3.6.1.</span> <span class="nav-text">ESXi主机中启用iSCSI启动器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加iSCSI目标"><span class="nav-number">3.6.2.</span> <span class="nav-text">添加iSCSI目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vSphere多路径(可选)"><span class="nav-number">3.6.3.</span> <span class="nav-text">vSphere多路径(可选)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加主机或配置集群(vSphere)"><span class="nav-number">3.7.</span> <span class="nav-text">添加主机或配置集群(vSphere)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware_vSphere主机安装补丁程序"><span class="nav-number">4.</span> <span class="nav-text">VMware vSphere主机安装补丁程序</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

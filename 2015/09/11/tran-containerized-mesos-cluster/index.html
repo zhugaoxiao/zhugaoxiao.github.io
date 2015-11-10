@@ -1,0 +1,693 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="docker,mesos," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="我们经常为我们的客户和自己用Apache Mesos 集群运行容器化的应用。虽然我们已经在容器中运行应用，我们还是从标准的Debian packages安装Mesos相关的依赖和框架。虽说这是很多Mesos用户的做法，而且是安装Mesos最直接和保险的方式，我们想可以略微调整一下Mesos的安装方式并尝试在容器中运行。
+除了有很大的乐趣和教育意义外，这种方式会帮助我们解决一个非常实际的问题。现在可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译：在Docker中运行你的Mesos集群">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/09/11/tran-containerized-mesos-cluster/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="我们经常为我们的客户和自己用Apache Mesos 集群运行容器化的应用。虽然我们已经在容器中运行应用，我们还是从标准的Debian packages安装Mesos相关的依赖和框架。虽说这是很多Mesos用户的做法，而且是安装Mesos最直接和保险的方式，我们想可以略微调整一下Mesos的安装方式并尝试在容器中运行。
+除了有很大的乐趣和教育意义外，这种方式会帮助我们解决一个非常实际的问题。现在可">
+<meta property="og:updated_time" content="2015-10-23T14:02:48.813Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翻译：在Docker中运行你的Mesos集群">
+<meta name="twitter:description" content="我们经常为我们的客户和自己用Apache Mesos 集群运行容器化的应用。虽然我们已经在容器中运行应用，我们还是从标准的Debian packages安装Mesos相关的依赖和框架。虽说这是很多Mesos用户的做法，而且是安装Mesos最直接和保险的方式，我们想可以略微调整一下Mesos的安装方式并尝试在容器中运行。
+除了有很大的乐趣和教育意义外，这种方式会帮助我们解决一个非常实际的问题。现在可">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 翻译：在Docker中运行你的Mesos集群 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              翻译：在Docker中运行你的Mesos集群
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-11T20:46:25+08:00" content="2015-09-11">
+            2015-09-11
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/翻译/" itemprop="url" rel="index">
+                  <span itemprop="name">翻译</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/11/tran-containerized-mesos-cluster/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/11/tran-containerized-mesos-cluster/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>我们经常为我们的客户和自己用<a href="http://mesos.apache.org/" target="_blank" rel="external">Apache Mesos</a> 集群运行容器化的应用。虽然我们已经在容器中运行应用，我们还是从标准的<a href="https://mesosphere.com/downloads/" target="_blank" rel="external">Debian packages</a>安装Mesos相关的依赖和框架。虽说这是很多Mesos用户的做法，而且是安装Mesos最直接和保险的方式，我们想可以略微调整一下Mesos的安装方式并尝试在容器中运行。</p>
+<p>除了有很大的乐趣和教育意义外，这种方式会帮助我们解决一个非常实际的问题。现在可以运行任意版本的Mesos和它的框架，包括发布的候选版本，因为在我们的设置下，这个问题变成只要运行不同版本的Docker镜像就可以了。</p>
+<p>当我们开发<a href="https://github.com/mesos/elasticsearch" target="_blank" rel="external">Mesos框架</a>时，能使用不同版本的Mesos（和其它工具）是非常重要的。除此之外，这给我们更多时间进行安全问题修复，有时甚至赶在它们发布之际。<br><a id="more"></a></p>
+<h1 id="Mesos,_Marathon_和_Zookeeper_Docker_镜像">Mesos, Marathon 和 Zookeeper Docker 镜像</h1><p>目前在Docker Hub上有几个不同的<a href="https://registry.hub.docker.com/search?q=mesos" target="_blank" rel="external">Apache Mesos Docker镜像</a>可用 (注意Mesos master 和 slave是两个镜像)。我们选择<a href="https://registry.hub.docker.com/repos/mesosphere/" target="_blank" rel="external">Mesosphere</a>的镜像，一个卓越的容器生态系统贡献者（也是我们的朋友）。<a href="https://registry.hub.docker.com/repos/redjack/" target="_blank" rel="external">Redjack</a>的仓库同样提供高质量、文档丰富的Mesos镜像。使用哪个取决于你，哪个用起来都很正常，不过需要注意配置可能有些不同，因为这篇文章是为Mesosphere镜像而写。</p>
+<p>上周<a href="https://github.com/thijsschnitger" target="_blank" rel="external">Thijs Schnitger</a> 创建了一个<a href="https://registry.hub.docker.com/u/containersol/zookeeper/" target="_blank" rel="external">Zookeeper3.5的镜像</a>。Apache Zookeeper在这个版本引入了动态主机重配置，一个非常酷的特性，特别是在一个经常变化的环境中特别有用，集群也是。所以我们也使用Zookeeper容器化的解决方案。</p>
+<p>我们还会用到<a href="https://registry.hub.docker.com/u/mesosphere/marathon/" target="_blank" rel="external">Mesosphere的Marathon Docker 镜像</a>。</p>
+<h1 id="容器化集群配置">容器化集群配置</h1><p>我们使用<a href="https://terraform.io/" target="_blank" rel="external">Terraform</a>启动集群。参考<a href="https://github.com/ContainerSolutions/terraform-mesos" target="_blank" rel="external">terraform-mesos</a>的GitHub repository并下载它的<a href="https://github.com/ContainerSolutions/terraform-mesos/tree/containers" target="_blank" rel="external">容器</a>分支，你会找到解决方案（至少在写这篇文章时）。不久，它会被合并到master分支。</p>
+<p>让我们来看一下配置过程的有趣部分，docker运行Mesos，Marathon和Zookeeper命令。</p>
+<h2 id="Mesos_主节点">Mesos 主节点</h2><figure class="highlight"><table><tr><td class="code"><pre><span class="line">QUORUM=2 # number of masters divided by 2 plus 1&#10;CLUSTERNAME=&#34;cluster7&#34;&#10;ZK=&#34;zk://&#60;quorum_string&#62;/mesos&#34;&#10;MESOS_VERSION=&#34;0.22.1-1.0.ubuntu1404&#34;&#10;&#10;docker run -d \&#10;-e MESOS_QUORUM=$&#123;QUORUM&#125; \&#10;-e MESOS_WORK_DIR=/var/lib/mesos \&#10;-e MESOS_LOG_DIR=/var/log \&#10;-e MESOS_CLUSTER=$&#123;CLUSTERNAME&#125; \&#10;-e MESOS_ZK=$&#123;ZK&#125;/mesos \&#10;--net=&#34;host&#34; \&#10;redjack/mesos-master:$&#123;MESOSVERSION&#125;&#10;--mesosphere/mesos-master:$&#123;MESOSVERSION&#125;</span><br></pre></td></tr></table></figure>
+<p>如你所见，我们仅仅传递给镜像几个相关的版本tag就能运行指定版本的Mesos。除此之外，为了Mesos正常工作还需要传递几个环境变量给容器并启用<a href="https://docs.docker.com/articles/networking/" target="_blank" rel="external">host networking</a>。<br>简而言之，带<code>MESOS_</code>前缀的变量保存配置的值，我们一般会写到主机<code>/etc/mesos*</code>目录下的配置文件。</p>
+<p>在集群中的每台主机上运行主节点容器。</p>
+<h2 id="Mesos从节点">Mesos从节点</h2><figure class="highlight"><table><tr><td class="code"><pre><span class="line">ZK=&#34;zk://&#60;quorum_string&#62;/mesos&#34;&#10;HOSTNAME=&#34;host1&#34; # use a hostname of the host&#10;IP=&#34;10.20.30.2&#34; # use an IP address of the host&#10;MESOSVERSION=&#34;0.22.1-1.0.ubuntu1404&#34;&#10;&#10;docker run -d \&#10; -e MESOS_LOG_DIR=/var/log/mesos \&#10; -e MESOS_MASTER=$&#123;ZK&#125; \&#10; -e MESOS_EXECUTOR_REGISTRATION_TIMEOUT=5mins \&#10; -e MESOS_HOSTNAME=$&#123;HOSTNAME&#125; \&#10; -e MESOS_ISOLATOR=cgroups/cpu,cgroups/mem \&#10; -e MESOS_CONTAINERIZERS=docker,mesos \&#10; -e MESOS_PORT=5051 \&#10; -e MESOS_IP=$&#123;IP&#125; \&#10; -v /var/run/docker.sock:/var/run/docker.sock \&#10; -v /usr/bin/docker:/usr/bin/docker \&#10; -v /sys:/sys:ro \&#10; --net=&#34;host&#34; \&#10;redjack/mesos-slave&#10; --mesosphere/mesos-slave:$&#123;MESOSVERSION&#125;</span><br></pre></td></tr></table></figure>
+<p>对Mesos从节点，配置有点复杂，主要是需要确保从节点可以访问主机上的Docker后台进程（同一个后台进程用来运行这个Mesos从节点实例）。通过挂载<code>/var/run/docker.sock</code>文件，<code>/usr/bin/docker</code>执行文件和<code>/sys</code> 目录（只读）到Mesos从节点容器实现。请注意，这还不是一个完美的解决方案，例如当从Marathon运行另一个Mesos框架，需要再进行细微调整。</p>
+<h2 id="Zookeeper">Zookeeper</h2><h1 id="第一个节点">第一个节点</h1><figure class="highlight"><table><tr><td class="code"><pre><span class="line">docker run -d -p 2181:2181 containersol/zookeeper 1</span><br></pre></td></tr></table></figure>
+<h1 id="其它节点">其它节点</h1> <figure class="highlight"><table><tr><td class="code"><pre><span class="line">MYID=&#34;2&#34; # 3,4,5,...&#10;FIRST_NODE=&#34;cluster7-mesos-master-0&#34; # hostname of the first node&#10;&#10;docker run -d -p 2181:2181 containersol/zookeeper $&#123;MYID&#125; $&#123;FIRST_NODE&#125;&#10;--&#38656;&#35201;&#26356;&#25913;&#31471;&#21475;2888:2888&#65292;3888:3888</span><br></pre></td></tr></table></figure>
+<p>在这个配置中，运行容器化的Zookeeper需要一点小技巧。在第一个节点以“standalone” 模式运行，等其他所有节点Zookeeper实例能连接到它并运行正常，Zookeeper接着会自动重新配置它自己向所有节点同步。</p>
+<h2 id="Marathon">Marathon</h2><p>因为我们想运行应用容器和其它框架，我们在Mesos之上安装“datacenter init system” Marathon框架。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">MARATHONVERSION=&#34;v0.8.2&#34;&#10;ZK=&#34;zk://&#60;quorum&#62;&#34; # zookeeper quorum string&#10;&#10;docker run -d \&#10; -p 8080:8080 \&#10; -p 5051:5051 \&#10; mesosphere/marathon:$&#123;MARATHONVERSION&#125; \&#10; --master $&#123;ZK&#125;/mesos \&#10; --zk $&#123;ZK&#125;/marathon</span><br></pre></td></tr></table></figure>
+<p> 注意，我们指定Marathon UI 运行在8080端口，监听5051端口。我们运行任意版本镜像并传递两个强制参数：</p>
+<p> <code>master</code>  – quorum hostname/ip and Mesos registration path<br> <code>zk</code>  – quorum hostname/ip and Marathon registration path</p>
+<p>这样就可以在Docker容器中运行Mesos集群的关键组件了。除了运行不同版本的组件，这个我们最大的动机，这种方式自然而然的带来在集群管理层次容器化的所有好处：快速部署，维护简单和设备可移植性。</p>
+<p>在这一过程，我们还需要解决haproxy-marathon bridge和<a href="http://mesosphere.github.io/mesos-dns/" target="_blank" rel="external">Mesos DNS</a>配置的问题。</p>
+<p>如果你有任何问题或者要进行评论，请直接在文章下面留言或者在 <a href="https://github.com/ContainerSolutions/terraform-mesos/issues" target="_blank" rel="external">GitHub上创建issues</a>。</p>
+<p>原文链接：<a href="http://container-solutions.com/containerized-mesos-cluster/" target="_blank" rel="external">Containerized Mesos Cluster</a> （翻译：朱高校）</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+            <a href="/tags/mesos/" rel="tag">#mesos</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/13/tran-red-hat-teams-with-black-duck-to-keep-containers-secure/" rel="prev">翻译：红帽团队与Black Duck一起让容器更安全</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/09/test-swingbench/" rel="next">使用Swingbench对数据库进行压力测试</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/11/tran-containerized-mesos-cluster/"
+                   data-title="翻译：在Docker中运行你的Mesos集群" data-url="zhugaoxiao.github.io/2015/09/11/tran-containerized-mesos-cluster/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mesos,_Marathon_和_Zookeeper_Docker_镜像"><span class="nav-number">1.</span> <span class="nav-text">Mesos, Marathon 和 Zookeeper Docker 镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#容器化集群配置"><span class="nav-number">2.</span> <span class="nav-text">容器化集群配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mesos_主节点"><span class="nav-number">2.1.</span> <span class="nav-text">Mesos 主节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mesos从节点"><span class="nav-number">2.2.</span> <span class="nav-text">Mesos从节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper"><span class="nav-number">2.3.</span> <span class="nav-text">Zookeeper</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第一个节点"><span class="nav-number">3.</span> <span class="nav-text">第一个节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其它节点"><span class="nav-number">4.</span> <span class="nav-text">其它节点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Marathon"><span class="nav-number">4.1.</span> <span class="nav-text">Marathon</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

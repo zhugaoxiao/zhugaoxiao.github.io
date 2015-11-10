@@ -1,0 +1,997 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="CloudStack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CloudStack系列2，网络配置部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudStack系列2 网络配置">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/02/cloudstack2-network-setup/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="CloudStack系列2，网络配置部分。">
+<meta property="og:image" content="zhugaoxiao.github.io/images/parallel-mode.png">
+<meta property="og:updated_time" content="2015-10-23T13:50:52.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudStack系列2 网络配置">
+<meta name="twitter:description" content="CloudStack系列2，网络配置部分。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> CloudStack系列2 网络配置 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              CloudStack系列2 网络配置
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-02T20:46:25+08:00" content="2015-10-02">
+            2015-10-02
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/云计算/" itemprop="url" rel="index">
+                  <span itemprop="name">云计算</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/02/cloudstack2-network-setup/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/02/cloudstack2-network-setup/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>CloudStack系列2，网络配置部分。<br><a id="more"></a></p>
+<h1 id="网络配置">网络配置</h1><p>正确的网络设置对于CloudStack能否成功安装至关重要。</p>
+<h2 id="基本和高级网络">基本和高级网络</h2><p>CloudStack提供二种网络类型:</p>
+<p><strong>Basic</strong><br>适用于AWS类型的网络。提供单一的来宾网络类型，通过三层安全组进行隔离（源IP地址过滤）。</p>
+<p><strong>Advanced</strong><br>适用于更复杂的网络拓扑。这种网络模型在定义来宾网络时提供了最大限度的灵活性，但是比基本网络需要更多的配置。</p>
+<p>每个区域都有基本或高级网络。一个区域的整个生命周期中，不论是基本或高级网络。一旦在CloudStack中选择并配置区域的网络类型，就无法再更改。</p>
+<p>下表是两种网络类型的功能比较。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Networking Feature</th>
+<th style="text-align:center">Basic Network</th>
+<th style="text-align:center">Advanced Network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Number of networks</td>
+<td style="text-align:center">Single network</td>
+<td style="text-align:center">Multiple networks</td>
+</tr>
+<tr>
+<td style="text-align:center">Firewall type</td>
+<td style="text-align:center">Physical</td>
+<td style="text-align:center">Physical and Virtual</td>
+</tr>
+<tr>
+<td style="text-align:center">Load balancer</td>
+<td style="text-align:center">Physical</td>
+<td style="text-align:center">Physical and Virtual</td>
+</tr>
+<tr>
+<td style="text-align:center">Isolation type</td>
+<td style="text-align:center">Layer 3</td>
+<td style="text-align:center">Layer 2 and Layer 3</td>
+</tr>
+<tr>
+<td style="text-align:center">VPN support</td>
+<td style="text-align:center">No</td>
+<td style="text-align:center">Yes</td>
+</tr>
+<tr>
+<td style="text-align:center">Port forwarding</td>
+<td style="text-align:center">Physical</td>
+<td style="text-align:center">Physical and Virtual</td>
+</tr>
+<tr>
+<td style="text-align:center">1:1 NAT</td>
+<td style="text-align:center">Physical</td>
+<td style="text-align:center">Physical and Virtual</td>
+</tr>
+<tr>
+<td style="text-align:center">Source NAT</td>
+<td style="text-align:center">No</td>
+<td style="text-align:center">Physical and Virtual</td>
+</tr>
+<tr>
+<td style="text-align:center">Userdata</td>
+<td style="text-align:center">Yes</td>
+<td style="text-align:center">Yes</td>
+</tr>
+<tr>
+<td style="text-align:center">Network usage monitoring</td>
+<td style="text-align:center">sFlow / netFlow at physical router</td>
+<td style="text-align:center">Hypervisor and Virtual Router</td>
+</tr>
+<tr>
+<td style="text-align:center">DNS and DHCP</td>
+<td style="text-align:center">Yes</td>
+<td style="text-align:center">Yes</td>
+</tr>
+</tbody>
+</table>
+<p>在一个云中可能会存在二种网络类型。但是，一个给定的区域要么是基本网络要么是高级网络。</p>
+<p>单一的物理网络可以被分割不同类型的网络流量。账户也可以分割来宾流量。可以通过划分VLAN来隔离流量。如果在物理网络中划分了VLAN，要确保VLAN标签的数值在不同范围。</p>
+<h2 id="VLAN分配示例">VLAN分配示例</h2><p>公共和来宾流量要求使用VLAN，下面是一个VLAN分配的示例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">VLAN IDs</th>
+<th style="text-align:center">Traffic type</th>
+<th style="text-align:center">Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">less than 500</td>
+<td style="text-align:center">Management traffic. Reserved for administrative purposes.</td>
+<td style="text-align:center">CloudStack software can access this, hypervisors, system VMs.</td>
+</tr>
+<tr>
+<td style="text-align:center">500-599</td>
+<td style="text-align:center">VLAN carrying public traffic.</td>
+<td style="text-align:center">CloudStack accounts.</td>
+</tr>
+<tr>
+<td style="text-align:center">600-799</td>
+<td style="text-align:center">VLANs carrying guest traffic.</td>
+<td style="text-align:center">CloudStack accounts. Account-specific VLAN is chosen from this pool.</td>
+</tr>
+<tr>
+<td style="text-align:center">800-899</td>
+<td style="text-align:center">VLANs carrying guest traffic.</td>
+<td style="text-align:center">CloudStack accounts. Account-specific VLAN chosen by CloudStack admin to assign to that account.</td>
+</tr>
+<tr>
+<td style="text-align:center">900-999</td>
+<td style="text-align:center">VLAN carrying guest traffic</td>
+<td style="text-align:center">CloudStack accounts. Can be scoped by project, domain, or all accounts.</td>
+</tr>
+<tr>
+<td style="text-align:center">greater than 1000</td>
+<td style="text-align:center">Reserved for future use</td>
+<td style="text-align:center">-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="硬件配置示例">硬件配置示例</h2><p>本节包含了一个特定交换机型号的示例配置，作为区域级别的三层交换。假设VLAN管理协议，如VTP、GVRP等已经被禁用。如果你选择使用VTP或GVRP，需要修改示例步骤脚本。</p>
+<h3 id="三层交换（Cisco_3750）">三层交换（Cisco 3750）</h3><p>以下步骤显示如何配置Cisco 3750作为区域级别的三层交换机。这些步骤假设VLAN 201用于Pod1中未标记的私有IP线路，并且Pod1中的二层交换机已经连接到GigabitEthernet0/1端口。</p>
+<ul>
+<li>设置VTP为透明模式，以便可以使用超过1000的VLAN。因为我们只用到999，VTP透明模式不做严格要求。</li>
+</ul>
+<figure class="highlight nsis"><table><tr><td class="code"><pre><span class="line">Switch&gt; en</span><br><span class="line">Switch<span class="comment">#</span></span><br><span class="line">en</span><br><span class="line"><span class="literal">show</span> running-config</span><br><span class="line"><span class="literal">show</span> vlan</span><br><span class="line"><span class="literal">show</span> interfaces switchport</span><br><span class="line"><span class="literal">show</span> interfaces trunk</span><br><span class="line"><span class="literal">show</span> vtp status</span><br><span class="line">//先确认原来配置</span><br><span class="line">configure terminal</span><br><span class="line">vtp mode transparent</span><br><span class="line">vlan <span class="number">200</span>-<span class="number">999</span></span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置GigabitEthernet0/1。</li>
+</ul>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Switch&gt; </span>en</span><br><span class="line"><span class="keyword">Switch#</span><br><span class="line"></span><span class="label">interface</span> GigabitEthernet0/<span class="number">1</span></span><br><span class="line"><span class="keyword">switchport </span>trunk encapsulation dot1q</span><br><span class="line"><span class="keyword">switchport </span>mode trunk</span><br><span class="line"><span class="keyword">switchport </span>trunk allowed vlan all</span><br><span class="line"><span class="keyword">switchport </span>trunk native vlan <span class="number">201</span></span><br><span class="line"><span class="label">exit</span></span><br></pre></td></tr></table></figure>
+<p>端口GigabitEthernet1/g1的配置说明：</p>
+<ul>
+<li>端口GigabitEthernet1/0/1的本征VLAN为201（属于VLAN201）。</li>
+<li>Cisco默认允许所有VLAN，因此，VLAN（200-999）都被允许并可访问所有的Pod级别的二层交换机。</li>
+</ul>
+<h3 id="二层交换（Cisco_3750）">二层交换（Cisco 3750）</h3><p>在Pod中的二层交换机提供接入层功能。</p>
+<ul>
+<li>它​通​过​trunk连​接​所​有​VLANS中​的​计​算​主​机。</li>
+<li>它​为​管​理​网​络​提​供​​计​算​和​存​储​主​机​的​流​量​交​换​。​三​层​交​换​机​将​作​为​这​个​管​理​网​络​的​网​关。</li>
+</ul>
+<p>以​下​步​骤​将​演​示​如何​配​置​cisco 3750作​为​Pod级​别​的​二层交​换​机，假设VTP、GVRP等已经被禁用。</p>
+<ul>
+<li>设置VTP为透明模式，以便我们使用超过1000的VLAN。因为我们只用到999，VTP透明模式并不做严格要求。</li>
+</ul>
+<figure class="highlight nsis"><table><tr><td class="code"><pre><span class="line">Switch&gt; en</span><br><span class="line">Switch<span class="comment">#</span></span><br><span class="line"><span class="literal">show</span> running-config</span><br><span class="line"><span class="literal">show</span> vlan</span><br><span class="line"><span class="literal">show</span> interfaces switchport</span><br><span class="line"><span class="literal">show</span> interfaces trunk</span><br><span class="line"><span class="literal">show</span> vtp status</span><br><span class="line">//先确认原来配置</span><br><span class="line">configure terminal</span><br><span class="line">vtp mode transparent</span><br><span class="line">vlan <span class="number">300</span>-<span class="number">999</span></span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置所有的端口使用dot1q协议、trunk模式，并设置201为本征VLAN。</li>
+</ul>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Switch&gt; </span>en</span><br><span class="line"><span class="keyword">Switch#</span><br><span class="line"></span><span class="label">interface</span> range GigabitEthernet <span class="number">0</span>/<span class="number">1</span>-<span class="number">24</span></span><br><span class="line"><span class="keyword">switchport </span>trunk encapsulation dot1q</span><br><span class="line"><span class="keyword">switchport </span>mod  e trunk</span><br><span class="line"><span class="keyword">switchport </span>trunk allowed vlan all</span><br><span class="line">//<span class="keyword">switchport </span>trunk native vlan <span class="number">201</span></span><br><span class="line"><span class="label">copy</span> running-config startup-config</span><br><span class="line"><span class="label">exit</span></span><br></pre></td></tr></table></figure>
+<p>默​认​情​况下​，Cisco允​许​所有​VLAN通过。​如果本征VLAN ID不相同的2个​​端​口​连​接​在​一​起时​​，​Cisco交​换​机​提出控诉。​这​就​是​为​什​么​必​须​指​定​VLAN201为​二层交​换​机​的​本​征​VLAN。</p>
+<h3 id="二层交换（H3C_S5800X）">二层交换（H3C S5800X）</h3><p>二层接入使用H3C交换机，可以与思科的交换机混搭。</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">&lt;DeviceA&gt; <span class="built_in">system</span>-<span class="keyword">view</span></span><br><span class="line"></span><br><span class="line">[H3C] reset saved-configuretion</span><br><span class="line">[H3C] <span class="keyword">display</span> <span class="keyword">version</span></span><br><span class="line">[H3C] <span class="keyword">display</span> current-configuretion</span><br><span class="line">[H3C] <span class="keyword">display</span> saved-configuretion</span><br><span class="line">[H3C] <span class="keyword">display</span> vlan</span><br><span class="line"></span><br><span class="line">[H3C] vlan <span class="number">300</span> <span class="keyword">to</span> <span class="number">999</span></span><br><span class="line">[H3C]interface <span class="built_in">range</span> Ten-GigabitEthernet1/<span class="number">0</span>/<span class="number">1</span> <span class="keyword">to</span> Ten-GigabitEthernet1/<span class="number">0</span>/<span class="number">24</span></span><br><span class="line">[H3C-<span class="keyword">if</span>-<span class="built_in">range</span>]port link-<span class="built_in">type</span> trunk</span><br><span class="line">[H3C-<span class="keyword">if</span>-<span class="built_in">range</span>]port trunk permit vlan <span class="keyword">all</span></span><br><span class="line">[DeviceA-GigabitEthernet1/<span class="number">0</span>/<span class="number">3</span>] <span class="keyword">quit</span></span><br><span class="line">[H3C]save</span><br><span class="line">[H3C]<span class="keyword">quit</span></span><br></pre></td></tr></table></figure>
+<h2 id="硬件防火墙">硬件防火墙</h2><p>所有部署都应该有一个防火墙保护管理服务器。根据情况不同，一些部署也可能用到Juniper SRX防火墙作为来宾网络的默认网关。</p>
+<h3 id="防火墙的一般规定">防火墙的一般规定</h3><p>硬件防火墙必需服务于两个目的：</p>
+<ul>
+<li><p>保护管理服务器。从互联网到管理服务器应该配置NAT和端口转发。</p>
+</li>
+<li><p>路由多个区域之间的管理网络流量。站点到站点VPN应该在多个区域之间配置。</p>
+</li>
+</ul>
+<p>为了达到上述目的，你必须设置固定配置的防火墙。当用户被配置到云中，不需要改变防火墙规则和策略。任何支持NAT和站点到站点VPN的硬件防火墙都可以使用。</p>
+<h3 id="集成Juniper_SRX（可选）外部来宾防火墙">集成Juniper SRX（可选）外部来宾防火墙</h3><blockquote>
+<p>注意：客户使用高级网络时才有效。</p>
+</blockquote>
+<p>CloudStack中提供了对Juniper SRX系列防火墙的直接管理。这使得CloudStack能建立公共IP到客户虚拟机的静态NAT映射，并利用Juniper设备替代虚拟路由器提供防火墙服务。每个区域中可以有一个或多个Juniper SRX设备。这个特性是可选的。如果不提供Juniper设备集成，CloudStack会使用虚拟路由器提供这些服务。</p>
+<p>Juniper SRX可以和任意的外部负载均衡器一起使用。外部网络元素可以部署为并排或内联结构。</p>
+<p><img src="/images/parallel-mode.png" alt=""></p>
+<h3 id="集成_Cisco_VNMC_(可选)外部来宾防火墙">集成 Cisco VNMC (可选)外部来宾防火墙</h3><p>Cisco虚拟网络管理中心（VNMC）为Cisco网络虚拟服务提供集中式多设备和策略管理。可以通过集成Cisco VNMC到CloudStack，使用ASA 1000v云防火墙提供防火墙和NAT服务。在开启了Cisco Nexus 1000v分布式虚拟交换机功能的CloudStack群集中。这样部署，你可以：</p>
+<ul>
+<li><p>配置Cisco ASA 1000v防火墙，你可以为每个来宾创建一个网络。</p>
+</li>
+<li><p>使用思科ASA 1000v防火墙创建和应用安全配置，包含入口和出口流量的ACL策略集。</p>
+</li>
+<li><p>使用Cisco ASA 1000v防火墙创建和应用源地址NAT，端口转发，静态NAT策略集。</p>
+</li>
+</ul>
+<p>CloudStack对于Cisco VNMC的支持基于开启了Cisco Nexus 1000v分布式虚拟交换机功能的VMware虚拟化管理平台。</p>
+<h2 id="整合外部来宾负载均衡（可选）">整合外部来宾负载均衡（可选）</h2><p>CloudStack可以使用Citrix NetScaler或BigIP F5负载均衡器为客户提供负载平衡服务。如果未启用,CloudStack将使用虚拟路由器中的软件负载平衡。</p>
+<p>在CloudStack管理端中安装和启用外部负载均衡：</p>
+<ul>
+<li><p>根据供应商提供的说明书安装你的设备。</p>
+</li>
+<li><p>连接到承载公共流量和管理流量的网络（可以是同一个网络）。</p>
+</li>
+<li><p>记录IP地址、用户名、密码、公共接口名称和专用接口名称。接口名称类似 “1.1” 或 “1.2”。</p>
+</li>
+<li><p>确保VLAN可以通过trunk到管理网络接口。</p>
+</li>
+<li><p>安装好CloudStack管理端后，使用管理员帐号登录CloudStack用户界面。</p>
+</li>
+<li><p>在左侧导航栏中，点击基础架构。</p>
+</li>
+<li><p>点击区域中的查看更多。</p>
+</li>
+<li><p>选择你要设置的区域。</p>
+</li>
+<li><p>点击网络选项卡。</p>
+</li>
+<li><p>点击示意图网络服务提供程序中的配置（你可能需要向下滚动才能看到）。</p>
+</li>
+<li><p>点击NetScaler或F5。</p>
+</li>
+<li><p>点击（+）添加按钮并提供如下信息：</p>
+</li>
+</ul>
+<p>对于NetScaler:</p>
+<ul>
+<li><p>IP地址：SRX设备的IP地址。</p>
+</li>
+<li><p>用户名/密码：访问设备的身份验证凭证。CloudStack使用这些凭证来访问设备。</p>
+</li>
+<li><p>类型：添加设备的类型。可以是F5 BigIP负载均衡器、NetScaler VPX、NetScaler MPX或 NetScaler SDX等设备。关于NetScaler的类型比较，请参阅CloudStack管理指南。</p>
+</li>
+<li><p>公共接口: 配置为公共网络部分的设备接口。</p>
+</li>
+<li><p>专用接口: 配置为专用网络部分的设备接口。</p>
+</li>
+<li><p>重试次数：尝试控制设备失败时重试的次数。默认值是2。</p>
+</li>
+<li><p>容量：该设备能处理的网络数量。</p>
+</li>
+<li><p>专用: 当标记为专用后，这个设备只对单个帐号专用。该选项被勾选后，容量选项就没有了实际意义且值会被置为1。</p>
+</li>
+</ul>
+<p>#. 点击确定。</p>
+<p>外部负载平衡器的安装和配置完成后，你就可以开始添加虚拟机和NAT或负载均衡规则。</p>
+<h2 id="管理服务器负载均衡">管理服务器负载均衡</h2><p>CloudStack可以使用负载均衡器为多管理服务器提供一个虚拟IP。管理员负责创建管理服务器的负载均衡规则。应用程序需要跨多个持久性或stickiness的会话。下表列出了需要进行负载平衡的端口和是否有持久性要求。</p>
+<p>即使不需要持久性，也使它是允许的。</p>
+<table>
+<thead>
+<tr>
+<th>Source Port</th>
+<th>Destination Port</th>
+<th>Protocol</th>
+<th>Persistence Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>80 or 443</td>
+<td>8080(or 20400 with AJP)</td>
+<td>HTTP (or AJP)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>8250</td>
+<td>8250</td>
+<td>TCP</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>8096</td>
+<td>8096</td>
+<td>HTTP</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>除了上面的设置，管理员还负责设置‘host’全局配置值，由管理服务器IP地址更改为负载均衡虚拟IP地址。如果‘host’值未设置为VIP的8250端口并且一台管理服务器崩溃时，用户界面依旧可用，但系统虚拟机将无法与管理服务器联系。</p>
+<h2 id="拓扑结构要求">拓扑结构要求</h2><h3 id="安全需求">安全需求</h3><p>公共互联网时，必须禁止管理服务器8096和8250的端口访问。</p>
+<h3 id="运行时内部通信需求">运行时内部通信需求</h3><ul>
+<li><p>管理服务器需要跟其他主机进行任务协调。该通信使用TCP协议的8250和9090端口。</p>
+</li>
+<li><p>CPVM跟区域中的所有主机通过管理网络通信。因此区域中任何一个Pod都必须能通过管理网络连接到其他Pod。</p>
+</li>
+<li><p>SSVM和CPVM通过8250端口与管理服务器通信。如果你使用了多个管理服务器，确保负载均衡器IP地址到管理服务器的8250端口是可达的。</p>
+</li>
+</ul>
+<h3 id="存储网络拓扑要求">存储网络拓扑要求</h3><p>SSVM需要挂载辅助存储中的NFS共享目录。即使有一个单独的存储网络，辅助存储的流量也会通过管理网络。如果存储网络可用，主存储的流量会通过存储网络。如果你选择辅助存储也使用存储网络，你必须确保有一条从管理网络到存储网络的路由。</p>
+<h3 id="外部防火墙拓扑要求">外部防火墙拓扑要求</h3><p>如果整合了外部防火墙设备，公共IP的VLAN必须通过trunk到达主机。这是SSVM和CPVM要求必须满足的。</p>
+<h3 id="高级区域拓扑要求">高级区域拓扑要求</h3><p>使用高级网络，专用和公共网络必须分离子网。</p>
+<h3 id="XenServer拓扑要求">XenServer拓扑要求</h3><p>管理服务器与XenServer服务器通过22（ssh）、80（http）和443（https）端口通信。</p>
+<h3 id="VMware拓扑要求">VMware拓扑要求</h3><ul>
+<li><p>管理服务器和SSVM必须能够访问区域中的vCenter和所有的ESXi主机。必须保证在防火墙中允许443端口。</p>
+</li>
+<li><p>管理服务器与VMware vCenter服务器通过443（https）端口通信。</p>
+</li>
+<li><p>管理服务器与系统VM使用管理网络通过3922（ssh）端口通信。</p>
+</li>
+</ul>
+<h3 id="Hyper-V拓扑要求">Hyper-V拓扑要求</h3><p>CloudStack管理服务器通过https与Hyper-V代理通信。管理服务器与Hyper-V主机之间的安全通信端口为8250。</p>
+<h3 id="KVM拓扑要求">KVM拓扑要求</h3><p>管理服务器与KVM主机通过22（ssh）端口通信。</p>
+<h3 id="LXC拓扑要求">LXC拓扑要求</h3><p>管理服务器与LXC主机通过22（ssh）端口通信。</p>
+<h2 id="Guest_Network_Usage_Integration_for_Traffic_Sentinel">Guest Network Usage Integration for Traffic Sentinel</h2><h2 id="通过流量哨兵整合来宾网络使用情况">通过流量哨兵整合来宾网络使用情况</h2><p>为了在来宾网络中收集网络数据，CloudStack需要从网络中安装的外部网络数据收集器中提取。通过整合CloudStack和inMon流量哨兵实现来宾网络的数据统计。</p>
+<p>网络哨兵是一个收集网络流量使用数据的套件。CloudStack可以将流量哨兵中的信息统计到自己的使用记录中,为云基础架构的计费用户提供了依据。流量哨兵使用的流量监控协议为sFlow。路由器和交换机将生成的sFlow记录提供给流量哨兵，然后CloudStack通过查询流量哨兵的数据库来获取这些信息。</p>
+<p>为了构建查询，CloudStack确定了当前来宾IP的查询时间间隔。这既包含新分配的IP地址，也包含之前已被分配并且在继续使用的IP地址。CloudStack查询流量哨兵，在分配的时间段内这些IP的网络统计信息。返回的数据是账户每个IP地址被分配和释放的时间戳，以便在CloudStack中为每个账户创建计费记录。当使用服务运行时便会收集这些数据</p>
+<p>配置整合CloudStack和流量哨兵：</p>
+<ul>
+<li><p>在网络基础设施中，安装和配置流量哨兵收集流量数据。关于安装和配置步骤，请查阅inMon的<a href="http://inmon.com" target="_blank" rel="external">Traffic Sentinel Documentation</a>。</p>
+</li>
+<li><p>在流量哨兵用户界面中，配置流量哨兵允许来宾用户使用脚本查询。CloudStack将通过执行远程查询为来宾用户的一个或多个IP和收集网络使用情况。<br>点击 File &gt; Users &gt; Access Control &gt; Reports Query, 然后从下拉列表中选择来宾。</p>
+</li>
+<li><p>在CloudStack中，使用API中的addTrafficMonitor命令添加流量哨兵主机。传入的流量哨兵URL类似于protocol + host + port (可选)；例如，<a href="http://10.147.28.100:8080" target="_blank" rel="external">http://10.147.28.100:8080</a> 。关于addTrafficMonitor命令用法，请参阅<a href="http://cloudstack.apache.org/docs/api/index.html" target="_blank" rel="external">API文档</a>。</p>
+<p>关于如何调用CloudStack API，请参阅<a href="http://docs.cloudstack.apache.org/en/latest/index.html#developers" target="_blank" rel="external">CloudStack API Developer’s Guide</a>。</p>
+</li>
+<li><p>作为管理员登录到CloudStack用户界面。</p>
+</li>
+<li><p>在全局设置页面中，查找如下参数进行设置：</p>
+<p>direct.network.stats.interval: 你希望CloudStack多久收集一次流量数据。</p>
+</li>
+</ul>
+<h2 id="设置区域中VLAN和虚拟机的最大值">设置区域中VLAN和虚拟机的最大值</h2><p>在外部网络案例中，每个虚拟机都必须有独立的来宾IP地址。在CloudStack中有两个参数你需要考虑如何进行配置：在同一时刻，你希望区域中有多少VLAN和多少虚拟机在运行。</p>
+<p>使用如下表格来确定如何在CloudStack部署时修改配置。</p>
+<table>
+<thead>
+<tr>
+<th>guest.vlan.bits</th>
+<th>Maximum Running VMs per Zone</th>
+<th>Maximum Zone VLANs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12</td>
+<td>4096</td>
+<td>4094</td>
+</tr>
+<tr>
+<td>11</td>
+<td>8192</td>
+<td>2048</td>
+</tr>
+<tr>
+<td>10</td>
+<td>16384</td>
+<td>1024</td>
+</tr>
+<tr>
+<td>10</td>
+<td>32768</td>
+<td>512</td>
+</tr>
+</tbody>
+</table>
+<p>基于部署需求，选择合适的guest.vlan.bits参数值。在全局配置中编辑该参数，并重启管理服务。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CloudStack/" rel="tag">#CloudStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/03/cloudstack3-storage-setup/" rel="prev">CloudStack系列3 存储配置</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/01/cloudstack1-architecture/" rel="next">CloudStack系列1 部署架构</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/02/cloudstack2-network-setup/"
+                   data-title="CloudStack系列2 网络配置" data-url="zhugaoxiao.github.io/2015/10/02/cloudstack2-network-setup/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络配置"><span class="nav-number">1.</span> <span class="nav-text">网络配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本和高级网络"><span class="nav-number">1.1.</span> <span class="nav-text">基本和高级网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VLAN分配示例"><span class="nav-number">1.2.</span> <span class="nav-text">VLAN分配示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件配置示例"><span class="nav-number">1.3.</span> <span class="nav-text">硬件配置示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三层交换（Cisco_3750）"><span class="nav-number">1.3.1.</span> <span class="nav-text">三层交换（Cisco 3750）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二层交换（Cisco_3750）"><span class="nav-number">1.3.2.</span> <span class="nav-text">二层交换（Cisco 3750）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二层交换（H3C_S5800X）"><span class="nav-number">1.3.3.</span> <span class="nav-text">二层交换（H3C S5800X）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件防火墙"><span class="nav-number">1.4.</span> <span class="nav-text">硬件防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#防火墙的一般规定"><span class="nav-number">1.4.1.</span> <span class="nav-text">防火墙的一般规定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成Juniper_SRX（可选）外部来宾防火墙"><span class="nav-number">1.4.2.</span> <span class="nav-text">集成Juniper SRX（可选）外部来宾防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成_Cisco_VNMC_(可选)外部来宾防火墙"><span class="nav-number">1.4.3.</span> <span class="nav-text">集成 Cisco VNMC (可选)外部来宾防火墙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整合外部来宾负载均衡（可选）"><span class="nav-number">1.5.</span> <span class="nav-text">整合外部来宾负载均衡（可选）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#管理服务器负载均衡"><span class="nav-number">1.6.</span> <span class="nav-text">管理服务器负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拓扑结构要求"><span class="nav-number">1.7.</span> <span class="nav-text">拓扑结构要求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安全需求"><span class="nav-number">1.7.1.</span> <span class="nav-text">安全需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时内部通信需求"><span class="nav-number">1.7.2.</span> <span class="nav-text">运行时内部通信需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储网络拓扑要求"><span class="nav-number">1.7.3.</span> <span class="nav-text">存储网络拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外部防火墙拓扑要求"><span class="nav-number">1.7.4.</span> <span class="nav-text">外部防火墙拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级区域拓扑要求"><span class="nav-number">1.7.5.</span> <span class="nav-text">高级区域拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XenServer拓扑要求"><span class="nav-number">1.7.6.</span> <span class="nav-text">XenServer拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VMware拓扑要求"><span class="nav-number">1.7.7.</span> <span class="nav-text">VMware拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hyper-V拓扑要求"><span class="nav-number">1.7.8.</span> <span class="nav-text">Hyper-V拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KVM拓扑要求"><span class="nav-number">1.7.9.</span> <span class="nav-text">KVM拓扑要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LXC拓扑要求"><span class="nav-number">1.7.10.</span> <span class="nav-text">LXC拓扑要求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Guest_Network_Usage_Integration_for_Traffic_Sentinel"><span class="nav-number">1.8.</span> <span class="nav-text">Guest Network Usage Integration for Traffic Sentinel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过流量哨兵整合来宾网络使用情况"><span class="nav-number">1.9.</span> <span class="nav-text">通过流量哨兵整合来宾网络使用情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置区域中VLAN和虚拟机的最大值"><span class="nav-number">1.10.</span> <span class="nav-text">设置区域中VLAN和虚拟机的最大值</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

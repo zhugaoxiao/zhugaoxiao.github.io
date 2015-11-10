@@ -1,0 +1,729 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="CloudStack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CloudStack在实验室实践过程，创建模版部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudStack 创建模版">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/10/cloudstack-templates/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="CloudStack在实验室实践过程，创建模版部分。">
+<meta property="og:updated_time" content="2015-10-23T13:53:27.588Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudStack 创建模版">
+<meta name="twitter:description" content="CloudStack在实验室实践过程，创建模版部分。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> CloudStack 创建模版 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              CloudStack 创建模版
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-10T20:46:25+08:00" content="2015-10-10">
+            2015-10-10
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/云计算/" itemprop="url" rel="index">
+                  <span itemprop="name">云计算</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/10/cloudstack-templates/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/10/cloudstack-templates/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>CloudStack在实验室实践过程，创建模版部分。</p>
+<a id="more"></a>
+<h1 id="Linux模板">Linux模板</h1><p>为了使用模板部署Linux VMs，可以按照此文档来准备Linux模板。这个指导目前覆盖了传统的安装，但不会涉及用户数据和cloud-init，还有假设在安装过程中安装了openssh服务。</p>
+<h1 id="创建Linux模板过程">创建Linux模板过程</h1><h2 id="安装">安装</h2><ul>
+<li>最小化安装</li>
+<li>保持localhost主机名<br>通常在安装过程中给VM命名是一个好的做法，这么做能确保某些组件如LVM不会只在一台机器中出现，但此处推荐在安装过程中使用“localhost”命名。</li>
+</ul>
+<h3 id="更新YUM源">更新YUM源</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br><span class="line">wget http://<span class="number">192.178</span>.<span class="number">102.249</span>/<span class="built_in">help</span>/CentOS-Base.repo -P /etc/yum.repos.d/</span><br><span class="line">wget http://<span class="number">192.178</span>.<span class="number">102.249</span>/<span class="built_in">help</span>/epel6.repo -P /etc/yum.repos.d/</span><br></pre></td></tr></table></figure>
+<h3 id="更新、安装主模板中的包">更新、安装主模板中的包</h3><ul>
+<li>Ubuntu</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">sudo -i</span><br><span class="line">apt-get <span class="operator"><span class="keyword">update</span></span><br><span class="line">apt-<span class="keyword">get</span> <span class="keyword">upgrade</span> -y</span><br><span class="line">apt-<span class="keyword">get</span> <span class="keyword">install</span> -y acpid ntp</span><br><span class="line">reboot</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>CentOS</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">ifup eth0</span><br><span class="line">yum update -y</span><br><span class="line">yum <span class="keyword">install</span> -y screen wget</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<h3 id="安装vmware_tools">安装vmware tools</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">mount /dev/cdrom /mnt</span><br><span class="line">tar -zxvf VMwareTools-<span class="number">9.4</span><span class="number">.11</span>-<span class="number">2400950.</span>tar.gz -C /tmp</span><br><span class="line">yum install -y perl</span><br><span class="line">./vmware-install.pl</span><br></pre></td></tr></table></figure>
+<h3 id="安装vnc服务端，并开启防火墙">安装vnc服务端，并开启防火墙</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum install -y tigervnc tigervnc-server</span><br><span class="line">vncserver :<span class="number">1</span></span><br><span class="line">vi /etc/sysconfig/vncservers</span><br><span class="line">VNCSERVERS=<span class="string">"1:root"</span></span><br><span class="line">VNCSERVERARGS[<span class="number">1</span>]=<span class="string">"-geometry 1280x720"</span></span><br><span class="line"></span><br><span class="line">chkconfig --level <span class="number">35</span> vncserver on</span><br><span class="line">ps -ef|grep Xvnc</span><br><span class="line"></span><br><span class="line">/sbin/iptables -I INPUT -p tcp --dport <span class="number">5901</span> -j ACCEPT</span><br><span class="line">/sbin/iptables -I INPUT -p tcp --dport <span class="number">5801</span> -j ACCEPT</span><br><span class="line">/etc/rc.d/init.d/iptables save</span><br></pre></td></tr></table></figure>
+<h3 id="安装falcon-agent">安装falcon-agent</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">yum <span class="operator"><span class="keyword">install</span> -y golang</span><br><span class="line">//<span class="keyword">set</span> $GOPATH <span class="keyword">and</span> $GOROOT</span><br><span class="line"><span class="keyword">export</span> GOPATH=/usr/<span class="keyword">share</span></span><br><span class="line"><span class="keyword">export</span> GOROOT=/usr/lib/golang</span><br><span class="line"></span><br><span class="line">mkdir -<span class="keyword">p</span> $GOPATH/src/github.com/<span class="keyword">open</span>-falcon</span><br><span class="line">cd $GOPATH/src/github.com/<span class="keyword">open</span>-falcon</span><br><span class="line">git <span class="keyword">clone</span> https://github.com/<span class="keyword">open</span>-falcon/<span class="keyword">agent</span>.git</span><br><span class="line">cd <span class="keyword">agent</span></span><br><span class="line"><span class="keyword">go</span> <span class="keyword">get</span> ./...</span><br><span class="line">./control <span class="keyword">build</span></span><br><span class="line"></span><br><span class="line">cd $GOPATH/src/github.com/<span class="keyword">open</span>-falcon/<span class="keyword">agent</span>/</span><br><span class="line">mv cfg.example.<span class="keyword">json</span> cfg.<span class="keyword">json</span></span><br><span class="line">vim cfg.<span class="keyword">json</span></span><br><span class="line">// 修改 transfer这个配置项的enabled为 <span class="literal">true</span>，表示开启向transfer发送数据的功能</span><br><span class="line">// 修改 transfer这个配置项的addr为：<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8433</span> (改地址为transfer组件的监听地址)</span><br><span class="line">// 默认情况下（所有组件都在同一台服务器上），保持cfg.<span class="keyword">json</span>不变即可</span><br><span class="line">// cfg.<span class="keyword">json</span>中的各配置项，可以参考 https://github.com/<span class="keyword">open</span>-falcon/<span class="keyword">agent</span>/<span class="built_in">blob</span>/<span class="keyword">master</span>/README.md</span><br><span class="line">//配置防火墙</span><br><span class="line">/sbin/iptables -<span class="keyword">I</span> <span class="keyword">INPUT</span> -<span class="keyword">p</span> tcp <span class="comment">--dport 1988 -j ACCEPT</span></span><br><span class="line">/sbin/iptables -<span class="keyword">I</span> <span class="keyword">INPUT</span> -<span class="keyword">p</span> tcp <span class="comment">--dport 8433 -j ACCEPT</span></span><br><span class="line">/sbin/iptables -<span class="keyword">I</span> <span class="keyword">INPUT</span> -<span class="keyword">p</span> tcp <span class="comment">--dport 6030 -j ACCEPT</span></span><br><span class="line">/etc/rc.<span class="keyword">d</span>/init.<span class="keyword">d</span>/iptables <span class="keyword">save</span></span><br><span class="line"></span><br><span class="line">//启动</span><br><span class="line">./control <span class="keyword">start</span></span><br><span class="line">//查看日志</span><br><span class="line">./control tail</span></span><br></pre></td></tr></table></figure>
+<p>goto <a href="http://localhost:1988" target="_blank" rel="external">http://localhost:1988</a></p>
+<p>配置falcon-agent开机自启动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">vi /etc/init.d/open-falcon-agent</span><br><span class="line"></span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="comment">### BEGIN INIT INFO</span></span><br><span class="line"><span class="comment"># Provides:          open-falcon open-falcon-agent</span></span><br><span class="line"><span class="comment"># Default-Start:     2 3 4 5</span></span><br><span class="line"><span class="comment"># Default-Stop:      0 1 6</span></span><br><span class="line"><span class="comment"># Description:       open-falcon open-falcon-agent</span></span><br><span class="line"><span class="comment">### END INIT INFO</span></span><br><span class="line"></span><br><span class="line">SCRIPT=<span class="string">"/opt/open-falcon/agent/control"</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="title">start</span></span>() &#123;</span><br><span class="line">   <span class="variable">$SCRIPT</span> start</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="title">stop</span></span>() &#123;</span><br><span class="line">   <span class="variable">$SCRIPT</span> stop</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></span><br><span class="line">   start)</span><br><span class="line">     start</span><br><span class="line">     ;;</span><br><span class="line">   stop)</span><br><span class="line">     stop</span><br><span class="line">     ;;</span><br><span class="line">   restart)</span><br><span class="line">     stop</span><br><span class="line">     start</span><br><span class="line">     ;;</span><br><span class="line">   *)</span><br><span class="line">     <span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$0</span> &#123;start|stop|restart&#125;"</span></span><br><span class="line"> <span class="keyword">esac</span></span><br></pre></td></tr></table></figure></p>
+<p>添加开机启动<br><figure class="highlight perl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">chkconfig --add <span class="keyword">open</span>-falcon-agent</span><br><span class="line"><span class="keyword">chmod</span> <span class="number">775</span> /etc/init.d/<span class="keyword">open</span>-falcon-agent</span><br><span class="line">service <span class="keyword">open</span>-falcon-agent restart</span><br></pre></td></tr></table></figure></p>
+<h2 id="其他配置">其他配置</h2><h3 id="配置命令回溯">配置命令回溯</h3><figure class="highlight julia"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">vi  /etc/profile</span><br><span class="line"><span class="comment">#Record history operation</span></span><br><span class="line"><span class="keyword">export</span> HISTTIMEFORMAT=<span class="string">"[%Y-%m-%d %H:%M:%S] [`who am i 2&gt;/dev/null| awk '&#123;print <span class="variable">$NF</span>&#125;'|sed -e 's/[()]//g'`] "</span></span><br><span class="line"><span class="keyword">export</span> PROMPT_COMMAND='\</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$OLD_PWD</span>"</span> ];then</span><br><span class="line">    <span class="keyword">export</span> OLD_PWD=$PWD;</span><br><span class="line">fi;</span><br><span class="line"><span class="keyword">if</span> [ ! -z <span class="string">"<span class="variable">$LAST_CMD</span>"</span> ] &amp;&amp; [ <span class="string">"<span class="subst">$(history <span class="number">1</span>)</span>"</span> != <span class="string">"<span class="variable">$LAST_CMD</span>"</span> ]; then</span><br><span class="line">    logger -t <span class="string">`whoami`</span>_shell_cmd <span class="string">"[<span class="variable">$OLD_PWD</span>]<span class="subst">$(history <span class="number">1</span>)</span>"</span>;</span><br><span class="line">fi ;</span><br><span class="line"><span class="keyword">export</span> LAST_CMD=<span class="string">"<span class="subst">$(history <span class="number">1</span>)</span>"</span>;</span><br><span class="line"><span class="keyword">export</span> OLD_PWD=$PWD;'</span><br></pre></td></tr></table></figure>
+<h3 id="主机名管理">主机名管理</h3><ul>
+<li>CentOS</li>
+</ul>
+<p>默认情况下CentOS在启动的时候配置主机名。</p>
+<ul>
+<li>Ubuntu</li>
+</ul>
+<p>Ubuntu没有此功能，对于Ubuntu，安装时使用下面步骤。一个模板化的VM使用<code>/etc/dhcp/dhclient-exit-hooks.d</code>中的一个自定义脚本来设置主机名，这个脚本首先检查当前的主机名是是否是hostname，如果是，它将从DHCP租约文件获取host-name，domain-name和fix-ip，并且使用这些值来设置主机名并将其追加到 /etc/hosts 文件以用来本地主机名解析。一旦这个脚本或者一个用户从本地改变了主机名，那么它将不再根据新的主机名调整系统文件。此脚本同样也会重建openssh-server keys，这个keys在做模板(如下所示)之前被删除了。保存下面的脚本到<code>/etc/dhcp/dhclient-exit-hooks.d/sethostname</code>，并且调整权限。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">vi /etc/dhcp/dhclient-exit-hooks.d/sethostname</span><br><span class="line"></span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="comment"># dhclient change hostname script for Ubuntu</span></span><br><span class="line">oldhostname=$(hostname <span class="operator">-s</span>)</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$oldhostname</span> = <span class="string">'localhost'</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    sleep <span class="number">10</span> <span class="comment"># Wait for configuration to be written to disk</span></span><br><span class="line">    hostname=$(cat /var/lib/dhcp/dhclient.eth0.leases  |  awk <span class="string">' /host-name/ &#123; host = $3 &#125;  END &#123; printf host &#125; '</span> | sed     <span class="string">'s/[";]//g'</span> )</span><br><span class="line">    fqdn=<span class="string">"<span class="variable">$hostname</span>.<span class="variable">$(cat /var/lib/dhcp/dhclient.eth0.leases  |  awk ' /domain-name/ &#123; domain = $3 &#125;  END &#123; printf     domain &#125; ' | sed 's/[";]//g')</span>"</span></span><br><span class="line">    ip=$(cat /var/lib/dhcp/dhclient.eth0.leases  |  awk <span class="string">' /fixed-address/ &#123; lease = $2 &#125;  END &#123; printf lease &#125; '</span> | sed     <span class="string">'s/[";]//g'</span>)</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"cloudstack-hostname: Hostname _localhost_ detected. Changing hostname and adding hosts."</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">" Hostname: <span class="variable">$hostname</span> \n FQDN: <span class="variable">$fqdn</span> \n IP: <span class="variable">$ip</span>"</span></span><br><span class="line">    <span class="comment"># Update /etc/hosts</span></span><br><span class="line">    awk -v i=<span class="string">"<span class="variable">$ip</span>"</span> -v f=<span class="string">"<span class="variable">$fqdn</span>"</span> -v h=<span class="string">"<span class="variable">$hostname</span>"</span> <span class="string">"/^127/&#123;x=1&#125; !/^127/ &amp;&amp; x &#123; x=0; print i,f,h; &#125; &#123; print <span class="variable">$0</span>; &#125;"</span> /etc/  hosts &gt; /etc/hosts.dhcp.tmp</span><br><span class="line">    mv /etc/hosts /etc/hosts.dhcp.bak</span><br><span class="line">    mv /etc/hosts.dhcp.tmp /etc/hosts</span><br><span class="line">    <span class="comment"># Rename Host</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$hostname</span> &gt; /etc/hostname</span><br><span class="line">    hostname <span class="variable">$hostname</span></span><br><span class="line">    <span class="comment"># Recreate SSH2</span></span><br><span class="line">    <span class="built_in">export</span> DEBIAN_FRONTEND=noninteractive</span><br><span class="line">    dpkg-reconfigure openssh-server</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment">### End of Script ###</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">chmod <span class="number">774</span> /etc/dhcp/dhclient-<span class="built_in">exit</span>-hooks.d/sethostname</span><br></pre></td></tr></table></figure>
+<p>为了Ubuntu DHCP的脚本功能和CentOS dhclient能设置VM主机名，他们都去要设置主模板的主机名设置为“localhost”，运行下面的命令来更改Ubuntu主机名。</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="built_in">hostname</span> localhost</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"localhost"</span> &gt; /etc/<span class="built_in">hostname</span></span><br></pre></td></tr></table></figure>
+<h3 id="密码管理">密码管理</h3><p>设置用户密码期限，这步是要在模板部署之后强制用户更改VM的密码。<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">passwd <span class="comment">--expire root</span></span><br></pre></td></tr></table></figure></p>
+<p>首先确认root用户是启用的并且使用了密码，然后使用root登录。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">passwd root</span><br><span class="line"><span class="built_in">logout</span></span><br></pre></td></tr></table></figure></p>
+<p>使用root，移除任何在安装过程中创建的自定义用户账户。</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">deluser myuser <span class="comment">--remove-home</span></span><br></pre></td></tr></table></figure>
+<p>关于设置密码管理脚本的相关说明，请参阅给你的模板添加密码管理 ，这样能允许CloudStack通过web界面更改root密码。</p>
+<blockquote>
+<p>警告</p>
+</blockquote>
+<p>当准备好做主模板的时候请运行下列步骤。如果主模板在这些步骤期间重启了，那么你要重新运行所有的步骤。在这个过程的最后，主模板应该关机并且将其创建为模板，然后再部署。</p>
+<h3 id="移除udev持久设备规则">移除udev持久设备规则</h3><p>这一步会移除模板的特殊信息，如网络MAC地址，租约信息和CD块设备，这个文件会在下次启动时自动生成。</p>
+<ul>
+<li>Ubuntu</li>
+</ul>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">rm -f /etc/udev/rules.d/<span class="number">70</span>*</span><br><span class="line">rm -f /var/<span class="class"><span class="keyword">lib</span>/<span class="title">dhcp</span>/<span class="title">dhclient</span>.*</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>CentOS</li>
+</ul>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">rm -f /etc/udev/rules.d/<span class="number">70</span>*</span><br><span class="line">rm -f /var/<span class="class"><span class="keyword">lib</span>/<span class="title">dhclient</span>/*</span></span><br></pre></td></tr></table></figure>
+<h3 id="移除SSH_Keys">移除SSH Keys</h3><p>这步是为了确认所有要作为模板的VMs的SSH Keys都不相同，否则这样会降低虚拟机的安全性。</p>
+<figure class="highlight gherkin"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">rm -f /etc/ssh/<span class="keyword">*</span>key<span class="keyword">*</span></span><br></pre></td></tr></table></figure>
+<h3 id="清除日志文件">清除日志文件</h3><p>从主模板移除旧的日志文件是一个好习惯。</p>
+<figure class="highlight q"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">cat /<span class="built_in">dev</span>/<span class="built_in">null</span> &gt; /<span class="built_in">var</span>/log/audit/audit.log <span class="number">2</span>&gt;/<span class="built_in">dev</span>/<span class="built_in">null</span></span><br><span class="line">cat /<span class="built_in">dev</span>/<span class="built_in">null</span> &gt; /<span class="built_in">var</span>/log/wtmp <span class="number">2</span>&gt;/<span class="built_in">dev</span>/<span class="built_in">null</span></span><br><span class="line">logrotate -f /etc/logrotate.conf <span class="number">2</span>&gt;/<span class="built_in">dev</span>/<span class="built_in">null</span></span><br><span class="line">rm -f /<span class="built_in">var</span>/log/*-* /<span class="built_in">var</span>/log/*.gz <span class="number">2</span>&gt;/<span class="built_in">dev</span>/<span class="built_in">null</span></span><br></pre></td></tr></table></figure>
+<h3 id="清除用户历史">清除用户历史</h3><p>清除曾经运行过的bash命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">history</span> -c</span><br><span class="line"><span class="built_in">unset</span> HISTFILE</span><br></pre></td></tr></table></figure>
+<h3 id="网卡配置">网卡配置</h3><p>对于CentOS，必须要修改网络接口的配置文件，在这里我们编辑文件，更改下面的内容。<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line"><span class="constant">DEVICE</span>=eth0</span><br><span class="line"><span class="constant">TYPE</span>=Ethernet</span><br><span class="line"><span class="constant">BOOTPROTO</span>=dhcp</span><br><span class="line"><span class="constant">ONBOOT</span>=yes</span><br></pre></td></tr></table></figure></p>
+<h2 id="创建模板">创建模板</h2><p>现在可以关闭模板VM并且创建模板了！<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">halt</span> -p</span><br></pre></td></tr></table></figure></p>
+<p>现在可以创建模板了。</p>
+<blockquote>
+<p>注意<br>通过Ubuntu和CentOS的模板分发的虚机可能需要重启主机名才生效。</p>
+</blockquote>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CloudStack/" rel="tag">#CloudStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/11/cloudstack-update/" rel="prev">CloudStack系列 升级</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/09/cloudstack-performance/" rel="next">CloudStack系列 调优</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/10/cloudstack-templates/"
+                   data-title="CloudStack 创建模版" data-url="zhugaoxiao.github.io/2015/10/10/cloudstack-templates/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux模板"><span class="nav-number">1.</span> <span class="nav-text">Linux模板</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建Linux模板过程"><span class="nav-number">2.</span> <span class="nav-text">创建Linux模板过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更新YUM源"><span class="nav-number">2.1.1.</span> <span class="nav-text">更新YUM源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新、安装主模板中的包"><span class="nav-number">2.1.2.</span> <span class="nav-text">更新、安装主模板中的包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装vmware_tools"><span class="nav-number">2.1.3.</span> <span class="nav-text">安装vmware tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装vnc服务端，并开启防火墙"><span class="nav-number">2.1.4.</span> <span class="nav-text">安装vnc服务端，并开启防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装falcon-agent"><span class="nav-number">2.1.5.</span> <span class="nav-text">安装falcon-agent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他配置"><span class="nav-number">2.2.</span> <span class="nav-text">其他配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置命令回溯"><span class="nav-number">2.2.1.</span> <span class="nav-text">配置命令回溯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主机名管理"><span class="nav-number">2.2.2.</span> <span class="nav-text">主机名管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#密码管理"><span class="nav-number">2.2.3.</span> <span class="nav-text">密码管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移除udev持久设备规则"><span class="nav-number">2.2.4.</span> <span class="nav-text">移除udev持久设备规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移除SSH_Keys"><span class="nav-number">2.2.5.</span> <span class="nav-text">移除SSH Keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清除日志文件"><span class="nav-number">2.2.6.</span> <span class="nav-text">清除日志文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清除用户历史"><span class="nav-number">2.2.7.</span> <span class="nav-text">清除用户历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网卡配置"><span class="nav-number">2.2.8.</span> <span class="nav-text">网卡配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建模板"><span class="nav-number">2.3.</span> <span class="nav-text">创建模板</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

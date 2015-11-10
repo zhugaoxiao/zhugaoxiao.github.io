@@ -1,0 +1,679 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="faq,openstack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="这周在折腾openstack，下面是过程中问题小记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack之kilo安装 FAQ">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/11/03/openstack-FAQ/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="这周在折腾openstack，下面是过程中问题小记。">
+<meta property="og:updated_time" content="2015-11-06T07:47:35.330Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack之kilo安装 FAQ">
+<meta name="twitter:description" content="这周在折腾openstack，下面是过程中问题小记。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> openstack之kilo安装 FAQ | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              openstack之kilo安装 FAQ
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-03T00:00:00+08:00" content="2015-11-03">
+            2015-11-03
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/03/openstack-FAQ/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/03/openstack-FAQ/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>这周在折腾openstack，下面是过程中问题小记。</p>
+<a id="more"></a>
+<h1 id="启动">启动</h1><ol>
+<li>无法启动</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"># systemctl <span class="operator"><span class="keyword">start</span> httpd.service</span><br><span class="line">Job <span class="keyword">for</span> httpd.service <span class="keyword">failed</span>. See <span class="string">'systemctl status httpd.service'</span> <span class="keyword">and</span> <span class="string">'journalctl -xn'</span> <span class="keyword">for</span> details.</span><br><span class="line"># systemctl <span class="keyword">status</span> httpd.service</span><br><span class="line">httpd.service - The Apache <span class="keyword">HTTP</span> <span class="keyword">Server</span></span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/<span class="keyword">system</span>/httpd.service;</span> enabled)</span><br><span class="line">   Active: failed (Result: exit-code) since Wed 2015-11-04 13:07:58 CST; 8s ago</span><br><span class="line">  Process: 13328 ExecStop=/bin/<span class="operator"><span class="keyword">kill</span> -WINCH $&#123;MAINPID&#125; (code=exited, <span class="keyword">status</span>=<span class="number">1</span>/<span class="keyword">FAILURE</span>)</span><br><span class="line">  Process: <span class="number">13327</span> ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND (code=exited, <span class="keyword">status</span>=<span class="number">1</span>/<span class="keyword">FAILURE</span>)</span><br><span class="line"> <span class="keyword">Main</span> PID: <span class="number">13327</span> (code=exited, <span class="keyword">status</span>=<span class="number">1</span>/<span class="keyword">FAILURE</span>)</span><br><span class="line"></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller systemd[<span class="number">1</span>]: <span class="keyword">Starting</span> The Apache <span class="keyword">HTTP</span> <span class="keyword">Server</span>...</span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller httpd[<span class="number">13327</span>]: (<span class="number">13</span>)Permission denied: AH00072: make_sock: could <span class="keyword">not</span> bind <span class="keyword">to</span> address [::]:<span class="number">5000</span></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller httpd[<span class="number">13327</span>]: (<span class="number">13</span>)Permission denied: AH00072: make_sock: could <span class="keyword">not</span> bind <span class="keyword">to</span> address <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">5000</span></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller httpd[<span class="number">13327</span>]: <span class="keyword">no</span> listening sockets available, shutting down</span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller httpd[<span class="number">13327</span>]: AH00015: Unable <span class="keyword">to</span> <span class="keyword">open</span> <span class="keyword">logs</span></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller systemd[<span class="number">1</span>]: httpd.service: <span class="keyword">main</span> process exited, code=exited, <span class="keyword">status</span>=<span class="number">1</span>/<span class="keyword">FAILURE</span></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller <span class="keyword">kill</span>[<span class="number">13328</span>]: <span class="keyword">kill</span>: cannot find process <span class="string">""</span></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller systemd[<span class="number">1</span>]: httpd.service: control process exited, code=exited <span class="keyword">status</span>=<span class="number">1</span></span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller systemd[<span class="number">1</span>]: <span class="keyword">Failed</span> <span class="keyword">to</span> <span class="keyword">start</span> The Apache <span class="keyword">HTTP</span> <span class="keyword">Server</span>.</span><br><span class="line">Nov <span class="number">04</span> <span class="number">13</span>:<span class="number">07</span>:<span class="number">58</span> controller systemd[<span class="number">1</span>]: Unit httpd.service entered <span class="keyword">failed</span> state.</span></span><br></pre></td></tr></table></figure>
+<p>安装openstack-selinux<br><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y openstack-selinux</span><br></pre></td></tr></table></figure></p>
+<h1 id="建实例">建实例</h1><ol>
+<li>无法创建实例</li>
+</ol>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">消息  Build of instance 6a1d5331-542c-4f05-8ef6-df5bc0aea44a aborted: Could not clean up failed build, not rescheduling</span><br><span class="line">编码  500</span><br><span class="line">详情  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/nova/compute/manager.py"</span>, <span class="keyword">line</span> 2235, <span class="keyword">in</span> _do_build_and_run_instance filter_properties) <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/nova/compute/manager.py"</span>, <span class="keyword">line</span> 2349, <span class="keyword">in</span> _build_and_run_instance 'create.<span class="keyword">error</span>', fault=<span class="keyword">e</span>) <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_utils/excutils.py"</span>, <span class="keyword">line</span> 85, <span class="keyword">in</span> __exit__ six.reraise(self.type_, self.value, self.tb) <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/nova/compute/manager.py"</span>, <span class="keyword">line</span> 2333, <span class="keyword">in</span> _build_and_run_instance block_device_info=block_device_info) <span class="keyword">File</span> <span class="string">"/usr/lib64/python2.7/contextlib.py"</span>, <span class="keyword">line</span> 35, <span class="keyword">in</span> __exit__ self.<span class="keyword">gen</span>.throw(<span class="keyword">type</span>, value, traceback) <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/nova/compute/manager.py"</span>, <span class="keyword">line</span> 2485, <span class="keyword">in</span> _build_resources instance_uuid=instance.uuid, reason=msg)</span><br></pre></td></tr></table></figure>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment"># keystone tenant-list | awk '/ service / &#123; print $2 &#125;'</span></span><br><span class="line">/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">python2</span>.7/<span class="title">site</span>-<span class="title">packages</span>/<span class="title">keystoneclient</span>/<span class="title">shell</span>.<span class="title">py</span>:65: <span class="title">DeprecationWarning</span>: <span class="title">The</span> <span class="title">keystone</span> <span class="title">CLI</span> <span class="title">is</span> <span class="title">deprecated</span> <span class="title">in</span> <span class="title">favor</span> <span class="title">of</span> <span class="title">python</span>-<span class="title">openstackclient</span>. <span class="title">For</span> <span class="title">a</span> <span class="title">Python</span> <span class="title">library</span>, <span class="title">continue</span> <span class="title">using</span> <span class="title">python</span>-<span class="title">keystoneclient</span>.</span></span><br><span class="line">  <span class="string">'python-keystoneclient.'</span>, <span class="constant">DeprecationWarning</span>)</span><br><span class="line"><span class="constant">Authorization</span> <span class="constant">Failed</span><span class="symbol">:</span> <span class="constant">The</span> resource could not be found. (<span class="constant">HTTP</span> <span class="number">404</span>) (<span class="constant">Request</span>-<span class="constant">ID</span><span class="symbol">:</span> req-d081607d-<span class="number">0</span>af5-<span class="number">441</span>d-a08a-<span class="number">688</span>db7a45612)</span><br></pre></td></tr></table></figure>
+<p>Failed to connect to server (code: 1006)</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/faq/" rel="tag">#faq</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/04/openstack-cmd-service/" rel="prev">openstack之kilo安装 常用命令</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/02/openstack-telemetry-service/" rel="next">openstack之kilo安装 监控服务</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/11/03/openstack-FAQ/"
+                   data-title="openstack之kilo安装 FAQ" data-url="zhugaoxiao.github.io/2015/11/03/openstack-FAQ/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#启动"><span class="nav-number">1.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#建实例"><span class="nav-number">2.</span> <span class="nav-text">建实例</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

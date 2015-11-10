@@ -1,0 +1,834 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="openstack,swift," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="OpenStack对象存储是一个多租户的对象存储系统，它支持大规模扩展，可以以低成本来管理大型的非结构化数据，通过RESTful HTTP 应用程序接口。
+它包含下列组件：
+
+Proxy servers (swift-proxy-server)接收OpenStack对象存储API和纯粹的HTTP请求以上传文件，更改元数据，以及创建容器。它可服务于在web浏览器下显示文件和容器列表。为了改进性能，代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack之kilo安装 对象存储服务">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/31/openstack-object-service/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="OpenStack对象存储是一个多租户的对象存储系统，它支持大规模扩展，可以以低成本来管理大型的非结构化数据，通过RESTful HTTP 应用程序接口。
+它包含下列组件：
+
+Proxy servers (swift-proxy-server)接收OpenStack对象存储API和纯粹的HTTP请求以上传文件，更改元数据，以及创建容器。它可服务于在web浏览器下显示文件和容器列表。为了改进性能，代">
+<meta property="og:updated_time" content="2015-11-09T12:29:42.833Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack之kilo安装 对象存储服务">
+<meta name="twitter:description" content="OpenStack对象存储是一个多租户的对象存储系统，它支持大规模扩展，可以以低成本来管理大型的非结构化数据，通过RESTful HTTP 应用程序接口。
+它包含下列组件：
+
+Proxy servers (swift-proxy-server)接收OpenStack对象存储API和纯粹的HTTP请求以上传文件，更改元数据，以及创建容器。它可服务于在web浏览器下显示文件和容器列表。为了改进性能，代">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> openstack之kilo安装 对象存储服务 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              openstack之kilo安装 对象存储服务
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-31T00:00:00+08:00" content="2015-10-31">
+            2015-10-31
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/31/openstack-object-service/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/31/openstack-object-service/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>OpenStack对象存储是一个多租户的对象存储系统，它支持大规模扩展，可以以低成本来管理大型的非结构化数据，通过RESTful HTTP 应用程序接口。</p>
+<p>它包含下列组件：</p>
+<ul>
+<li>Proxy servers (swift-proxy-server)<br>接收OpenStack对象存储API和纯粹的HTTP请求以上传文件，更改元数据，以及创建容器。它可服务于在web浏览器下显示文件和容器列表。为了改进性能，代理服务可以使用可选的缓存，通常部署的是memcache。</li>
+<li>Account servers (swift-account-server)<br>管理由对象存储定义的账户。</li>
+<li>Container servers (swift-container-server)<br>管理容器或文件夹的映射，对象存储内部。</li>
+<li>Object servers (swift-object-server)<br>在存储节点管理实际的对象，诸如文件。</li>
+<li>Various periodic processes<br>为了驾驭大型数据存储的任务，复制服务需要在集群内确保一致性和可用性，其他定期进程有审计，更新和reaper。</li>
+<li>WSGI middleware<br>掌控认证，使用OpenStack认证服务。</li>
+</ul>
+<blockquote>
+<p>参考：<a href="http://docs.openstack.org/kilo/install-guide/install/yum/content/ch_swift.html" target="_blank" rel="external">Chapter 9. Add Object Storage</a></p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Install_and_configure_the_controller_node">Install and configure the controller node</h1><p>proxy service可以安装在任意节点，本文装在控制节点。代理服务依赖于例如认证服务所提供的认证和授权机制。但是，与其他服务不同的是，它也提供一个内部的机制可以在没有任何其它OpenStack服务的情况下工作。在配置对象存储服务之间，你必须生成服务凭证和API端点。</p>
+<blockquote>
+<p>[Note]<br>对象存储服务在控制节点上不使用 SQL 数据库，使用在各个存储节点的分布式SQLite数据库。</p>
+</blockquote>
+<p>获取admin权限:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>创建 swift user:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack user <span class="built_in">create</span> swift <span class="comment">--password swift</span></span><br></pre></td></tr></table></figure>
+<p>添加 admin role to the swift user:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_ins">add</span> --project service --<span class="built_ins">user</span> swift admin</span><br></pre></td></tr></table></figure>
+<p>创建 swift service entity:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack service <span class="built_in">create</span> <span class="comment">--name swift \</span></span><br><span class="line">  <span class="comment">--description "OpenStack Object Storage" object-store</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">openstack service create --type  <span class="keyword">object</span>-store --description <span class="string">"OpenStack Object Storage"</span> swift</span><br></pre></td></tr></table></figure>
+<p>创建 Object Storage service API endpoint:</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">openstack endpoint create \</span><br><span class="line">  -<span class="ruby">-publicurl <span class="string">'http://controller:8080/v1/AUTH_%(tenant_id)s'</span> \</span><br><span class="line"></span>  -<span class="ruby">-internalurl <span class="string">'http://controller:8080/v1/AUTH_%(tenant_id)s'</span> \</span><br><span class="line"></span>  -<span class="ruby">-adminurl <span class="symbol">http:</span>/<span class="regexp">/controller:8080 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-region RegionOne \</span><br><span class="line"></span></span>  object-store</span><br></pre></td></tr></table></figure>
+<p>安装软件包:</p>
+<figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">yum install -y openstack-swift-proxy <span class="keyword">python</span>-swiftclient <span class="keyword">python</span>-keystone-auth-token \</span><br><span class="line">  <span class="keyword">python</span>-keystonemiddleware memcached</span><br></pre></td></tr></table></figure>
+<p>从对象存储的仓库源中获取代理服务的配置文件：</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/proxy-server.conf \</span><br><span class="line">  https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/proxy-server.conf-sample?h=stable/</span>kilo</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/swift/proxy-server.conf 配置文件:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">cp /etc/swift/proxy-server.conf /etc/swift/proxy-server.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line">bind_port = 8080</span><br><span class="line">user = swift</span><br><span class="line">swift_dir = /etc/swift</span><br><span class="line"></span><br><span class="line">[pipeline:main]</span><br><span class="line">pipeline = catch_errors gatekeeper healthcheck proxy-logging <span class="operator"><span class="keyword">cache</span> container_sync <span class="keyword">bulk</span> ratelimit authtoken keystoneauth <span class="keyword">container</span>-quotas <span class="keyword">account</span>-quotas slo dlo proxy-<span class="keyword">logging</span> proxy-<span class="keyword">server</span></span><br><span class="line"></span><br><span class="line">[app:proxy-<span class="keyword">server</span>]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#proxy</span><br><span class="line">account_autocreate = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">[filter:keystoneauth]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#keystoneauth</span><br><span class="line">operator_roles = <span class="keyword">admin</span>,<span class="keyword">user</span></span><br><span class="line"># operator_roles = <span class="keyword">admin</span>,__member__</span><br><span class="line">[filter:authtoken]</span><br><span class="line">paste.filter_factory = keystonemiddleware.auth_token:filter_factory</span><br><span class="line">auth_uri = <span class="keyword">http</span>://controller:<span class="number">5000</span></span><br><span class="line">auth_url = <span class="keyword">http</span>://controller:<span class="number">35357</span></span><br><span class="line">auth_plugin = <span class="keyword">password</span></span><br><span class="line">project_domain_id = <span class="keyword">default</span></span><br><span class="line">user_domain_id = <span class="keyword">default</span></span><br><span class="line">project_name = service</span><br><span class="line">username = swift</span><br><span class="line"><span class="keyword">password</span> = swift</span><br><span class="line">delay_auth_decision = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">[filter:<span class="keyword">cache</span>]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#memcache</span><br><span class="line">memcache_servers = <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">11211</span></span><br><span class="line"></span><br><span class="line">[filter:healthcheck]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#healthcheck</span><br><span class="line"></span><br><span class="line">[filter:catch_errors]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#catch_errors</span><br><span class="line"></span><br><span class="line">[filter:ratelimit]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#ratelimit</span><br><span class="line"></span><br><span class="line">[filter:domain_remap]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#domain_remap</span><br><span class="line"></span><br><span class="line">[filter:cname_lookup]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#cname_lookup</span><br><span class="line"></span><br><span class="line">[filter:staticweb]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#staticweb</span><br><span class="line"></span><br><span class="line">[filter:tempurl]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#tempurl</span><br><span class="line"></span><br><span class="line">[filter:formpost]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#formpost</span><br><span class="line"></span><br><span class="line">[filter:name_check]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#name_check</span><br><span class="line"></span><br><span class="line">[filter:<span class="keyword">list</span>-endpoints]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#list_endpoints</span><br><span class="line"></span><br><span class="line">[filter:proxy-<span class="keyword">logging</span>]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#proxy_logging</span><br><span class="line"></span><br><span class="line">[filter:<span class="keyword">bulk</span>]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#<span class="keyword">bulk</span></span><br><span class="line"></span><br><span class="line">[filter:slo]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#slo</span><br><span class="line"></span><br><span class="line">[filter:dlo]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#dlo</span><br><span class="line"></span><br><span class="line">[filter:<span class="keyword">container</span>-quotas]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#container_quotas</span><br><span class="line"></span><br><span class="line">[filter:<span class="keyword">account</span>-quotas]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#account_quotas</span><br><span class="line"></span><br><span class="line">[filter:gatekeeper]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#gatekeeper</span><br><span class="line"></span><br><span class="line">[filter:container_sync]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#container_sync</span><br><span class="line"></span><br><span class="line">[filter:xprofile]</span><br><span class="line"><span class="keyword">use</span> = egg:swift#xprofile<span class="string">"&gt;/etc/swift/proxy-server.conf</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_and_configure_the_storage_nodes">Install and configure the storage nodes</h1><p>This section describes how to install and configure storage nodes that operate the account, container, and object services. For simplicity, this configuration references two storage nodes, each containing two empty local block storage devices. Each of the devices, /dev/sdb and /dev/sdc, must contain a suitable partition table with one partition occupying the entire device. Although the Object Storage service supports any file system with extended attributes (xattr), testing and benchmarking indicate the best performance and reliability on XFS. For more information on horizontally scaling your environment, see the Deployment Guide.</p>
+<p>在您安装和配置卷服务之前，您必须先配置存储节点。类似于控制节点，存储节点包含一个管理网络接口上的网络。存储节点可以选择性地包含第二个网络接口到一个独立地网络上，用以复制。</p>
+<p>配置所有节点 /etc/hosts 文件:</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line">echo <span class="string">"# object1</span></span><br><span class="line"><span class="number">10.0</span>.<span class="number">0.51</span>        object1</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># object2</span></span><br><span class="line"><span class="number">10.0</span>.<span class="number">0.52</span>        object2<span class="string">"&gt;&gt; /etc/hosts</span></span><br></pre></td></tr></table></figure>
+<p>安装相关支撑软件包:</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y xfsprogs rsync</span><br></pre></td></tr></table></figure>
+<p>格式化 /dev/sdb1 and /dev/sdc1 partitions as XFS:</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">fdisk <span class="regexp">/dev/</span>sdb</span><br><span class="line">fdisk <span class="regexp">/dev/</span>sdc</span><br><span class="line">mkfs.xfs <span class="regexp">/dev/</span>sdb1</span><br><span class="line">mkfs.xfs <span class="regexp">/dev/</span>sdc1</span><br></pre></td></tr></table></figure>
+<p>创建 mount point directory structure:</p>
+<figure class="highlight perl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">mkdir</span> -p /srv/node/sdb1</span><br><span class="line"><span class="keyword">mkdir</span> -p /srv/node/sdc1</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/fstab 文件:</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo <span class="string">"</span><br><span class="line">/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 2</span><br><span class="line">/dev/sdc1 /srv/node/sdc1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 2"</span><span class="prompt">&gt;&gt;</span>/etc/fstab</span><br></pre></td></tr></table></figure>
+<p>挂载 devices:</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">mount</span> /srv/node/sdb1</span><br><span class="line">mount /srv/node/sdc1</span><br></pre></td></tr></table></figure>
+<p>编辑/etc/rsyncd.conf 文件:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">echo "uid = swift</span><br><span class="line">gid = swift</span><br><span class="line">log file = /var/log/rsyncd.log</span><br><span class="line">pid file = /var/run/rsyncd.pid</span><br><span class="line">address = MANAGEMENT_INTERFACE_IP_ADDRESS</span><br><span class="line"></span><br><span class="line">[account]</span><br><span class="line">max connections = 2</span><br><span class="line">path = /srv/node/</span><br><span class="line">read only = false</span><br><span class="line"><span class="operator"><span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">lock</span>/<span class="keyword">account</span>.<span class="keyword">lock</span></span><br><span class="line"></span><br><span class="line">[<span class="keyword">container</span>]</span><br><span class="line"><span class="keyword">max</span> connections = <span class="number">2</span></span><br><span class="line"><span class="keyword">path</span> = /srv/node/</span><br><span class="line"><span class="keyword">read</span> <span class="keyword">only</span> = <span class="literal">false</span></span><br><span class="line"><span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">lock</span>/<span class="keyword">container</span>.<span class="keyword">lock</span></span><br><span class="line"></span><br><span class="line">[<span class="keyword">object</span>]</span><br><span class="line"><span class="keyword">max</span> connections = <span class="number">2</span></span><br><span class="line"><span class="keyword">path</span> = /srv/node/</span><br><span class="line"><span class="keyword">read</span> <span class="keyword">only</span> = <span class="literal">false</span></span><br><span class="line"><span class="keyword">lock</span> <span class="keyword">file</span> = /<span class="keyword">var</span>/<span class="keyword">lock</span>/<span class="keyword">object</span>.<span class="keyword">lock</span><span class="string">"&gt;/etc/rsyncd.conf</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]    Note<br>The rsync service requires no authentication, so consider running it on a private network.</p>
+</blockquote>
+<p>启动 rsyncd service 并配置开机启动:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl <span class="built_in">enable</span> rsyncd.service</span><br><span class="line">systemctl start rsyncd.service</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]<br>Perform these steps on each storage node.</p>
+</blockquote>
+<p>安装软件包:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">yum <span class="operator"><span class="keyword">install</span> -y openstack-swift-<span class="keyword">account</span> openstack-swift-<span class="keyword">container</span> \</span><br><span class="line"> openstack-swift-<span class="keyword">object</span></span></span><br></pre></td></tr></table></figure>
+<p>从对象存储资源仓库中获取帐户、容器和对象服务的配置文件：</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"># curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/account-server.conf \</span><br><span class="line"> https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/account-server.conf-sample?h=stable/</span>kilo</span><br><span class="line"># curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/container-server.conf \</span><br><span class="line"> https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/container-server.conf-sample?h=stable/</span>kilo</span><br><span class="line"># curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/object-server.conf \</span><br><span class="line"> https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/object-server.conf-sample?h=stable/</span>kilo</span><br><span class="line"># curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/container-reconciler.conf \</span><br><span class="line"> https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/container-reconciler.conf-sample?h=stable/</span>kilo</span><br><span class="line"># curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/object-expirer.conf \</span><br><span class="line"> https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/object-expirer.conf-sample?h=stable/</span>kilo</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/swift/account-server.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/swift/account-server.conf /etc/swift/account-server.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">bind_ip</span> = 0.0.0.0</span><br><span class="line"><span class="constant">bind_port</span> = 6002</span><br><span class="line"><span class="constant">user</span> = swift</span><br><span class="line"><span class="constant">swift_dir</span> = /etc/swift</span><br><span class="line"><span class="constant">devices</span> = /srv/node</span><br><span class="line"></span><br><span class="line">[pipeline:main]</span><br><span class="line"><span class="constant">pipeline</span> = healthcheck recon account-server</span><br><span class="line"></span><br><span class="line">[app:account-server]</span><br><span class="line"><span class="constant">use</span> = egg:swift#account</span><br><span class="line"></span><br><span class="line">[filter:healthcheck]</span><br><span class="line"><span class="constant">use</span> = egg:swift#healthcheck</span><br><span class="line"></span><br><span class="line">[filter:recon]</span><br><span class="line"><span class="constant">use</span> = egg:swift#recon</span><br><span class="line"><span class="constant">recon_cache_path</span> = /var/cache/swift</span><br><span class="line"></span><br><span class="line">[account-replicator]</span><br><span class="line"></span><br><span class="line">[account-auditor]</span><br><span class="line"></span><br><span class="line">[account-reaper]</span><br><span class="line"></span><br><span class="line">[filter:xprofile]</span><br><span class="line"><span class="constant">use</span> = egg:swift#xprofile"&gt;/etc/swift/account-server.conf</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/swift/container-server.conf 文件:</p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">cp /etc/swift/<span class="keyword">container</span>-server.conf /etc/swift/<span class="keyword">container</span>-server.confbak</span><br><span class="line">echo <span class="string">"<span class="subst">[DEFAULT]</span></span><br><span class="line">bind_ip = 0.0.0.0</span><br><span class="line">bind_port = 6001</span><br><span class="line">user = swift</span><br><span class="line">swift_dir = /etc/swift</span><br><span class="line">devices = /srv/node</span><br><span class="line"></span><br><span class="line"><span class="subst">[pipeline:main]</span></span><br><span class="line">pipeline = healthcheck recon container-server</span><br><span class="line"></span><br><span class="line"><span class="subst">[app:container-server]</span></span><br><span class="line">use = egg:swift#container</span><br><span class="line"></span><br><span class="line"><span class="subst">[filter:healthcheck]</span></span><br><span class="line">use = egg:swift#healthcheck</span><br><span class="line"></span><br><span class="line"><span class="subst">[filter:recon]</span></span><br><span class="line">use = egg:swift#recon</span><br><span class="line">recon_cache_path = /var/cache/swift</span><br><span class="line"></span><br><span class="line"><span class="subst">[container-replicator]</span></span><br><span class="line"></span><br><span class="line"><span class="subst">[container-updater]</span></span><br><span class="line"></span><br><span class="line"><span class="subst">[container-auditor]</span></span><br><span class="line"></span><br><span class="line"><span class="subst">[container-sync]</span></span><br><span class="line"></span><br><span class="line"><span class="subst">[filter:xprofile]</span></span><br><span class="line">use = egg:swift#xprofile"</span>&gt;/etc/swift/<span class="keyword">container</span>-server.conf</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/swift/object-server.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/swift/object-server.conf /etc/swift/object-server.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">bind_ip</span> = 0.0.0.0</span><br><span class="line"><span class="constant">bind_port</span> = 6000</span><br><span class="line"><span class="constant">user</span> = swift</span><br><span class="line"><span class="constant">swift_dir</span> = /etc/swift</span><br><span class="line"><span class="constant">devices</span> = /srv/node</span><br><span class="line"></span><br><span class="line">[pipeline:main]</span><br><span class="line"><span class="constant">pipeline</span> = healthcheck recon object-server</span><br><span class="line"></span><br><span class="line">[app:object-server]</span><br><span class="line"><span class="constant">use</span> = egg:swift#object</span><br><span class="line"></span><br><span class="line">[filter:healthcheck]</span><br><span class="line"><span class="constant">use</span> = egg:swift#healthcheck</span><br><span class="line"></span><br><span class="line">[filter:recon]</span><br><span class="line"><span class="constant">use</span> = egg:swift#recon</span><br><span class="line"><span class="constant">recon_cache_path</span> = /var/cache/swift</span><br><span class="line"><span class="constant">recon_lock_path</span> = /var/lock</span><br><span class="line"></span><br><span class="line">[object-replicator]</span><br><span class="line"></span><br><span class="line">[object-reconstructor]</span><br><span class="line"></span><br><span class="line">[object-updater]</span><br><span class="line"></span><br><span class="line">[object-auditor]</span><br><span class="line"></span><br><span class="line">[filter:xprofile]</span><br><span class="line"><span class="constant">use</span> = egg:swift#xprofile"&gt;/etc/swift/object-server.conf</span><br></pre></td></tr></table></figure>
+<p>编辑/etc/swift/container-reconciler.conf：<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment"># cp /etc/swift/container-reconciler.conf /etc/swift/container-reconciler.confbak</span></span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="comment"># swift_dir = /etc/swift</span></span><br><span class="line"><span class="comment"># user = swift</span></span><br><span class="line"><span class="comment"># You can specify default log routing here if you want:</span></span><br><span class="line"><span class="comment"># log_name = swift</span></span><br><span class="line"></span><br><span class="line">[container-reconciler]</span><br><span class="line"><span class="comment"># reclaim_age = 604800</span></span><br><span class="line"><span class="comment"># The cycle time of the daemon</span></span><br><span class="line"><span class="comment"># interval = 30</span></span><br><span class="line"><span class="comment"># Server errors from requests will be retried by default</span></span><br><span class="line"><span class="comment"># request_tries = 3</span></span><br><span class="line"></span><br><span class="line">[pipeline:main]</span><br><span class="line"><span class="constant">pipeline</span> = catch_errors proxy-logging cache proxy-server</span><br><span class="line"></span><br><span class="line">[app:proxy-server]</span><br><span class="line"><span class="constant">use</span> = egg:swift#proxy</span><br><span class="line"></span><br><span class="line">[filter:cache]</span><br><span class="line"><span class="constant">use</span> = egg:swift#memcache</span><br><span class="line"></span><br><span class="line">[filter:proxy-logging]</span><br><span class="line"><span class="constant">use</span> = egg:swift#proxy_logging</span><br><span class="line"></span><br><span class="line">[filter:catch_errors]</span><br><span class="line"><span class="constant">use</span> = egg:swift#catch_errors"&gt;/etc/swift/container-reconciler.conf</span><br></pre></td></tr></table></figure></p>
+<p>编辑/etc/swift/object-expirer.conf：<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/swift/object-expirer.conf /etc/swift/object-expirer.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="comment"># swift_dir = /etc/swift</span></span><br><span class="line"><span class="comment"># user = swift</span></span><br><span class="line"><span class="comment"># You can specify default log routing here if you want:</span></span><br><span class="line"><span class="comment"># log_name = swift</span></span><br><span class="line"><span class="comment"># log_facility = LOG_LOCAL0</span></span><br><span class="line"><span class="comment"># log_level = INFO</span></span><br><span class="line"><span class="comment"># log_address = /dev/log</span></span><br><span class="line"><span class="comment"># The following caps the length of log lines to the value given; no limit if</span></span><br><span class="line"><span class="comment"># set to 0, the default.</span></span><br><span class="line"><span class="comment"># log_max_line_length = 0</span></span><br><span class="line"></span><br><span class="line">[object-expirer]</span><br><span class="line"><span class="comment"># interval = 300</span></span><br><span class="line"><span class="comment"># auto_create_account_prefix = .</span></span><br><span class="line"><span class="comment"># expiring_objects_account_name = expiring_objects</span></span><br><span class="line"><span class="comment"># report_interval = 300</span></span><br><span class="line"><span class="comment"># concurrency = 1</span></span><br><span class="line"></span><br><span class="line">[pipeline:main]</span><br><span class="line"><span class="constant">pipeline</span> = catch_errors proxy-logging cache proxy-server</span><br><span class="line"></span><br><span class="line">[app:proxy-server]</span><br><span class="line"><span class="constant">use</span> = egg:swift#proxy</span><br><span class="line"><span class="comment"># See proxy-server.conf-sample for options</span></span><br><span class="line"></span><br><span class="line">[filter:cache]</span><br><span class="line"><span class="constant">use</span> = egg:swift#memcache</span><br><span class="line"><span class="comment"># See proxy-server.conf-sample for options</span></span><br><span class="line"></span><br><span class="line">[filter:catch_errors]</span><br><span class="line"><span class="constant">use</span> = egg:swift#catch_errors</span><br><span class="line"><span class="comment"># See proxy-server.conf-sample for options</span></span><br><span class="line"></span><br><span class="line">[filter:proxy-logging]</span><br><span class="line"><span class="constant">use</span> = egg:swift#proxy_logging"&gt;/etc/swift/object-expirer.conf</span><br></pre></td></tr></table></figure></p>
+<p>确认挂载点目录结构是否有合适的权限：</p>
+<figure class="highlight perl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">chown</span> -R swift:swift /srv/node</span><br></pre></td></tr></table></figure>
+<p>创建 recon目录并确认它有合适的权限：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">mkdir -p /<span class="keyword">var</span>/cache/<span class="built_in">swift</span></span><br><span class="line">chown -<span class="type">R</span> <span class="built_in">swift</span>:<span class="built_in">swift</span> /<span class="keyword">var</span>/cache/<span class="built_in">swift</span></span><br></pre></td></tr></table></figure>
+<h1 id="Create_initial_rings">Create initial rings</h1><p>帐户服务器使用帐户 ring 来维护一个容器的列表。</p>
+<blockquote>
+<p>[Note]<br>Perform these steps on the controller node.</p>
+</blockquote>
+<p>切换到/etc/swift目录。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">cd</span>  /etc/swift</span><br></pre></td></tr></table></figure>
+<p>创建基本的account.builder文件：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder account.builder create <span class="number">10</span> <span class="number">3</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]<br>This command provides no output.</p>
+</blockquote>
+<p>Add each storage node to the ring:</p>
+<p>在每个存储节点执行:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder account.builder add r1z1-<span class="number">10.0</span><span class="number">.0</span><span class="number">.51</span>:<span class="number">6002</span>/sdb1 <span class="number">100</span></span><br><span class="line">swift-ring-builder account.builder add r1z2-<span class="number">10.0</span><span class="number">.0</span><span class="number">.51</span>:<span class="number">6002</span>/sdc1 <span class="number">100</span></span><br><span class="line">swift-ring-builder account.builder add r1z3-<span class="number">10.0</span><span class="number">.0</span><span class="number">.52</span>:<span class="number">6002</span>/sdb1 <span class="number">100</span></span><br><span class="line">swift-ring-builder account.builder add r1z4-<span class="number">10.0</span><span class="number">.0</span><span class="number">.52</span>:<span class="number">6002</span>/sdc1 <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>验证 ring contents:</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder account.builder</span><br></pre></td></tr></table></figure>
+<p>Rebalance the ring:</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">swift-ring-builder </span>account.<span class="keyword">builder </span>rebalance</span><br></pre></td></tr></table></figure>
+<p>Container ring</p>
+<p>对象服务器使用对象环来维护对象在本地设备上的位置列表。</p>
+<p>To create the ring</p>
+<blockquote>
+<p>[Note]<br>Perform these steps on the controller node.</p>
+</blockquote>
+<p>切换到 /etc/swift 目录.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">cd</span> /etc/swift</span><br></pre></td></tr></table></figure>
+<p>创建 base container.builder file:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder container.builder create <span class="number">10</span> <span class="number">3</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]    Note<br>This command provides no output.</p>
+</blockquote>
+<p>添加每个 storage node to the ring:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder container.builder add r1z1-<span class="number">10.0</span><span class="number">.0</span><span class="number">.51</span>:<span class="number">6001</span>/sdb1 <span class="number">100</span></span><br><span class="line">swift-ring-builder container.builder add r1z2-<span class="number">10.0</span><span class="number">.0</span><span class="number">.51</span>:<span class="number">6001</span>/sdc1 <span class="number">100</span></span><br><span class="line">swift-ring-builder container.builder add r1z3-<span class="number">10.0</span><span class="number">.0</span><span class="number">.52</span>:<span class="number">6001</span>/sdb1 <span class="number">100</span></span><br><span class="line">swift-ring-builder container.builder add r1z4-<span class="number">10.0</span><span class="number">.0</span><span class="number">.52</span>:<span class="number">6001</span>/sdc1 <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>验证 ring contents:</p>
+<figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder <span class="keyword">container</span>.builder</span><br></pre></td></tr></table></figure>
+<p>Rebalance the ring:</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">swift-ring-builder </span>container.<span class="keyword">builder </span>rebalance</span><br></pre></td></tr></table></figure>
+<p>Object ring</p>
+<p>The object server uses the object ring to maintain lists of object locations on local devices.</p>
+<p>To create the ring</p>
+<blockquote>
+<p>[Note]    Note<br>Perform these steps on the controller node.</p>
+</blockquote>
+<p>切换到 /etc/swift 目录.<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">cd</span> /etc/swift</span><br></pre></td></tr></table></figure></p>
+<p>创建 base object.builder file:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder object.builder create <span class="number">10</span> <span class="number">3</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>[Note]    Note<br>This command provides no output.</p>
+</blockquote>
+<p>添加每个 storage node to the ring:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder object.builder add r1z1-<span class="number">10.0</span><span class="number">.0</span><span class="number">.51</span>:<span class="number">6000</span>/sdb1 <span class="number">100</span></span><br><span class="line">swift-ring-builder object.builder add r1z2-<span class="number">10.0</span><span class="number">.0</span><span class="number">.51</span>:<span class="number">6000</span>/sdc1 <span class="number">100</span></span><br><span class="line">swift-ring-builder object.builder add r1z3-<span class="number">10.0</span><span class="number">.0</span><span class="number">.52</span>:<span class="number">6000</span>/sdb1 <span class="number">100</span></span><br><span class="line">swift-ring-builder object.builder add r1z4-<span class="number">10.0</span><span class="number">.0</span><span class="number">.52</span>:<span class="number">6000</span>/sdc1 <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>验证 ring contents:</p>
+<figure class="highlight cs"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift-ring-builder <span class="keyword">object</span>.builder</span><br></pre></td></tr></table></figure>
+<p>Rebalance the ring:</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">swift-ring-builder </span>object.<span class="keyword">builder </span>rebalance</span><br></pre></td></tr></table></figure>
+<p>Distribute ring configuration files</p>
+<p>复制 account.ring.gz、container.ring.gz和 object.ring.gz文件到每个存储节点和其他运行了代理服务的额外节点的 /etc/swift目录下：<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">scp</span> <span class="regexp">*.ring.gz</span> object1:/etc/swift</span><br><span class="line">scp <span class="regexp">*.ring.gz</span> object2:/etc/swift</span><br></pre></td></tr></table></figure></p>
+<h1 id="Finalize_installation">Finalize installation</h1><p>配置哈希和默认的存储策略</p>
+<p>从对象存储的仓库源中获取 /etc/swift/swift.conf文件：</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">curl -o <span class="regexp">/etc/</span>swift<span class="regexp">/swift.conf \</span><br><span class="line">  https:/</span><span class="regexp">/git.openstack.org/</span>cgit<span class="regexp">/openstack/</span>swift<span class="regexp">/plain/</span>etc<span class="regexp">/swift.conf-sample?h=stable/</span>kilo</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/swift/swift.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "[swift-hash]</span><br><span class="line"><span class="constant">swift_hash_path_suffix</span> = HASH_PATH_PREFIX</span><br><span class="line"><span class="constant">swift_hash_path_prefix</span> = HASH_PATH_SUFFIX</span><br><span class="line">[storage-policy:0]</span><br><span class="line"><span class="constant">name</span> = Policy-0</span><br><span class="line"><span class="constant">default</span> = yes</span><br><span class="line">[swift-constraints]"&gt;/etc/swift/swift.conf</span><br></pre></td></tr></table></figure>
+<p>复制 swift.conf文件到每个存储节点和其他运行了代理服务的额外节点的 /etc/swift目录下：<br><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">scp /etc/<span class="built_in">swift</span>/<span class="built_in">swift</span>.conf object1:/etc/<span class="built_in">swift</span></span><br><span class="line">scp /etc/<span class="built_in">swift</span>/<span class="built_in">swift</span>.conf object2:/etc/<span class="built_in">swift</span></span><br></pre></td></tr></table></figure></p>
+<p>在所有节点上，确认配置文件目录是否有合适的所有权：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">chown -<span class="type">R</span> <span class="built_in">swift</span>:<span class="built_in">swift</span> /etc/<span class="built_in">swift</span></span><br></pre></td></tr></table></figure>
+<p>在控制节点和其他运行了代理服务的节点上，启动对象存储代理服务及其依赖服务，并将它们配置为随系统启动：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">enable</span> <span class="tag">openstack-swift-proxy</span><span class="class">.service</span> <span class="tag">memcached</span><span class="class">.service</span></span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">start</span> <span class="tag">openstack-swift-proxy</span><span class="class">.service</span> <span class="tag">memcached</span><span class="class">.service</span></span><br></pre></td></tr></table></figure>
+<p>在存储节点上，启动对象存储服务，并将其设置为随系统启动：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">systemctl enable openstack-swift-account.service openstack-swift-account-auditor.service \</span><br><span class="line">  openstack-swift-account-reaper.service openstack-swift-account-replicator.service</span><br><span class="line">systemctl <span class="operator"><span class="keyword">start</span> openstack-swift-<span class="keyword">account</span>.service openstack-swift-<span class="keyword">account</span>-auditor.service \</span><br><span class="line">  openstack-swift-<span class="keyword">account</span>-reaper.service openstack-swift-<span class="keyword">account</span>-replicator.service</span><br><span class="line">systemctl <span class="keyword">enable</span> openstack-swift-<span class="keyword">container</span>.service openstack-swift-<span class="keyword">container</span>-auditor.service \</span><br><span class="line">  openstack-swift-<span class="keyword">container</span>-replicator.service openstack-swift-<span class="keyword">container</span>-updater.service</span><br><span class="line">systemctl <span class="keyword">start</span> openstack-swift-<span class="keyword">container</span>.service openstack-swift-<span class="keyword">container</span>-auditor.service \</span><br><span class="line">  openstack-swift-<span class="keyword">container</span>-replicator.service openstack-swift-<span class="keyword">container</span>-updater.service</span><br><span class="line">systemctl <span class="keyword">enable</span> openstack-swift-<span class="keyword">object</span>.service openstack-swift-<span class="keyword">object</span>-auditor.service \</span><br><span class="line">  openstack-swift-<span class="keyword">object</span>-replicator.service openstack-swift-<span class="keyword">object</span>-updater.service</span><br><span class="line">systemctl <span class="keyword">start</span> openstack-swift-<span class="keyword">object</span>.service openstack-swift-<span class="keyword">object</span>-auditor.service \</span><br><span class="line">  openstack-swift-<span class="keyword">object</span>-replicator.service openstack-swift-<span class="keyword">object</span>-updater.service</span></span><br></pre></td></tr></table></figure>
+<h1 id="Verify_operation">Verify operation</h1><blockquote>
+<p>[Note]    Note<br>The swift client requires the -V 3 parameter to use the Identity version 3 API.</p>
+<p>[Note]    Note<br>Perform these steps on the controller node.</p>
+</blockquote>
+<p>Source the demo credentials:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>显示服务状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">swift -V <span class="number">3</span> <span class="built_in">stat</span></span><br></pre></td></tr></table></figure>
+<p>上传一个测试文件：</p>
+<figure class="highlight irpf90"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">touch</span> <span class="keyword">FILE</span></span><br><span class="line">swift -V <span class="number">3</span> upload demo-container1 <span class="keyword">FILE</span></span><br></pre></td></tr></table></figure>
+<p>Replace FILE with the name of a local file to upload to the demo-container1 container.</p>
+<p>显示 containers:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift -V <span class="number">3</span> <span class="built_in">list</span></span><br></pre></td></tr></table></figure>
+<p>下载 test file:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">swift -V <span class="number">3</span> download demo-container1 FILE</span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+            <a href="/tags/swift/" rel="tag">#swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/01/openstack-orchestration-service/" rel="prev">openstack之kilo安装 Orchestration服务</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/30/openstack-block-service/" rel="next">openstack之kilo安装 块设备存储服务</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/31/openstack-object-service/"
+                   data-title="openstack之kilo安装 对象存储服务" data-url="zhugaoxiao.github.io/2015/10/31/openstack-object-service/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_the_controller_node"><span class="nav-number">1.</span> <span class="nav-text">Install and configure the controller node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_the_storage_nodes"><span class="nav-number">2.</span> <span class="nav-text">Install and configure the storage nodes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Create_initial_rings"><span class="nav-number">3.</span> <span class="nav-text">Create initial rings</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Finalize_installation"><span class="nav-number">4.</span> <span class="nav-text">Finalize installation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Verify_operation"><span class="nav-number">5.</span> <span class="nav-text">Verify operation</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

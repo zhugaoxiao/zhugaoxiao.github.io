@@ -1,0 +1,786 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="CloudStack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="CloudStack在实验室实践过程，高级网络部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudStack 高级网络">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/08/cloudstack-advance_network/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="CloudStack在实验室实践过程，高级网络部分。">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-1.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-2.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-3.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-5.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-6.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-7.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-8.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-9.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-view-10.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-1.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-2.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-3.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-4.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-5.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-6.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-7.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-8.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-9.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-10.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-11.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-12.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-13.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-14.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-15.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-16.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-17.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-18.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-19.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-20.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-21.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-22.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-23.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-24.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-25.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-26.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-27.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-28.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-29.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-30.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-34.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-31.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-32.png">
+<meta property="og:image" content="zhugaoxiao.github.io/images/CloudStack-Advanced-Network-Zone-feature-33.png">
+<meta property="og:updated_time" content="2015-10-26T02:23:56.962Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudStack 高级网络">
+<meta name="twitter:description" content="CloudStack在实验室实践过程，高级网络部分。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> CloudStack 高级网络 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              CloudStack 高级网络
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-08T20:46:25+08:00" content="2015-10-08">
+            2015-10-08
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/云计算/" itemprop="url" rel="index">
+                  <span itemprop="name">云计算</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/08/cloudstack-advance_network/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/08/cloudstack-advance_network/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>CloudStack在实验室实践过程，高级网络部分。</p>
+<a id="more"></a>
+<p>本文将根据实例介绍高级网络架构, 并依次介绍高级网络的各个功能模块: DHCP, DNS, 源NAT, 端口转发, 防火墙, 静态NAT, 负载均衡。</p>
+<h1 id="网络架构情况如下">网络架构情况如下</h1><p>CloudStack里面物理网卡1对应XenServer上流量标签为Management的Bond 0 + 3, 用于管理。<br><img src="images/CloudStack-Advanced-Network-Zone-view-1.png" alt="advanced network"><br>CloudStack里面物理网卡2对应XenServer上流量标签为Trunk的Bond 1 + 4, 用于公共和来宾。<br><img src="images/CloudStack-Advanced-Network-Zone-view-2.png" alt="advanced network"><br>CloudStack里面物理网卡3对应XenServer上流量标签为Management的Bond 2 + 5, 用于存储。<br><img src="images/CloudStack-Advanced-Network-Zone-view-3.png" alt="advanced network"></p>
+<p>使用XenServer的管理控制台XenCenter查看网络情况，VLAN ID 为91的网络是CloudStack创建的公共网络，VLAN ID 301 – 500 之间的网络是CloudStack根据需求自动创建的来宾网络。管理和存储如前文所述不需要设置VLAN ID，所以这里CloudStack也不会创建。</p>
+<h1 id="高级网络架构">高级网络架构</h1><p><img src="images/CloudStack-Advanced-Network-Zone-view-5.png" alt="advanced network"><br>我们使用其中一个帐户建立一个高级网络环境，举例说明CloudStack高级网络的工作方式。<br>使用帐户shennan下同名用户shennan创建1高级网络：<br><img src="images/CloudStack-Advanced-Network-Zone-view-6.png" alt="advanced network"></p>
+<ul>
+<li>网络名称: SN-Network01,</li>
+<li>所属帐户: shennan,</li>
+<li>类型: isolate</li>
+<li>VLAN: 462</li>
+<li>来宾网络CIDR: 192.168.100.0/24</li>
+<li>VLAN说明: VLAN ID462是系统自动分配的，使用此网络的VM数据包都会打上vlan为462的标签， 所连接交换机上必须已配置有此vlan标签才能保证VM网络的正常通信。</li>
+</ul>
+<blockquote>
+<p>注：<br>CloudStack会根据使用需求自动创建相应VLAN ID的网络。<br>本文例子中管理网络使用单独网卡, 连接到交换机Access vlan 101类型端口。<br>Public 网络和Guest网络使用同一块网卡, 连接到交换机的Trunk类型端口。Public网络设置VLAN ID为91。<br>Storage 网络使用单独网卡, 连接到交换机Access vlan 12 类型端口。</p>
+</blockquote>
+<p>管理网络和Storage网络因为是access类型所以不需要在CloudStack里面配置VLAN ID。<br>Public网络设置VLAN ID为91, Guest网络设置的VLAN ID为301 – 500。</p>
+<p>系统虚拟机启动需要使用管理网络, public网络和存储网络, 因为只有Public 网络连接为Trunk并在CloudStack里面设置了VLAN为91。所以CloudStack只需要创建Public网络即可。Guest网络将会再用到时自动创建。<br><img src="images/CloudStack-Advanced-Network-Zone-view-7.png" alt="advanced network"><br>启用SN-Network01此网络时, CloudStack会自动新建VLAN ID为462的Guest网络。<br><img src="images/CloudStack-Advanced-Network-Zone-view-8.png" alt="advanced network"><br>CloudStack并为SN-Network01此网络自动创建一专用的虚拟路由器. 虚拟路由器配置2块网卡, 网卡一端连接Public网络，另一端连接到隔离的来宾网络.<br><img src="images/CloudStack-Advanced-Network-Zone-view-9.png" alt="advanced network"><br>使用此网络的VM将会配置一块网卡连接到VLAN ID为462的来宾网络。并且会由本网络的虚拟路由器即r-24-VM的DHCP服务自动分配1个IP地址。<br><img src="images/CloudStack-Advanced-Network-Zone-view-10.png" alt="advanced network"></p>
+<h1 id="高级网络的各个功能模块">高级网络的各个功能模块</h1><ul>
+<li>DHCP</li>
+<li>DNS</li>
+<li>源NAT</li>
+<li>端口转发</li>
+<li>防火墙</li>
+<li>静态NAT</li>
+<li>负载均衡</li>
+</ul>
+<p>使用上面环境在用户shennan的高级网络SN-Network01下建立3台试验虚拟机。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-1.png" alt="advanced network"></p>
+<h1 id="DHCP">DHCP</h1><p>虚拟路由器被设置为DHCP服务器为虚拟网络内部VM自动分配IP地址，前面文章已有图示介绍。</p>
+<h1 id="DNS">DNS</h1><p>虚拟路由器被设置为内部DNS服务器为虚拟网络内部VM进行域名解析，也可以直接使用外部DNS。</p>
+<h1 id="源NAT">源NAT</h1><p>新建网络会自动配置源NAT映射</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-2.png" alt="advanced network"></p>
+<p>源NAT 用于将VM的内部IP映射成外部IP地址，用于VM访问外部网络。外部网络计算机无法直接访问VM的内部IP。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-3.png" alt="advanced network"></p>
+<h1 id="端口转发">端口转发</h1><p>外部网络的计算机需要访问内部网络的VM，需要手动配置端口转发规则。</p>
+<p>例：将虚拟路由器外部IP：111.111.101.109的8081端口影射到内部网络VM1的80端口。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-4.png" alt="advanced network"><br><img src="/images/CloudStack-Advanced-Network-Zone-feature-5.png" alt="advanced network"><br>配置端口转发规则</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-6.png" alt="advanced network"><br> 设置专用端口范围 80 – 80，公用端口范围8081 – 8081，选择协议TCP。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-7.png" alt="advanced network"><br> 选择Win2003-NLB01虚拟机。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-8.png" alt="advanced network"> 重复添加好3条映射规则<br><img src="/images/CloudStack-Advanced-Network-Zone-feature-9.png" alt="advanced network"><br>此时外部计算机还无法访问，还需要配置对应的防火墙规则。</p>
+<h1 id="防火墙">防火墙</h1><p>刚才设置的端口转发还无法访问，因为需要进行防火墙规则配置。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-10.png" alt="advanced network"><br>配置防火墙规则</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-11.png" alt="advanced network"><br>配置规则允许端口8081 – 8083 的访问</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-12.png" alt="advanced network"><br>添加成功后测试Http访问。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-13.png" alt="advanced network"></p>
+<h1 id="静态NAT">静态NAT</h1><p>静态NAT是建立内部网络IP到外部网络IP的双向映射。因此使用静态NAT后外部计算机可以直接访问内部网络VM。</p>
+<p>每条规则对应一VM实例，并且每条静态NAT映射规则需独占1外网IP地址。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-14.png" alt="advanced network"><br><img src="/images/CloudStack-Advanced-Network-Zone-feature-15.png" alt="advanced network"><br>因为静态NAT需要独占外网IP，首先需要为虚拟路由器申请3个新的外网IP。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-16.png" alt="advanced network"><br>重复3次申请3个新外网IP</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-17.png" alt="advanced network"><br>设置静态NAT映射</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-18.png" alt="advanced network"><br>选择Win2003-NLB01</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-19.png" alt="advanced network"><br>完成映射后，修改防火前规则，允许80端口访问。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-20.png" alt="advanced network"><br><img src="/images/CloudStack-Advanced-Network-Zone-feature-21.png" alt="advanced network"><br>重复以上操作，完成3条规则配置。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-22.png" alt="advanced network"><br>使用外网IP直接访问VM测试。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-23.png" alt="advanced network"></p>
+<h1 id="负载均衡">负载均衡</h1><p>负载均衡规则</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-24.png" alt="advanced network"><br><img src="/images/CloudStack-Advanced-Network-Zone-feature-25.png" alt="advanced network"><br>设置负载均衡规则</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-26.png" alt="advanced network"></p>
+<p>选择均衡算法:<br>（算法选择工作原理请参考专业负载均衡设备文档，如果有需要的NetScaler文档的朋友可以给我发邮件索取）</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-27.png" alt="advanced network"></p>
+<p>设置粘性，在NetScaler设备上也称为会话持久性策略，一般用于带cookies认证Web访问。</p>
+<ul>
+<li>None: 不使用会话持久性策略.</li>
+<li>SorceBased: 根据客户端的IP地址, 记录访问分配.</li>
+<li>AppCookie: 根据数据包中服务器应用Cookie, 记录访问分配</li>
+<li>LBCookie: 将会有虚拟路由器向数据保证插入Cookie, 记录访问分配</li>
+</ul>
+<p>一般前2种比较常用. 这里我们先择SorceBased方式。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-28.png" alt="advanced network"><br><img src="/images/CloudStack-Advanced-Network-Zone-feature-29.png" alt="advanced network"><br>AutoScale : 自动扩展内容较多, 并且可能需要额外的配置工具。会单独写篇文章进行讨论。</p>
+<p>创建好后，设置防火墙规则。就可以通过浏览器进行访问测试了。我们强行关闭任意1-2台，访问会自动故障转移到其他Web Server。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-30.png" alt="advanced network"></p>
+<h1 id="VPN">VPN</h1><p>CloudStack帐户所有者可以创建虚拟专用网络（VPN）来访问他们的虚拟机。如果来宾网络是从提供远程访问VPN服务中实例化产生的，虚拟路由器（基于系统虚拟机）可以用于提供该服务。CloudStack为来宾虚拟网络提供L2TP-over-IPsec-based远程访问VPN服务。由于每个网络获取自己的虚拟路由器，因此VPN不能跨网络共享。Windows、Mac OS X和iOS的自身VPN客户端可用于连接客户网络。帐户的所有者可以对其用户的VPN进行创建和管理。为达此目的，CloudStack不使用其帐户数据库，而使用单独的表。VPN用户数据库之间共享帐户所有者创建的所有VPN。所有VPN用户可以访问所有帐户所有者创建的VPN。</p>
+<p>可以在全局设置中自定义VPN相关参数。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-34.png" alt="advanced network"><br>使用VPN</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-31.png" alt="advanced network"><br>启用后获得共享密钥，创建VPN用户：shennan。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-32.png" alt="advanced network"><br>创建VPN连接，之后进行测试。外网计算机VPN拨号后，获得内网地址可以直接访问VM内部网络地址。</p>
+<p><img src="/images/CloudStack-Advanced-Network-Zone-feature-33.png" alt="advanced network"><br>以上就是关于CloudStack高级网络功能应用的介绍。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CloudStack/" rel="tag">#CloudStack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/09/cloudstack-performance/" rel="prev">CloudStack系列 调优</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/07/cloudstack7-vsphere/" rel="next">CloudStack系列7 vsphere安装和配置</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/08/cloudstack-advance_network/"
+                   data-title="CloudStack 高级网络" data-url="zhugaoxiao.github.io/2015/10/08/cloudstack-advance_network/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络架构情况如下"><span class="nav-number">1.</span> <span class="nav-text">网络架构情况如下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级网络架构"><span class="nav-number">2.</span> <span class="nav-text">高级网络架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级网络的各个功能模块"><span class="nav-number">3.</span> <span class="nav-text">高级网络的各个功能模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DHCP"><span class="nav-number">4.</span> <span class="nav-text">DHCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DNS"><span class="nav-number">5.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源NAT"><span class="nav-number">6.</span> <span class="nav-text">源NAT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#端口转发"><span class="nav-number">7.</span> <span class="nav-text">端口转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#防火墙"><span class="nav-number">8.</span> <span class="nav-text">防火墙</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态NAT"><span class="nav-number">9.</span> <span class="nav-text">静态NAT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡"><span class="nav-number">10.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VPN"><span class="nav-number">11.</span> <span class="nav-text">VPN</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

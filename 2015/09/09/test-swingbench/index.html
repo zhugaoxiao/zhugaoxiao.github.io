@@ -1,0 +1,760 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="Oracle,Swingbench," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="Swingbench is a free load generator (and benchmarks) designed to stress test an Oracle database (10g,11g,12c).">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Swingbench对数据库进行压力测试">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/09/09/test-swingbench/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="Swingbench is a free load generator (and benchmarks) designed to stress test an Oracle database (10g,11g,12c).">
+<meta property="og:image" content="zhugaoxiao.github.io/images/swingbench_simple.JPG">
+<meta property="og:image" content="zhugaoxiao.github.io/images/swingbench_advance.JPG">
+<meta property="og:updated_time" content="2015-10-23T14:02:37.901Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Swingbench对数据库进行压力测试">
+<meta name="twitter:description" content="Swingbench is a free load generator (and benchmarks) designed to stress test an Oracle database (10g,11g,12c).">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 使用Swingbench对数据库进行压力测试 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              使用Swingbench对数据库进行压力测试
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-09T20:46:25+08:00" content="2015-09-09">
+            2015-09-09
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/测试/" itemprop="url" rel="index">
+                  <span itemprop="name">测试</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/09/test-swingbench/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/09/test-swingbench/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>Swingbench is a free load generator (and benchmarks) designed to stress test an Oracle database (10g,11g,12c).</p>
+<a id="more"></a>
+<h1 id="介绍">介绍</h1><ul>
+<li><p>Swingbench组件：<br>Swingbench是一个图形界面，用户可以编辑配置参数。可以显示实时的图形。<br>Minibench是一个图形界面，可以显示简单的实时图形。<br>Charbench是一个命令行的工具，有很多的命令行选项。</p>
+</li>
+<li><p>四种基准测试</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>描述</th>
+<th>读写比例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Order Entry</td>
+<td>经典的Order Entry基准测试。像TPC。</td>
+<td>60/40</td>
+<td>TPC-C类似的，基于Oracle自带的两个Sample Schema：OE和SH</td>
+</tr>
+<tr>
+<td>Calling Circle</td>
+<td>电话公司自助系统</td>
+<td>70/30</td>
+<td>基于电话自助服务系统的基准测试，大小相对固定，每次运行都需要重新生成schema</td>
+</tr>
+<tr>
+<td>Stess Test</td>
+<td>简单的INSERT/DELETE/UPDATE/SELECT</td>
+<td>50/50</td>
+<td>Stress Test是最简单的测试，执行insert/update/delete/select的操作，数据是在运行时产生，可以用于测试TimesTen</td>
+</tr>
+<tr>
+<td>Sales History</td>
+<td>DSS基准测试</td>
+<td>100/0</td>
+<td>数据仓库基准测试，使用datagenerator产生数据，由disk和时间来决定最大的大小，基于Oracle自带的两个Sample Schema：OE和SH</td>
+</tr>
+</tbody>
+</table>
+<h1 id="环境">环境</h1><ul>
+<li>Linux</li>
+<li>Oracle Database 11</li>
+</ul>
+<h1 id="架构示意图">架构示意图</h1><p>单实例<br><img src="/images/swingbench_simple.JPG" alt=""></p>
+<p>RAC<br><img src="/images/swingbench_advance.JPG" alt=""></p>
+<h1 id="安装和设置">安装和设置</h1><ul>
+<li><p>下载<br>目前作者已经发布了最新的2.5版本，本次使用2.5。从dominicgiles.com下载，地址：<a href="http://dominicgiles.com/downloads.html。" target="_blank" rel="external">http://dominicgiles.com/downloads.html。</a></p>
+</li>
+<li><p>验证Java版本<br>2.4和2.5版本需要使用Java 6/7 JVM。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">yum <span class="operator"><span class="keyword">install</span> -y <span class="keyword">java</span>-<span class="number">1.7</span><span class="number">.0</span>-openjdk.x86_64</span><br><span class="line">$</span><br><span class="line"><span class="keyword">java</span> -<span class="keyword">version</span></span><br><span class="line"><span class="keyword">java</span> <span class="keyword">version</span> <span class="string">"1.7.0_65"</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line"><span class="keyword">pwd</span> /home/oracle</span><br><span class="line">unzip swingbench25932.<span class="keyword">zip</span></span><br><span class="line">&lt;略&gt;</span><br><span class="line"><span class="keyword">cd</span> swingbench</span><br><span class="line"><span class="keyword">pwd</span></span><br><span class="line">/home/oracle/swingbench</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用户设置<br>Unix/Linux平台配置文件为swingbench.env，执行文件路径为bin；Windows下则为swingbenchenv.bat和winbin。在windows平台上注意一定要配置ORACLE_HOME，好像不认注册表。<br>Linux平台下，swingbench是在Oracle用户下执行，请确保它被设置在环境变量以下。</p>
+<figure class="highlight xquery"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">export ORACLE_BASE=/u01/app/oracle</span><br><span class="line">export ORACLE_HOME=<span class="variable">$ORACLE</span>_BASE/product/<span class="number">11.2</span>.<span class="number">0</span>/dbhome_1</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="使用">使用</h1><ul>
+<li>配置OE仓库<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line"><span class="label">cd</span> <span class="keyword">bin</span><br><span class="line"></span>./oewizard</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>1.按在欢迎屏幕[下一页]</p>
+<p>2.选择Benchmark版本，此处选择版本2.0，然后按[下一页]</p>
+<p>3.选择任务，选择“Create the Order Entry Schema（User,Tables,indexes,Data etc）”，然后按[下一页]</p>
+<p>4.在数据库的详细信息界面，输入必要的信息，然后按[下一页]</p>
+<p>5.在Schema Details界面输入所需信息，然后按[下一页]</p>
+<p>6.在Database Options输入所需的信息，然后按[下一页]<br>可默认</p>
+<p>7.大小细节，建议进入用户自定义，可以使用1GB按[下一步]。</p>
+<p>8.最后，指定并行度，然后按[完成]</p>
+<p>9.日志在一个单独的窗口中打开。</p>
+<p>10.打开完成后的模式创建完成界面。并按[确定]退出。</p>
+<ul>
+<li>测试<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">cd <span class="regexp">/home/</span>oracle<span class="regexp">/swingbench/</span>bin</span><br><span class="line">.<span class="regexp">/swingbench -cs /</span><span class="regexp">/oracledb01/</span>orcl112 -dt thin  -rt <span class="number">0</span>:<span class="number">05</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="测试中遇到的问题和解决方法">测试中遇到的问题和解决方法</h1><ol>
+<li><p>生成AWR<br>在测试开始时可以生成awr快照，但是结束时没有自动生成awr快照。可以运行下列<br>语句手工生成：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SQL&gt;</span><br><span class="line"><span class="built_in">exec</span> DBMS_WORKLOAD_REPOSITORY.CREATE_SNAPSHOT ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>遇到等待事件<br>resmgr:cpu quantum<br>根据metalink的note禁止资源管理</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">SQL&gt;</span><br><span class="line">alter <span class="built_in">system</span> <span class="keyword">set</span> resource_manager_plan=<span class="string">''</span> scope=both;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行swingbench, 没有显示cpu和disk的实时图形<br>./swingbench -cpuloc localhost 带选项-cpuloc，如果是2.4版本，可以指定hostname和用户密码</p>
+</li>
+<li>遇到ora-03111错误<br>查了metalink的note可以通过调节sdu来解决，不过有时还是会出现。<br>(SDU = 16384)<br>(TDU = 16384)</li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Oracle/" rel="tag">#Oracle</a>
+          
+            <a href="/tags/Swingbench/" rel="tag">#Swingbench</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/11/tran-containerized-mesos-cluster/" rel="prev">翻译：在Docker中运行你的Mesos集群</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/07/sys-cobbler/" rel="next">使用Cobbler部署操作系统</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/09/09/test-swingbench/"
+                   data-title="使用Swingbench对数据库进行压力测试" data-url="zhugaoxiao.github.io/2015/09/09/test-swingbench/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构示意图"><span class="nav-number">3.</span> <span class="nav-text">架构示意图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装和设置"><span class="nav-number">4.</span> <span class="nav-text">安装和设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">5.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试中遇到的问题和解决方法"><span class="nav-number">6.</span> <span class="nav-text">测试中遇到的问题和解决方法</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="ceilometer,openstack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="Telemetry 提供一个监控和检测 OpenStack 云的框架。也就是大家所知道的 ceilometer 项目。
+Telemetry 模块表现有如下功能:
+Efficiently polls metering data related to OpenStack services.
+Collects event and metering data by monitoring notificat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack之kilo安装 监控服务">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/11/02/openstack-telemetry-service/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="Telemetry 提供一个监控和检测 OpenStack 云的框架。也就是大家所知道的 ceilometer 项目。
+Telemetry 模块表现有如下功能:
+Efficiently polls metering data related to OpenStack services.
+Collects event and metering data by monitoring notificat">
+<meta property="og:updated_time" content="2015-11-09T15:25:05.726Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack之kilo安装 监控服务">
+<meta name="twitter:description" content="Telemetry 提供一个监控和检测 OpenStack 云的框架。也就是大家所知道的 ceilometer 项目。
+Telemetry 模块表现有如下功能:
+Efficiently polls metering data related to OpenStack services.
+Collects event and metering data by monitoring notificat">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> openstack之kilo安装 监控服务 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              openstack之kilo安装 监控服务
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-02T00:00:00+08:00" content="2015-11-02">
+            2015-11-02
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/02/openstack-telemetry-service/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/02/openstack-telemetry-service/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>Telemetry 提供一个监控和检测 OpenStack 云的框架。也就是大家所知道的 ceilometer 项目。</p>
+<p>Telemetry 模块表现有如下功能:</p>
+<p>Efficiently polls metering data related to OpenStack services.</p>
+<p>Collects event and metering data by monitoring notifications sent from services.</p>
+<p>Publishes collected data to various targets including data stores and message queues.</p>
+<p>Creates alarms when collected data breaks defined rules.</p>
+<p>Telemetry 模块通常包含下面组件:</p>
+<ul>
+<li><p>A compute agent (ceilometer-agent-compute)<br>运行在每个计算节点中，推送资源的使用状态，也许在未来会有其他类型的代理，但是目前来说社区专注于创建计算节点代理。</p>
+</li>
+<li><p>A central agent (ceilometer-agent-central)<br>Runs on a central management server to poll for resource utilization statistics for resources not tied to instances or compute nodes. Multiple agents can be started to scale service horizontally.</p>
+</li>
+<li><p>A notification agent (ceilometer-agent-notification)<br>Runs on a central management server(s) and consumes messages from the message queue(s) to build event and metering data.</p>
+</li>
+<li><p>A collector (ceilometer-collector)<br>运行在一个或多个中心管理服务器，当警告发生是由于相关联的统计趋势超过阈值以上的滑动时间窗口，然后作出决定。</p>
+</li>
+<li><p>An alarm evaluator (ceilometer-alarm-evaluator)<br>运行在一个或多个中心管理服务器，允许警告为一组收集的实例基于评估阀值来设置。</p>
+</li>
+<li><p>An alarm notifier (ceilometer-alarm-notifier)<br>Runs on one or more central management servers to allow alarms to be set based on the threshold evaluation for a collection of samples.</p>
+</li>
+<li><p>An API server (ceilometer-api)<br>运行在一个或多个中心管理服务器，提供从数据存储的数据访问。</p>
+</li>
+</ul>
+<p>这些服务使用OpenStack消息总线来通信，只有收集者和API服务可以访问数据存储。</p>
+<blockquote>
+<p>参考：<a href="http://docs.openstack.org/kilo/install-guide/install/yum/content/ch_ceilometer.html" target="_blank" rel="external">Chapter 11. Add the Telemetry module</a></p>
+</blockquote>
+<a id="more"></a>
+<h1 id="Install_and_configure_controller_node">Install and configure controller node</h1><p>Telemetry模块使用分离的代理来从您环境的 OpenStack 服务中收集评估。</p>
+<p>安装 MongoDB package:</p>
+<figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">yum install -y mongodb-<span class="keyword">server</span> mongodb</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/mongod.conf 文件:</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo <span class="string">"</span><br><span class="line">bind_ip = 10.0.0.11</span><br><span class="line">smallfiles = true"</span><span class="prompt">&gt;&gt;</span>/etc/mongod.conf</span><br></pre></td></tr></table></figure>
+<p>启动 MongoDB 服务并将其配置为随系统启动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl <span class="built_in">enable</span> mongod.service</span><br><span class="line">systemctl start mongod.service</span><br></pre></td></tr></table></figure>
+<p>创建 ceilometer database:</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">mongo --host controller --eval '</span><br><span class="line">  <span class="keyword">db</span> = <span class="keyword">db</span>.getSiblingDB(<span class="string">"ceilometer"</span>);</span><br><span class="line">  <span class="keyword">db</span>.createUser(&#123;user: <span class="string">"ceilometer"</span>,</span><br><span class="line">  <span class="keyword">pwd</span>: <span class="string">"CEILOMETER_DBPASS"</span>,</span><br><span class="line">  roles: [ <span class="string">"readWrite"</span>, <span class="string">"dbAdmin"</span> ]&#125;)'</span><br></pre></td></tr></table></figure>
+<p>导入 admin身份凭证以执行管理员用户专有的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>创建 ceilometer user:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack user <span class="built_in">create</span> ceilometer <span class="comment">--password ceilometer</span></span><br></pre></td></tr></table></figure>
+<p>添加 admin role to the ceilometer user.</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_ins">add</span> --project service --<span class="built_ins">user</span> ceilometer admin</span><br></pre></td></tr></table></figure>
+<p>创建 ceilometer service entity:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack service <span class="built_in">create</span> <span class="comment">--name ceilometer \</span></span><br><span class="line">  <span class="comment">--description "Telemetry" metering</span></span><br></pre></td></tr></table></figure>
+<p>创建 Telemetry module API endpoint:</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">openstack endpoint create \</span><br><span class="line">  -<span class="ruby">-publicurl <span class="symbol">http:</span>/<span class="regexp">/controller:8777 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-internalurl http:/</span><span class="regexp">/controller:8777 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-adminurl http:/</span><span class="regexp">/controller:8777 \</span><br><span class="line"></span></span>  -<span class="ruby"><span class="regexp">-region RegionOne \</span><br><span class="line"></span></span>  metering</span><br></pre></td></tr></table></figure>
+<p>安装软件包:</p>
+<figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum install -y openstack-ceilometer-api openstack-ceilometer-collector <span class="string">\</span></span><br><span class="line">  openstack-ceilometer-notification openstack-ceilometer-central openstack-ceilometer-alarm <span class="string">\</span></span><br><span class="line">  python-ceilometerclient</span><br></pre></td></tr></table></figure>
+<p>Generate a random value to use as the telemetry secret:</p>
+<figure class="highlight perl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openssl <span class="keyword">rand</span> -<span class="keyword">hex</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/ceilometer/ceilometer.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/ceilometer/ceilometer.conf /etc/ceilometer/ceilometer.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">auth_strategy</span> = keystone</span><br><span class="line"><span class="constant">verbose</span> = True</span><br><span class="line">[api]</span><br><span class="line"><span class="constant">port</span> = 8777</span><br><span class="line"><span class="constant">host</span> = 0.0.0.0</span><br><span class="line"><span class="comment"># MongoDB connection info</span></span><br><span class="line">[database]</span><br><span class="line"><span class="constant">connection</span> = mongodb://ceilometer:CEILOMETER_DBPASS@controller:27017/ceilometer</span><br><span class="line"><span class="comment"># RabbitMQ connection info</span></span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_port</span> = 5672</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS</span><br><span class="line"><span class="comment"># Keystone auth info</span></span><br><span class="line">[keystone_authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000/v2.0</span><br><span class="line"><span class="constant">identity_uri</span> = http://controller:35357</span><br><span class="line"><span class="constant">admin_tenant_name</span> = service</span><br><span class="line"><span class="constant">admin_user</span> = ceilometer</span><br><span class="line"><span class="constant">admin_password</span> = ceilometer</span><br><span class="line"><span class="comment"># set the secret key which is shared among nodes.(set any words you like)</span></span><br><span class="line">[publisher]</span><br><span class="line"><span class="constant">telemetry_secret</span> = TELEMETRY_SECRET</span><br><span class="line"><span class="comment"># Ceilometer auth info</span></span><br><span class="line">[service_credentials]</span><br><span class="line"><span class="constant">os_auth_url</span> = http://controller:5000/v2.0</span><br><span class="line"><span class="constant">os_username</span> = ceilometer</span><br><span class="line"><span class="constant">os_tenant_name</span> = service</span><br><span class="line"><span class="constant">os_password</span> = ceilometer</span><br><span class="line"><span class="constant">os_endpoint_type</span> = internalURL</span><br><span class="line"><span class="constant">os_region_name</span> = RegionOne"&gt;/etc/ceilometer/ceilometer.conf</span><br></pre></td></tr></table></figure>
+<p>启动Telemetry服务并将其配置为随系统启动:</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">enable</span> <span class="tag">openstack-ceilometer-api</span><span class="class">.service</span> <span class="tag">openstack-ceilometer-notification</span><span class="class">.service</span> \</span><br><span class="line"><span class="tag">openstack-ceilometer-central</span><span class="class">.service</span> <span class="tag">openstack-ceilometer-collector</span><span class="class">.service</span> \</span><br><span class="line"><span class="tag">openstack-ceilometer-alarm-evaluator</span><span class="class">.service</span> <span class="tag">openstack-ceilometer-alarm-notifier</span><span class="class">.service</span></span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">start</span> <span class="tag">openstack-ceilometer-api</span><span class="class">.service</span> <span class="tag">openstack-ceilometer-notification</span><span class="class">.service</span> \</span><br><span class="line"><span class="tag">openstack-ceilometer-central</span><span class="class">.service</span> <span class="tag">openstack-ceilometer-collector</span><span class="class">.service</span> \</span><br><span class="line"><span class="tag">openstack-ceilometer-alarm-evaluator</span><span class="class">.service</span> <span class="tag">openstack-ceilometer-alarm-notifier</span><span class="class">.service</span></span><br></pre></td></tr></table></figure>
+<h1 id="Configure_the_Compute_service">Configure the Compute service</h1><p>Telemetry uses a combination of notifications and an agent to collect Compute metrics. Perform these steps on each compute node.</p>
+<p>安装软件包:</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y openstack-ceilometer-compute python-ceilometerclient python-pecan</span><br></pre></td></tr></table></figure>
+<p>编辑 /etc/ceilometer/ceilometer.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cp /etc/ceilometer/ceilometer.conf /etc/ceilometer/ceilometer.confbak</span><br><span class="line">echo "[DEFAULT]</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">verbose</span> = True</span><br><span class="line"><span class="comment"># RabbitMQ connection info</span></span><br><span class="line">[oslo_messaging_rabbit]</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_port</span> = 5672</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS</span><br><span class="line"><span class="comment"># Keystone auth info</span></span><br><span class="line">[keystone_authtoken]</span><br><span class="line"><span class="constant">auth_uri</span> = http://controller:5000/v2.0</span><br><span class="line"><span class="constant">identity_uri</span> = http://controller:35357</span><br><span class="line"><span class="constant">admin_tenant_name</span> = service</span><br><span class="line"><span class="constant">admin_user</span> = ceilometer</span><br><span class="line"><span class="constant">admin_password</span> = ceilometer</span><br><span class="line"><span class="comment"># set the secret key which is shared among nodes.(set any words you like)</span></span><br><span class="line">[publisher]</span><br><span class="line"><span class="constant">telemetry_secret</span> = TELEMETRY_SECRET</span><br><span class="line"><span class="comment"># Ceilometer auth info</span></span><br><span class="line">[service_credentials]</span><br><span class="line"><span class="constant">os_auth_url</span> = http://controller:5000/v2.0</span><br><span class="line"><span class="constant">os_username</span> = ceilometer</span><br><span class="line"><span class="constant">os_tenant_name</span> = service</span><br><span class="line"><span class="constant">os_password</span> = ceilometer</span><br><span class="line"><span class="constant">os_endpoint_type</span> = internalURL</span><br><span class="line"><span class="constant">os_region_name</span> = RegionOne"&gt;/etc/ceilometer/ceilometer.conf</span><br></pre></td></tr></table></figure>
+<p>Configure the Compute service to send notifications to the message bus.</p>
+<p>修改配置文件 /etc/nova/nova.conf并在 [DEFAULT]部分配置消息机制：</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "</span><br><span class="line">[DEFAULT]</span><br><span class="line"><span class="constant">instance_usage_audit</span> = True</span><br><span class="line"><span class="constant">instance_usage_audit_period</span> = hour</span><br><span class="line"><span class="constant">notify_on_state_change</span> = vm_and_task_state</span><br><span class="line"><span class="constant">notification_driver</span> = messagingv2"&gt;&gt;/etc/nova/nova.conf</span><br></pre></td></tr></table></figure>
+<p>Start the Telemetry agent and configure it to start when the system boots:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl <span class="built_in">enable</span> openstack-ceilometer-compute.service</span><br><span class="line">systemctl start openstack-ceilometer-compute.service</span><br></pre></td></tr></table></figure>
+<p>重启 Compute service:</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">systemctl</span> restart openstack-nova-compute.service</span><br></pre></td></tr></table></figure>
+<h1 id="Configure_the_Image_service">Configure the Image service</h1><p>To retrieve image-oriented events and samples, configure the Image service to send notifications to the message bus. Perform these steps on the controller node.</p>
+<p>编辑 /etc/glance/glance-api.conf 和 /etc/glance/glance-registry.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo "</span><br><span class="line">[DEFAULT]</span><br><span class="line"><span class="constant">notification_driver</span> = messagingv2</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS"&gt;&gt;/etc/glance/glance-api.conf</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">echo "</span><br><span class="line">[DEFAULT]</span><br><span class="line"><span class="constant">notification_driver</span> = messagingv2</span><br><span class="line"><span class="constant">rpc_backend</span> = rabbit</span><br><span class="line"><span class="constant">rabbit_host</span> = controller</span><br><span class="line"><span class="constant">rabbit_userid</span> = openstack</span><br><span class="line"><span class="constant">rabbit_password</span> = RABBIT_PASS"&gt;&gt;/etc/glance/glance-registry.conf</span><br></pre></td></tr></table></figure>
+<p>重启Image service:</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">restart</span> <span class="tag">openstack-glance-api</span><span class="class">.service</span> <span class="tag">openstack-glance-registry</span><span class="class">.service</span></span><br></pre></td></tr></table></figure>
+<h1 id="Configure_the_Block_Storage_service">Configure the Block Storage service</h1><p>To retrieve volume-oriented events and samples, you must configure the Block Storage service to send notifications to the message bus. Perform these steps on the controller and storage nodes.</p>
+<p>编辑 /etc/cinder/cinder.conf :</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">echo <span class="string">"</span><br><span class="line">[DEFAULT]</span><br><span class="line">control_exchange = cinder</span><br><span class="line">notification_driver = messagingv2"</span><span class="prompt">&gt;&gt; </span>/etc/cinder/cinder.conf</span><br></pre></td></tr></table></figure>
+<p>重启 Block Storage services on the storage nodes:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">systemctl restart openstack-cinder-<span class="built_ins">volume</span>.service</span><br></pre></td></tr></table></figure>
+<p>重启 Block Storage services on the controller node:</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="tag">systemctl</span> <span class="tag">restart</span> <span class="tag">openstack-cinder-api</span><span class="class">.service</span> <span class="tag">openstack-cinder-scheduler</span><span class="class">.service</span></span><br></pre></td></tr></table></figure>
+<p>Use the <code>cinder-volume-usage-audit</code> command to retrieve metrics on demand. For more information, see Block Storage audit script setup to get notifications.</p>
+<h1 id="Configure_the_Object_Storage_service">Configure the Object Storage service</h1><p>To retrieve storage-oriented events and samples, configure the Object Storage service to send notifications to the message bus.</p>
+<p>The Telemetry service requires access to the Object Storage service using the ResellerAdmin role. Perform these steps on the controller node.</p>
+<p>Source the admin credentials to gain access to admin-only CLI commands.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>Create the ResellerAdmin role:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_in">create</span> ResellerAdmin</span><br></pre></td></tr></table></figure>
+<p>添加 ResellerAdmin role to the service tenant and ceilometer user:</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">openstack role <span class="built_ins">add</span> --project service --<span class="built_ins">user</span> ceilometer ResellerAdmin</span><br></pre></td></tr></table></figure>
+<p>Perform these steps on the controller and any other nodes that run the Object Storage proxy service.</p>
+<p>编辑 /etc/swift/proxy-server.conf 文件:</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">echo "</span><br><span class="line">[filter:keystoneauth]</span><br><span class="line"><span class="constant">operator_roles</span> = admin,user,ResellerAdmin</span><br><span class="line">[pipeline:main]</span><br><span class="line"><span class="constant">pipeline</span> = ceilometer</span><br><span class="line">[filter:ceilometer]</span><br><span class="line">paste.filter_factory = ceilometermiddleware.swift:filter_factory</span><br><span class="line"><span class="constant">control_exchange</span> = swift</span><br><span class="line"><span class="constant">url</span> = rabbit://openstack:RABBIT_PASS@controller:5672/</span><br><span class="line"><span class="constant">driver</span> = messagingv2</span><br><span class="line"><span class="constant">topic</span> = notifications</span><br><span class="line"><span class="constant">log_level</span> = WARN"&gt;&gt;/etc/swift/proxy-server.conf</span><br></pre></td></tr></table></figure>
+<p>Add the swift system user to the ceilometer system group to permit access to the Telemetry configuration files by the Object Storage service:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">usermod <span class="operator">-a</span> -G ceilometer swift</span><br></pre></td></tr></table></figure>
+<p>安装 ceilometermiddleware package:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">yum <span class="operator"><span class="keyword">install</span> -y python-pip</span><br><span class="line">pip <span class="keyword">install</span> ceilometermiddleware</span><br><span class="line">pip <span class="keyword">install</span> ceilometermiddleware -<span class="keyword">i</span> <span class="keyword">http</span>://<span class="number">192.178</span><span class="number">.102</span><span class="number">.249</span>/pypi/web/simple/ <span class="comment">--trusted-host 192.178.102.249</span></span></span><br></pre></td></tr></table></figure>
+<p>重启 the Object Storage proxy service:</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">systemctl</span> restart openstack-swift-proxy.service</span><br></pre></td></tr></table></figure>
+<h1 id="Verify_the_Telemetry_installation">Verify the Telemetry installation</h1><p>This section describes how to verify operation of the Telemetry module.</p>
+<blockquote>
+<p>[Note]    Note<br>Perform these steps on the controller node.</p>
+</blockquote>
+<p>Source the admin credentials to gain access to admin-only CLI commands:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">source</span> admin-openrc.sh</span><br></pre></td></tr></table></figure>
+<p>List available meters:</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">ceilometer meter-<span class="type">list</span></span><br></pre></td></tr></table></figure>
+<p>Download an image from the Image service:</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="constant">IMAGE_ID=</span><span class="variable">$(</span>glance image-list | grep <span class="string">'cirros-0.3.4-x86_64'</span> | awk <span class="string">'&#123; print $2 &#125;'</span>)</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">glance image-download <span class="variable">$IMAGE_ID</span> &gt; <span class="regexp">/tmp/cirros</span>.img</span><br></pre></td></tr></table></figure>
+<p>List available meters again to validate detection of the image download:</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">ceilometer meter-<span class="type">list</span></span><br></pre></td></tr></table></figure>
+<p>Retrieve usage statistics from the image.download meter:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">ceilometer statistics -m image.download -p <span class="number">60</span></span><br></pre></td></tr></table></figure>
+<p>Remove the previously downloaded image file /tmp/cirros.img:</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">rm</span> /tmp/cirros.img</span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ceilometer/" rel="tag">#ceilometer</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/03/openstack-FAQ/" rel="prev">openstack之kilo安装 FAQ</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/01/openstack-orchestration-service/" rel="next">openstack之kilo安装 Orchestration服务</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/11/02/openstack-telemetry-service/"
+                   data-title="openstack之kilo安装 监控服务" data-url="zhugaoxiao.github.io/2015/11/02/openstack-telemetry-service/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_and_configure_controller_node"><span class="nav-number">1.</span> <span class="nav-text">Install and configure controller node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Configure_the_Compute_service"><span class="nav-number">2.</span> <span class="nav-text">Configure the Compute service</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Configure_the_Image_service"><span class="nav-number">3.</span> <span class="nav-text">Configure the Image service</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Configure_the_Block_Storage_service"><span class="nav-number">4.</span> <span class="nav-text">Configure the Block Storage service</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Configure_the_Object_Storage_service"><span class="nav-number">5.</span> <span class="nav-text">Configure the Object Storage service</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Verify_the_Telemetry_installation"><span class="nav-number">6.</span> <span class="nav-text">Verify the Telemetry installation</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

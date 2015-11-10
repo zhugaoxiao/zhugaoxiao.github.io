@@ -1,0 +1,681 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="docker," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="【编者的话】本文是Docker用户命名空间功能实现作者写的一篇关于开源社区的文章。他的观点是一切的成功都离不开社区的鼎力支持，所以当你加入一个开源项目的时候，尽量去真正的参与其中，帮助其他人，建立社区影响力。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译：傻瓜，社区才是关键啊!">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/10/23/trans-It's the community,stupid/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="【编者的话】本文是Docker用户命名空间功能实现作者写的一篇关于开源社区的文章。他的观点是一切的成功都离不开社区的鼎力支持，所以当你加入一个开源项目的时候，尽量去真正的参与其中，帮助其他人，建立社区影响力。">
+<meta property="og:updated_time" content="2015-10-27T14:31:53.107Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翻译：傻瓜，社区才是关键啊!">
+<meta name="twitter:description" content="【编者的话】本文是Docker用户命名空间功能实现作者写的一篇关于开源社区的文章。他的观点是一切的成功都离不开社区的鼎力支持，所以当你加入一个开源项目的时候，尽量去真正的参与其中，帮助其他人，建立社区影响力。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 翻译：傻瓜，社区才是关键啊! | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'CzK1KgsZV7UDQV2N5maz','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              翻译：傻瓜，社区才是关键啊!
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-23T20:46:25+08:00" content="2015-10-23">
+            2015-10-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/翻译/" itemprop="url" rel="index">
+                  <span itemprop="name">翻译</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/23/trans-It's the community,stupid/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/23/trans-It's the community,stupid/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>【编者的话】本文是Docker用户命名空间功能实现作者写的一篇关于开源社区的文章。他的观点是一切的成功都离不开社区的鼎力支持，所以当你加入一个开源项目的时候，尽量去真正的参与其中，帮助其他人，建立社区影响力。</p>
+<a id="more"></a>
+<p>考虑到潜在的国际读者，这个博客的标题借鉴自一个老的美国总统竞选词，“<a href="https://en.wikipedia.org/wiki/It%27s_the_economy,_stupid" target="_blank" rel="external">傻瓜，经济才是关键啊!</a>”不过，我是什么意思呢？在过去的一周，因为我在Docker<a href="https://github.com/docker/docker/pull/12648" target="_blank" rel="external">用户命名空间</a>的工作，收到了很多的祝贺。这真的一个很好玩的事情，因为这荣耀的瞬间我体会到了<a href="https://twitter.com/humblebrag" target="_blank" rel="external">斯诺登</a>的感觉，“哦，不，又一页页的Twitter通知，我可没有时间！”当然，完成一个看似艰巨的事情，而且是很多Docker用户期待已久的新功能，这感觉还是非常棒的！</p>
+<p>虽然只比平时多了几个读者（我的博客在最近5天的访问比过去12个月的总和还多！），我觉得还是值得我停下编程的步伐，为社区的力量多写几句话。</p>
+<p>首先，用户命名空间并不是从我开始。它源于Linux内核，也许你听说过的另一个开源社区，无数人经过数年的艰苦努力把它变为现实。其次，用户命名空间只存在在Docker中，因为，a）为了支持<a href="https://golang.org/pkg/syscall/#SysProcIDMap" target="_blank" rel="external">Go语言标准库</a>，在<a href="https://github.com/golang/go/issues/8447" target="_blank" rel="external">2014年下半年</a>，由<a href="https://github.com/mrunalp" target="_blank" rel="external">Mrunal Patel</a>和<a href="https://github.com/crosbymichael" target="_blank" rel="external"> Michael Crosby</a>又加入一个开源项目，b）为了支持开源<a href="https://github.com/opencontainers/runc/tree/master/libcontainer" target="_blank" rel="external">libcontainer</a>项目兼容性，目前已经是<a href="http://opencontainers.org/" target="_blank" rel="external">开放容器联盟</a>的RunC实施和库，也同样先加入进来。</p>
+<p>所以，你可能会说“那没有问题，但你在Docker中做的PR已经被合并。”当然，不过这一切都离不开社区的鼎力相助。真心希望如果你问任何一个在健康的开源社区中工作的开发人员他们是否单枪匹马，只在需要向GitHub仓库提交PRs时才冒泡，他们会说：“绝对不是！”每个贡献者工作上取得的成功都离不开社区提供的指导和帮助。在这个过程中我曾经卡壳多次，需要一些其他的看法，思维和观点，以便在过程中进行清晰的设计和修改。在后期的审核环节我们甚至把GitHub上的Eric Biederman（<a href="https://lwn.net/Articles/491236/" target="_blank" rel="external">Linux用户命名空间的维护者/核心贡献者</a>）拉了进来，改变了我们的思维，让我们想出用户和组ID映射范围本身的方案！</p>
+<p>所以，现在是我对了不起的<a href="https://github.com/docker/docker" target="_blank" rel="external">Docker社区</a>说：“谢谢你！”的机会。我的工作离不开社区众多成员的鼎立支持和启发，但我会更进一步并做个惊人的事情，我提到人的名字，非常有可能就被不小心遗漏了。但是，为了防止只是说说而已，下面的都是实现Docker用户命名空间值得感谢人：</p>
+<p><a href="https://twitter.com/crosbymichael" target="_blank" rel="external">Michael Crosby</a>：今年年初和我一起坐在Docker HQ的沙发上，并帮我写了初始化的实施步骤/目标清单。另外，在准备该功能合并的过程中他已经修复了几个libcontainer严重错误。</p>
+<p>Mrunal Patel：一个将用户命名空间兼容到Go语言的小组成员，提供了大量的反馈和指导，并在整个过程中帮助调试。</p>
+<p><a href="https://twitter.com/lk4d4math" target="_blank" rel="external">Alexandr Morozov</a>：帮我进行了整体设计，修正了几个问题，审查代码，做测试/反馈提供，很大程度改善质量代码。</p>
+<p><a href="https://twitter.com/frazelledazzell" target="_blank" rel="external">Jess Frazelle</a>：使用她容器中的“<a href="https://www.youtube.com/watch?v=1qlLUf7KtAw" target="_blank" rel="external">特殊类</a>”做了大量的测试！她为守护进程运行集成了测试组件，设置了专门的CI目标端，<br>自然也成了一个狂热的爱好者（显然包括直接在她的Linux主机上运行，任何人都知道这是一个很大的荣誉）。</p>
+<p><a href="https://twitter.com/diogomonica" target="_blank" rel="external">Diogo Monica</a>/<a href="https://twitter.com/nathanmccauley" target="_blank" rel="external">Nathan McCauley</a>：Docker的安全团队已经成了这个功能的啦啦队，Diogo 和 Nathan在设计和最初的目标上添加了他们自己的评论和反馈，并在整个过程中督促我们前进。</p>
+<p>Madhu Venugopal：Madhu和他的<a href="https://github.com/docker/libnetwork/" target="_blank" rel="external">libnetwork</a>开发团队重构了整个网络命名空间管理的代码，<br>以便当包含用户命名空间时，命名空间排序/链接可以在Linux的限制下一起工作。如果没有这次有效的重构，我们决不可能合并用户命名空间！</p>
+<p>那么，我为什么要在这个漫长的博客张贴几个tweets表示感谢？因为，我的希望是，如果你正在准备加入开源社区，你真的需要接受我的建议，真正参与进来。获取IRC频道，满足关键人群的交流，帮助没人愿意工作的bugs，清理文件，如果他们可以使用一些帮助。采取一切必要措施，以成为社区值得信赖的一部分。最终你会发现，当你在一个困难的bug，PR或功能上需要一些帮助时，在你选择的社区有很多，因为你已经在你周围建立起的人际关系。傻瓜，社区才是关键啊！</p>
+<p>更多阅读：</p>
+<p><a href="https://github.com/docker/docker/blob/master/CONTRIBUTING.md" target="_blank" rel="external">Docker 贡献指南</a><br><a href="http://blog.docker.com/2015/10/how-i-started-contributing-to-the-docker-project/" target="_blank" rel="external">我该如何开始Docker项目贡献</a> - by fellow-maintainer <a href="https://twitter.com/runc0m" target="_blank" rel="external">Antonio Murdaca</a></p>
+<p>原文链接：<a href="http://integratedcode.us/2015/10/16/its-the-community-stupid/?_tmc=wsd5_hxuuui2yQTszRLkHiRU3Is88pLSMfATCMVKmUI&amp;mkt_tok=3RkMMJWWfF9wsRonuqTMZKXonjHpfsX66u4vWqCylMI%2F0ER3fOvrPUfGjI4ASstgI%2BSLDwEYGJlv6SgFQ7LMMaZq1rgMXBk%3D" target="_blank" rel="external">It’s the community, stupid.</a> （翻译：朱高校）</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/24/openstack-Basic-environment/" rel="prev">openstack之kilo安装 基础环境</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/11/cloudstack-update/" rel="next">CloudStack系列 升级</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/10/23/trans-It's the community,stupid/"
+                   data-title="翻译：傻瓜，社区才是关键啊!" data-url="zhugaoxiao.github.io/2015/10/23/trans-It's the community,stupid/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
