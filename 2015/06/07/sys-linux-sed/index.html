@@ -45,7 +45,7 @@
 <meta property="og:url" content="zhugaoxiao.github.io/2015/06/07/sys-linux-sed/index.html">
 <meta property="og:site_name" content="高校的小站">
 <meta property="og:description" content="Sed  is a stream editor.  A stream editor is used to perform basic text transformations on an input stream (a file or input from a pipeline).  While in some ways similar to an editor which permits scr">
-<meta property="og:updated_time" content="2015-11-11T01:26:40.224Z">
+<meta property="og:updated_time" content="2015-11-12T04:13:07.115Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux中sed命令">
 <meta name="twitter:description" content="Sed  is a stream editor.  A stream editor is used to perform basic text transformations on an input stream (a file or input from a pipeline).  While in some ways similar to an editor which permits scr">
@@ -57,9 +57,6 @@
     sidebar: 'hide'
   };
 </script>
-
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Hits
 
   <title> Linux中sed命令 | 高校的小站 </title>
 </head>
@@ -237,7 +234,7 @@
             </span>
           
         
-#单文统计
+
         
         <span>&nbsp; | &nbsp;
         <span id="busuanzi_value_page_pv" ></span>次阅读
@@ -259,14 +256,278 @@
 <p>参考：<a href="http://www.gnu.org/software/sed/" target="_blank" rel="external">GNU sed home page</a></p>
 </blockquote>
 <a id="more"></a>
-<p>mysql让外面访问</p>
-<p>把127.0.0.1 替换成0.0.0.0</p>
-<p>sed -i ‘s/127.0.0.1/0.0.0.0/g’ /etc/mysql/my.cnf<br>NTP服务器设置</p>
-<p>sed -i ‘s/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g’ /etc/ntp.conf<br>keystone</p>
-<p>注释掉sqlite这行</p>
-<p>sed -i ‘/sqlite/s/^/#/‘ /etc/keystone/keystone.conf<br>在sqlite行下插入一行</p>
-<p>sed -i ‘/sqlite/a\connection = mysql://keystone:password@10.1.199.17/keystone’ \<br>/etc/keystone/keystone.conf<br>把默认的keystone的token: ADMIN 改成 chenshake</p>
-<p>sed -i ‘s/ADMIN/chenshake/g’ /etc/keystone/keystone.conf</p>
+<h1 id="sed选项">sed选项</h1><p>调用sed命令有两种形式：<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">sed [options] <span class="string">'command'</span> <span class="function"><span class="title">file</span><span class="params">(s)</span></span></span><br><span class="line">sed [options] -f scriptfile <span class="function"><span class="title">file</span><span class="params">(s)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>其中option是可选的，常用的option有如下几种：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>–version</td>
+<td>打印版本和版权信息</td>
+</tr>
+<tr>
+<td>–help</td>
+<td>打印命令的概括信息，并显示bug列表的地址</td>
+</tr>
+<tr>
+<td>-n,–quiet,–silent</td>
+<td>默认情况下，所有来自stdin的内容都会被输出到屏幕上。这些参数禁止自动输出，只有使用 p命令时才会输出</td>
+</tr>
+<tr>
+<td>-e script,–expression=script</td>
+<td>直接在指令列模式上进行 sed 的动作编辑</td>
+</tr>
+<tr>
+<td>-f script-file,–file=script-file</td>
+<td>将 sed 的命令写在script文件内， 当处理输入时可以执行script内的sed命令</td>
+</tr>
+</tbody>
+</table>
+<p>If no -e, -f, –expression, or –file options are given on the command-line, then the first non-option argument on the command line is taken to be the script to be executed.</p>
+<p>If any command-line parameters remain after processing the above, these parameters are interpreted as the names of input files to be processed. A file name of ‘-’ refers to the standard input stream. The standard input will be processed if no file names are specified.</p>
+<h1 id="sed命令">sed命令</h1><p>下面是一些常用的命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)。在当前行后添加一行或多行。多行时除最后一行外，每行末尾需用“\”续行</td>
+</tr>
+<tr>
+<td>c</td>
+<td>取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！用此符号后的新文本替换当前行中的文本。多行时除最后一行外，每行末尾需用”\”续行</td>
+</tr>
+<tr>
+<td>d</td>
+<td>删除，删除 Pattern space，所以 d 后面通常不接任何咚咚</td>
+</tr>
+<tr>
+<td>i</td>
+<td>插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)。在当前行之前插入文本。多行时除最后一行外，每行末尾需用”\”续行</td>
+</tr>
+<tr>
+<td>p</td>
+<td>打印，打印pattern space到标准输出。通常 p 会与参数 -n 一起使用</td>
+</tr>
+<tr>
+<td>s</td>
+<td>替换，用一个字符串替换另一个，可与正则表达式一起使用。s/re/string，用string替换正则表达式re。</td>
+</tr>
+<tr>
+<td>q</td>
+<td>结束或退出sed</td>
+</tr>
+<tr>
+<td>n</td>
+<td>如果自动打印未启用，打印pattern space，然后读取下一个输入行，并从下一条命令而不是第一条命令开始对其的处理</td>
+</tr>
+<tr>
+<td>#</td>
+<td>把注释扩展到下一个换行符以前</td>
+</tr>
+<tr>
+<td>r</td>
+<td>从文件中读取输入行</td>
+</tr>
+<tr>
+<td>g</td>
+<td>把暂存缓冲区里的内容复制到模式空间，覆盖原有的内容。获得内存缓冲区的内容，并替代当前模板块中的文本。在行内进行全局替换</td>
+</tr>
+</tbody>
+</table>
+<p>下面是一些不太常用的命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>h</td>
+<td>把模式空间里的内容复制到暂存缓冲区</td>
+</tr>
+<tr>
+<td>H</td>
+<td>把模式空间里的内容追加到暂存缓冲区</td>
+</tr>
+<tr>
+<td>G</td>
+<td>把暂存缓冲区的内容追加到模式空间里，追加在原有内容的后面</td>
+</tr>
+<tr>
+<td>l</td>
+<td>列出非打印字符</td>
+</tr>
+<tr>
+<td>!</td>
+<td>对所选行以外的所有行应用命令。表示后面的命令对所有没有被选定的行发生作用。</td>
+</tr>
+<tr>
+<td>w</td>
+<td>将所选的行写入文件，file写并追加模板块到file末尾</td>
+</tr>
+<tr>
+<td>x</td>
+<td>交换暂存缓冲区与模式空间的内容</td>
+</tr>
+<tr>
+<td>y</td>
+<td>将字符替换为另一字符（不能对正则表达式使用y命令）</td>
+</tr>
+<tr>
+<td>b lable</td>
+<td>分支到脚本中带有标记的地方，如果分支不存在则分支到脚本的末尾。</td>
+</tr>
+<tr>
+<td>D</td>
+<td>删除模板块的第一行。</td>
+</tr>
+<tr>
+<td>N</td>
+<td>追加下一个输入行到模板块后面并在二者间嵌入一个新行，改变当前行号码。</td>
+</tr>
+<tr>
+<td>P</td>
+<td>打印模板块的第一行。</td>
+</tr>
+<tr>
+<td>t labelif</td>
+<td>分支，从最后一行开始，条件一旦满足或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。</td>
+</tr>
+<tr>
+<td>T label</td>
+<td>错误分支，从最后一行开始，一旦发生错误或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。</td>
+</tr>
+<tr>
+<td>W file</td>
+<td>写并追加模板块的第一行到file末尾。</td>
+</tr>
+<tr>
+<td>=</td>
+<td>打印当前行号码。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="正则表达式元字符">正则表达式元字符</h1><p>与grep一样，sed也支持特殊元字符，来进行模式查找、替换。不同的是，sed使用的正则表达式是括在斜杠线”/“之间的模式。</p>
+<p>如果要把正则表达式分隔符”/“改为另一个字符，比如o，只要在这个字符前加一个反斜线，在字符后跟上正则表达式，再跟上这个字符即可。例如：sed -n ‘\o^Myop’ datafile</p>
+<table>
+<thead>
+<tr>
+<th>元字符</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>行首定位符</td>
+<td>/^my/  匹配所有以my开头的行</td>
+</tr>
+<tr>
+<td>$</td>
+<td>行尾定位符</td>
+<td>/my$/  匹配所有以my结尾的行</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符以外的单个字符</td>
+<td>/m..y/  匹配包含字母m，后跟两个任意字符，再跟字母y的行</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配零个或多个前导字符</td>
+<td>/my*/  匹配包含字母m,后跟零个或多个y字母的行</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>匹配指定字符组内的任一字符</td>
+<td>/[Mm]y/  匹配包含My或my的行</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>匹配不在指定字符组内的任一字符</td>
+<td>/[^Mm]y/  匹配包含y，但y之前的那个字符不是M或m的行</td>
+</tr>
+<tr>
+<td>(..)</td>
+<td>保存已匹配的字符</td>
+<td>1,20s/(you)self/\1r/  标记元字符之间的模式，并将其保存为标签1，之后可以使用\1来引用它。最多可以定义9个标签，从左边开始编号，最左边的是第一个。此例中，对第1到第20行进行处理，you被保存为标签1，如果发现youself，则替换为your。</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>保存查找串以便在替换串中引用</td>
+<td>s/my/<strong>&amp;</strong>/  符号&amp;代表查找串。my将被替换为<strong>my</strong></td>
+</tr>
+<tr>
+<td>\&lt;</td>
+<td>词首定位符</td>
+<td>/\&lt;my/  匹配包含以my开头的单词的行</td>
+</tr>
+<tr>
+<td>></td>
+<td>词尾定位符</td>
+<td>/my>/  匹配包含以my结尾的单词的行</td>
+</tr>
+<tr>
+<td>x{m}</td>
+<td>连续m个x</td>
+<td>/9{5}/ 匹配包含连续5个9的行</td>
+</tr>
+<tr>
+<td>x{m,}</td>
+<td>至少m个x</td>
+<td>/9{5,}/  匹配包含至少连续5个9的行</td>
+</tr>
+<tr>
+<td>x{m,n}</td>
+<td>至少m个，但不超过n个x</td>
+<td>/9{5,7}/  匹配包含连续5到7个9的行</td>
+</tr>
+</tbody>
+</table>
+<h1 id="命令示例">命令示例</h1><p>以官方文档的大纲为例：</p>
+<blockquote>
+<p>cat filename<br>Execution Cycle: How sed works<br>Addresses: Selecting lines with sed<br>Regular Expressions: Overview of regular expression syntax<br>Common Commands: Often used commands<br>The “s” Command: sed’s Swiss Army Knife<br>Other Commands: Less frequently used commands<br>Programming Commands: Commands for sed gurus<br>Extended Commands: Commands specific of GNU sed<br>Escapes: Specifying special characters</p>
+</blockquote>
+<h2 id="a命令">a命令</h2><p>a 命令是追加命令，追加将添加新文本到文件中当前行（即读入模式缓冲区中的行）的后面。所追加的文本行位于sed命令的下方另起一行。如果要追加的内容超过一行，则每一行都必须以反斜线结束，最后一行除外。最后一行将以引号和文件名结束。<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#本例命令部分中的1表示第一行，同样的第二行写成2，第一行到第三行写成`1,3`，用`$`表示最后一行，比如`2,$`表示第二行到最后一行中间所有的行(包含第二行和最后一行)。</span></span><br><span class="line"><span class="comment">#第一行后添加</span></span><br><span class="line"><span class="title">sed</span> <span class="string">'1a Hi，welcome to sed!'</span> filename</span><br><span class="line"></span><br><span class="line"><span class="comment">#最后一行后添加内容，使用换行符\n</span></span><br><span class="line">sed <span class="string">'<span class="variable">$a</span> Hi，welcome to sed!\</span><br><span class="line">Do u like it?'</span> filename</span><br><span class="line"></span><br><span class="line"><span class="comment">#在第一行到最后一行后添加内容，会在每一行下添加</span></span><br><span class="line">sed <span class="string">'1,<span class="variable">$a</span> Hi，welcome to sed!'</span> filename</span><br><span class="line"></span><br><span class="line"><span class="comment">#在包含"Programming"字符串的行的后面添加内容</span></span><br><span class="line">sed <span class="string">'/Programming/a Hi，welcome to sed!'</span> filename</span><br><span class="line"></span><br><span class="line"><span class="comment">#使用正则表达式匹配行，`^The.*Knife$`表示以sed's开头，以Knife结尾的行，则可以匹配到文件的"The "s" Command: sed's Swiss Army Knife</span></span><br><span class="line"><span class="string">"，所以在该行后面增加了"</span>Hi，welcome to sed!<span class="string">"。</span><br><span class="line">sed '/^The.*Knife$/a \Hi，welcome to sed!' filename</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="i命令">i命令</h2><p>i命令使用方法和a命令一样的，只不过是在匹配的行的前面插入，直接将上面a命令的示例的a替换成i即可。</p>
+<h2 id="c命令">c命令</h2><p>sed使用该命令将已有文本修改成新的文本。</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#本例表示将最后一行替换</span></span><br><span class="line"><span class="title">sed</span> <span class="string">'<span class="variable">$c</span> \Hi，welcome to sed!'</span> filename</span><br><span class="line"></span><br><span class="line"><span class="comment">#本例将第四行到最后一行的内容替换</span></span><br><span class="line">sed <span class="string">'4,<span class="variable">$c</span> \Hi，welcome to sed!'</span> filename</span><br><span class="line"></span><br><span class="line"><span class="comment">#使用正则表达式匹配行，`^The.*Knife$`表示以sed's开头，以Knife结尾的行，则可以匹配到文件的"The "s" Command: sed's Swiss Army Knife</span></span><br><span class="line"><span class="string">"，所以在该行后面增加了"</span>Hi，welcome to sed!<span class="string">"。</span><br><span class="line">sed '/^The.*Knife$/c \Hi，welcome to sed!' filename</span></span><br></pre></td></tr></table></figure>
+<h2 id="d命令">d命令</h2><p>命令d用于删除输入行。sed先将输入行从文件复制到模式空间里，然后对该行执行sed命令，最后将模式空间里的内容显示在屏幕上。如果发出的是命令d，当前模式空间里的输入行会被删除，不被显示。</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#删除第一行中的内容</span></span><br><span class="line">sed <span class="string">'1d'</span> <span class="keyword">filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#删除第四行到最后一行中的内容</span></span><br><span class="line">sed <span class="string">'10,$d'</span> <span class="keyword">filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#删除包含demo的行，其余的都被显示</span></span><br><span class="line">sed <span class="string">'/Other Commands/d'</span> <span class="keyword">filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#本例删除以The开头，以Knife结尾的行</span></span><br><span class="line">sed <span class="string">'/^The.*Knife$/d'</span> <span class="keyword">filename</span></span><br></pre></td></tr></table></figure>
+<h2 id="p命令">p命令</h2><p>命令p用于显示模式空间的内容。默认情况下，sed把输入行打印在屏幕上，选项-n用于取消默认的打印操作。当选项-n和命令p同时出现时,sed可打印选定的内容。</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line"><span class="comment">#默认情况下，sed把所有输入行都打印在标准输出上。如果某行匹配模式my，p命令将把该行另外打印一遍。</span></span><br><span class="line">sed <span class="string">'/Regular/p'</span> <span class="keyword">filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#选项-n取消sed默认的打印，p命令把匹配模式Regular的行打印一遍。</span></span><br><span class="line">sed -n <span class="string">'/Regular/p'</span> <span class="keyword">filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在屏幕上打印第四行到最后一行的内容。</span></span><br><span class="line">sed -n <span class="string">'4,$p'</span> <span class="keyword">filename</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#打印以The开头，以Knife结尾的行</span></span><br><span class="line">sed -n <span class="string">'/^The.*Knife$/p'</span> <span class="keyword">filename</span></span><br></pre></td></tr></table></figure>
+<h2 id="s命令">s命令</h2><p>实际运用中s命令式最常使用到的。</p>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">#命令末端的g表示在行内进行全局替换，也就是说如果某行出现多个Commands，所有的Commands都被替换为cmds</span><br><span class="line">sed 's/^Commands/cmds/g' filename</span><br><span class="line"></span><br><span class="line">#取消默认输出，处理全部行里匹配以commands结尾的行，把行内所有的commands替换为cmds，并打印到屏幕上</span><br><span class="line">sed -n '<span class="number">1</span>,$s/commands$/cmds/gp' filename</span><br><span class="line"></span><br><span class="line">#紧跟在s命令后的字符就是查找串和替换串之间的分隔符。分隔符默认为正斜杠，但可以改变。无论什么字符（换行符、反斜线除外），只要紧跟s命令，就成了新的串分隔符。</span><br><span class="line">sed 's#commands#cmds#g' filename</span><br><span class="line"></span><br><span class="line"># 将文件中的所有Commands替换成cmds，最后的g是global的意思，也就是全局替换，如果不加g，则只会替换本行</span><br><span class="line">sed 's/Commands/cmds/g' filename</span><br><span class="line"></span><br><span class="line">#匹配以The开头，以Knife结尾的行，本例中匹配到的行是The <span class="string">"s"</span> Command: sed's Swiss Army Knife这样，然后再将该行中的<span class="string">"s"</span>替换成<span class="string">"sed"</span></span><br><span class="line">sed '/^The.*Knife$/s/<span class="string">"s"</span>/<span class="string">"sed"</span>/g' filename</span><br><span class="line"></span><br><span class="line">#首先s命令的模式是<span class="escape">`s</span>/old/new/g<span class="escape">`这</span>样的，所以本例的old部分即<span class="escape">`\</span>(.*\)line$<span class="escape">`,</span>sed命令中使用<span class="escape">`\</span>(\)<span class="escape">`包</span>裹的内容表示正则表达式的第n部分，序号从<span class="number">1</span>开始计算，本例中只有一个<span class="escape">`\</span>(\)<span class="escape">`所</span>以<span class="escape">`\</span>(.*\)<span class="escape">`表</span>示正则表达式的第一部分，这部分匹配任意字符串，所以<span class="escape">`\</span>(.*\)line$<span class="escape">`匹</span>配的就是以line结尾的任何行。然后将匹配到的行替换成正则表达式的第一部分（本例中相当于删除line部分），使用<span class="escape">`\</span><span class="number">1</span><span class="escape">`表</span>示匹配到的第一部分，同样<span class="escape">`\</span><span class="number">2</span><span class="escape">`表</span>示第二部分，<span class="escape">`\</span><span class="number">3</span><span class="escape">`表</span>示第三部分，可以依次这样引用。</span><br><span class="line">sed 's/\(.*\)line$/\<span class="number">1</span>/g' filename</span><br><span class="line"></span><br><span class="line">#正则表达式中<span class="escape">`i</span>s<span class="escape">`两</span>边的部分可以用<span class="escape">`\</span><span class="number">1</span><span class="escape">`和</span><span class="escape">`\</span><span class="number">2</span><span class="escape">`表</span>示，该例子的作用其实就是删除中间部分的is。</span><br><span class="line">sed 's/\(.*\)is\(.*\)line/\<span class="number">1</span>\<span class="number">2</span>/g' filename</span><br></pre></td></tr></table></figure>
+<h2 id="e选项">e选项</h2><p>e是编辑命令，用于sed执行多个编辑任务的情况下。在下一行开始编辑前，所有的编辑动作将应用到模式缓冲区中的行上。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#选项-e用于进行多重编辑。第一重编辑删除第1-3行。第二重编辑将出现的所有My替换为Your。因为是逐行进行这两项编辑（即这两个命令都在模式空间的当前行上执行），所以编辑命令的顺序会影响结果。</span></span><br><span class="line">sed <span class="operator">-e</span> <span class="string">'1,10d'</span> <span class="operator">-e</span> <span class="string">'s/Commands/cmds/g'</span> filename</span><br></pre></td></tr></table></figure>
+<h2 id="r命令">r命令</h2><p>r命令是读命令。sed使用该命令将一个文本文件中的内容加到当前文件的特定位置上。</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#如果在文件filename的某一行匹配到模式My，就在该行后读入文件introduce.txt的内容。如果出现Commands的行不止一行，则在出现Commands的各行后都读入introduce.txt文件的内容。</span></span><br><span class="line"><span class="title">sed</span> <span class="string">'/Common/r filename2'</span> filename</span><br></pre></td></tr></table></figure>
+<h2 id="w命令">w命令</h2><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">sed</span> -n <span class="string">'/Common/w filename2'</span> filename</span><br></pre></td></tr></table></figure>
+<h2 id="n命令">n命令</h2><p>sed使用该命令获取输入文件的下一行，并将其读入到模式缓冲区中，任何sed命令都将应用到匹配行紧接着的下一行上。</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 如果需要使用多条命令，或者需要在某个地址范围内嵌套地址，就必须用花括号将命令括起来，每行只写一条命令，或这用分号分割同一行中的多条命令。</span></span><br><span class="line"><span class="title">sed</span> <span class="string">'/hrwang/&#123;n;s/My/Your/;&#125;'</span> filename</span><br></pre></td></tr></table></figure>
+<h2 id="y命令">y命令</h2><p>该命令与UNIX/Linux中的tr命令类似，字符按照一对一的方式从左到右进行转换。例如，y/abc/ABC/将把所有小写的a转换成A，小写的b转换成B，小写的c转换成C。</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#将1到20行内，所有的小写hrwang转换成大写，将1转换成^,将2转换成$。</span></span><br><span class="line"><span class="preprocessor">#正则表达式元字符对y命令不起作用。与s命令的分隔符一样，斜线可以被替换成其它的字符。</span></span><br><span class="line">sed <span class="string">'1,20y/hrwang12/HRWANG^$/'</span> filename</span><br></pre></td></tr></table></figure>
+<h2 id="q命令">q命令</h2><p>q命令将导致sed程序退出，不再进行其它的处理。</p>
+<figure class="highlight dust"><table><tr><td class="code"><pre><span class="line"><span class="xml">sed '/hrwang/</span><span class="expression">&#123;<span class="variable">s</span><span class="end-block">/hrwang</span><span class="end-block">/HRWANG</span>/;<span class="variable">q</span>;&#125;</span><span class="xml">' filename</span></span><br></pre></td></tr></table></figure>
+<h2 id="h命令和g命令">h命令和g命令</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#cat datafile</span></span><br><span class="line">My name is hrwang.</span><br><span class="line">Your name is mjfan.</span><br><span class="line">hrwang is mjfan<span class="string">'s husband.</span><br><span class="line">mjfan is hrwang'</span>s wife.</span><br><span class="line"></span><br><span class="line">sed <span class="operator">-e</span> <span class="string">'/hrwang/h'</span> <span class="operator">-e</span> <span class="string">'$G'</span> filename</span><br><span class="line">sed <span class="operator">-e</span> <span class="string">'/hrwang/H'</span> <span class="operator">-e</span> <span class="string">'$G'</span> filename</span><br></pre></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#通过上面两条命令，你会发现<span class="keyword">h</span>会把原来暂存缓冲区的内容清除，只保存最近一次执行<span class="keyword">h</span>时保存进去的模式空间的内容。而<span class="keyword">H</span>命令则把每次匹配hrwnag的行都追加保存在暂存缓冲区。</span><br><span class="line">sed -<span class="keyword">e</span> '/hrwang/<span class="keyword">H</span>' -<span class="keyword">e</span> '<span class="label">$g</span>' filename</span><br><span class="line">sed -<span class="keyword">e</span> '/hrwang/<span class="keyword">H</span>' -<span class="keyword">e</span> '<span class="label">$G</span>' filename</span><br><span class="line">#通过上面两条命令，你会发现<span class="keyword">g</span>把暂存缓冲区中的内容替换掉了模式空间中当前行的内容，此处即替换了最后一行。而<span class="keyword">G</span>命令则把暂存缓冲区的内容追加到了模式空间的当前行后。此处即追加到了末尾。</span><br></pre></td></tr></table></figure>
+<h1 id="sed脚本">sed脚本</h1><p>sed脚本就是写在文件中的一列sed命令。脚本中，要求命令的末尾不能有任何多余的空格或文本。如果在一行中有多个命令，要用分号分隔。执行脚本时，sed先将输入文件中第一行复制到模式缓冲区，然后对其执行脚本中所有的命令。每一行处理完毕后，sed再复制文件中下一行到模式缓冲区，对其执行脚本中所有命令。使用sed脚本时，不再用引号来确保sed命令不被shell解释。例如sed脚本script：</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line">#handle datafile</span><br><span class="line"><span class="header">3i\</span><br><span class="line">~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line">3,$s/\(hrwang\) is \(mjfan\)/\2 is \1/</span><br><span class="line">$a\</span><br><span class="line">We will love eachother forever！！</span><br></pre></td></tr></table></figure>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line">#sed -f script datafile</span><br><span class="line">My name is hrwang</span><br><span class="line"><span class="header">Your name is mjfan</span><br><span class="line">~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line">mjfan is hrwang's husband.          ＃啦啦～～～</span><br><span class="line">mjfan is hrwang's wife.</span><br><span class="line">We will love eachother forever！！</span><br></pre></td></tr></table></figure>
 </span>
       
     </div>
@@ -358,7 +619,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-count">45</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -372,7 +633,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -410,7 +671,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed选项"><span class="nav-number">1.</span> <span class="nav-text">sed选项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sed命令"><span class="nav-number">2.</span> <span class="nav-text">sed命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正则表达式元字符"><span class="nav-number">3.</span> <span class="nav-text">正则表达式元字符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令示例"><span class="nav-number">4.</span> <span class="nav-text">命令示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#a命令"><span class="nav-number">4.1.</span> <span class="nav-text">a命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#i命令"><span class="nav-number">4.2.</span> <span class="nav-text">i命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c命令"><span class="nav-number">4.3.</span> <span class="nav-text">c命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d命令"><span class="nav-number">4.4.</span> <span class="nav-text">d命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#p命令"><span class="nav-number">4.5.</span> <span class="nav-text">p命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#s命令"><span class="nav-number">4.6.</span> <span class="nav-text">s命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#e选项"><span class="nav-number">4.7.</span> <span class="nav-text">e选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#r命令"><span class="nav-number">4.8.</span> <span class="nav-text">r命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#w命令"><span class="nav-number">4.9.</span> <span class="nav-text">w命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n命令"><span class="nav-number">4.10.</span> <span class="nav-text">n命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#y命令"><span class="nav-number">4.11.</span> <span class="nav-text">y命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#q命令"><span class="nav-number">4.12.</span> <span class="nav-text">q命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#h命令和g命令"><span class="nav-number">4.13.</span> <span class="nav-text">h命令和g命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sed脚本"><span class="nav-number">5.</span> <span class="nav-text">sed脚本</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

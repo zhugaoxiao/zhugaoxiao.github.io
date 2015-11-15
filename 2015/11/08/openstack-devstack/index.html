@@ -1,0 +1,713 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="devstack,openstack," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="DevStack可以用来快速搭建 OpenStack 的运行和开发环境，特别适合在自己的笔记本上搭建一个开发环境出来。
+参考：http://docs.openstack.org/developer/devstack/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack之devstack">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/11/08/openstack-devstack/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="DevStack可以用来快速搭建 OpenStack 的运行和开发环境，特别适合在自己的笔记本上搭建一个开发环境出来。
+参考：http://docs.openstack.org/developer/devstack/">
+<meta property="og:updated_time" content="2015-11-15T14:11:40.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack之devstack">
+<meta name="twitter:description" content="DevStack可以用来快速搭建 OpenStack 的运行和开发环境，特别适合在自己的笔记本上搭建一个开发环境出来。
+参考：http://docs.openstack.org/developer/devstack/">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> openstack之devstack | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'C7zDme1dExGhEGz8vgSx','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              openstack之devstack
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-08T00:00:00+08:00" content="2015-11-08">
+            2015-11-08
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/08/openstack-devstack/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/08/openstack-devstack/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+        <span>&nbsp; | &nbsp;
+        <span id="busuanzi_value_page_pv" ></span>次阅读
+        </span>
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>DevStack可以用来快速搭建 OpenStack 的运行和开发环境，特别适合在自己的笔记本上搭建一个开发环境出来。</p>
+<p>参考：<a href="http://docs.openstack.org/developer/devstack/" target="_blank" rel="external">http://docs.openstack.org/developer/devstack/</a></p>
+<a id="more"></a>
+<h1 id="环境说明">环境说明</h1><p>官方文档目前只有Ubuntu 14.04 (Trusty), Fedora 21 (or Fedora 22) 和 CentOS/RHEL 7的，不过 OpenSUSE 和 Debian也支持。</p>
+<p>我选择最小化安装CentOS 7系统。</p>
+<p>主机环境<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Devstack VM：</span><br><span class="line">    Name: devstack</span><br><span class="line">    vCPU:<span class="number">4</span></span><br><span class="line">    Memory :<span class="number">4</span>G</span><br><span class="line">    Disk:<span class="number">30</span>G</span><br><span class="line">    Networks: ens160,ens192</span><br></pre></td></tr></table></figure></p>
+<p>网络环境<br><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="attribute">ens160</span>:</span><br><span class="line">    <span class="attribute">Purpose</span>: management network</span><br><span class="line">    IP <span class="attribute">block</span>: <span class="number">192.168</span>.<span class="number">56.101</span>/<span class="number">24</span></span><br><span class="line">    <span class="attribute">DHCP</span>: disable</span><br><span class="line">    Linux <span class="attribute">device</span>: eth0</span><br><span class="line"></span><br><span class="line"><span class="attribute">ens192</span>:</span><br><span class="line">    <span class="attribute">Purpose</span>: public network</span><br><span class="line">    <span class="attribute">DHCP</span>: disable</span><br><span class="line">    IP <span class="attribute">block</span>: <span class="number">192.168</span>.<span class="number">199.223</span>/<span class="number">24</span></span><br><span class="line">    Linux <span class="attribute">device</span>: eth1</span><br></pre></td></tr></table></figure></p>
+<p>OpenStack组件<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">cinder</span></span><br><span class="line">heat</span><br><span class="line">horizon</span><br><span class="line">keystone</span><br><span class="line">neutron</span><br><span class="line">nova</span><br></pre></td></tr></table></figure></p>
+<h1 id="相关设置">相关设置</h1><p>主机名设置<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">hostnamectl <span class="keyword">set</span>-hostname devstack</span><br></pre></td></tr></table></figure></p>
+<p>hosts设置<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line"><span class="number">192.168</span><span class="number">.56</span><span class="number">.101</span> devstack</span><br></pre></td></tr></table></figure></p>
+<p>关闭selinux<br><figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="setting">SELINUX=<span class="value">disabled</span></span></span><br></pre></td></tr></table></figure></p>
+<p>关闭防火墙、网络管理<br><figure class="highlight smali"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span><span class="keyword"></span><br><span class="line">system</span>ctl stop NetworkManager<span class="keyword"></span><br><span class="line">system</span>ctl disable NetworkManager<span class="keyword"></span><br><span class="line">system</span>ctl stop firewalld.service<span class="keyword"></span><br><span class="line">system</span>ctl disable firewalld.service<span class="keyword"></span><br><span class="line">system</span>ctl disable iptables<span class="keyword"></span><br><span class="line">system</span>ctl stop  iptables</span><br></pre></td></tr></table></figure></p>
+<p>安装相关软件包<br><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">yum <span class="keyword">install</span> -y open-vm-tools</span><br><span class="line">yum <span class="keyword">install</span> -y git</span><br></pre></td></tr></table></figure></p>
+<h1 id="安装">安装</h1><p>devstack 官网地址：<a href="https://git.openstack.org/cgit/openstack-dev/devstack/" target="_blank" rel="external">https://git.openstack.org/cgit/openstack-dev/devstack/</a></p>
+<p>克隆devstack仓库<br><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">cd /opt</span><br><span class="line">git <span class="keyword">clone</span> git:<span class="comment">//git.openstack.org/openstack-dev/devstack</span></span><br><span class="line"><span class="comment">#或者</span></span><br><span class="line">git <span class="keyword">clone</span> https:<span class="comment">//git.openstack.org/openstack-dev/devstack</span></span><br></pre></td></tr></table></figure></p>
+<p>使用提供的脚本创建stack用户<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">cd</span> devstack</span><br><span class="line">./tools/create-<span class="keyword">stack</span>-user.<span class="keyword">sh</span></span><br><span class="line">chown -R <span class="keyword">stack</span>:<span class="keyword">stack</span> /opt/devstack</span><br><span class="line">chmod 777 /opt/devstack -<span class="literal">R</span></span><br><span class="line"><span class="keyword">su</span> - <span class="keyword">stack</span></span><br></pre></td></tr></table></figure></p>
+<p>进行安装<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line"><span class="keyword">cd</span> /opt/devstack</span><br><span class="line">./<span class="keyword">stack</span>.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
+<p>整个过程需要的时间视各地网络速度而定，特别是你如果没有梯子，为你默哀。安装过程中可以研究一下这个<a href="http://docs.openstack.org/developer/devstack/stack.sh.html" target="_blank" rel="external">脚本</a> 。最后出现类似如下输出，说明安装完成。</p>
+<p>This is your host IP address: 192.168.56.101<br>This is your host IPv6 address: ::1<br>Horizon is now available at <a href="http://192.168.56.101/dashboard" target="_blank" rel="external">http://192.168.56.101/dashboard</a><br>Keystone is serving at <a href="http://192.168.56.101:5000/" target="_blank" rel="external">http://192.168.56.101:5000/</a><br>The default users are: admin and demo<br>The password: admin</p>
+<p>打开浏览器输入<a href="http://10.20.0.210/" target="_blank" rel="external">http://10.20.0.210/</a> 登录Dashboard</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> mariadb</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> rabbitmq-server</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> httpd</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> openvswitch</span><br></pre></td></tr></table></figure>
+<p>重启虚拟机后，登录 Dashboard 时出现 “An error occurred authenticating. Please try again later” 的错误， 如上图 .<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">sh</span> <span class="label">$HOME</span>/open_filter.<span class="keyword">sh</span></span><br><span class="line">$ sudo losetup -f /opt/<span class="keyword">stack</span>/data/<span class="keyword">stack</span>-volumes-lvmdriver-1-backing-<span class="keyword">file</span></span><br><span class="line">$ <span class="keyword">cd</span> <span class="label">$HOME</span>/devstack</span><br><span class="line">$ ./rejoin-<span class="keyword">stack</span>.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
+<p>local.conf文件参考<br><figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">echo "<span class="comment">##</span></span><br><span class="line"><span class="comment">## local.conf for devstack</span></span><br><span class="line"><span class="comment">##[[local|localrc]]</span></span><br><span class="line"><span class="constant">ADMIN_PASSWORD</span>=admin</span><br><span class="line"><span class="constant">DATABASE_PASSWORD</span>=$ADMIN_PASSWORD</span><br><span class="line"><span class="constant">RABBIT_PASSWORD</span>=$ADMIN_PASSWORD</span><br><span class="line"><span class="constant">SERVICE_PASSWORD</span>=$ADMIN_PASSWORD</span><br><span class="line"><span class="constant">SERVICE_TOKEN</span>=$ADMIN_PASSWORD</span><br><span class="line"></span><br><span class="line"><span class="comment"># Target Path</span></span><br><span class="line"><span class="comment">#DEST=/opt/stack</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable Logging</span></span><br><span class="line"><span class="constant">LOGFILE</span>=$DEST/logs/stack.sh.log</span><br><span class="line"><span class="constant">VERBOSE</span>=True</span><br><span class="line"><span class="constant">LOG_COLOR</span>=True</span><br><span class="line"><span class="constant">SCREEN_LOGDIR</span>=$DEST/logs</span><br><span class="line"></span><br><span class="line"><span class="constant">KEYSTONE_TOKEN_FORMAT</span>=UUID</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nova</span></span><br><span class="line">enable_service n-novnc n-cauth</span><br><span class="line"></span><br><span class="line"><span class="comment"># Neutron</span></span><br><span class="line"><span class="comment">## Do not use Nova-Network</span></span><br><span class="line">disable_service n-net</span><br><span class="line"><span class="comment">## Enable Neutron</span></span><br><span class="line"><span class="constant">ENABLED_SERVICES</span>+=,q-svc,q-dhcp,q-meta,q-agt,q-l3,neutron</span><br><span class="line"><span class="constant">ENABLED_SERVICES</span>+=,q-lbaas,q-vpn,q-fwaas</span><br><span class="line"><span class="comment">## Neutron options</span></span><br><span class="line"><span class="constant">HOST_IP</span>=192.168.200.223</span><br><span class="line"><span class="constant">FIXED_RANGE</span>=10.10.0.0/24</span><br><span class="line"><span class="constant">NETWORK_GATEWAY</span>=10.10.0.1</span><br><span class="line"><span class="comment">#PUBLIC_INTERFACE=eth0</span></span><br><span class="line"><span class="constant">Q_L3_ENABLED</span>=True</span><br><span class="line"><span class="constant">Q_USE_SECGROUP</span>=True</span><br><span class="line"><span class="constant">Q_USE_PROVIDERNET_FOR_PUBLIC</span>=True</span><br><span class="line"><span class="constant">OVS_PHYSICAL_BRIDGE</span>=br-ex</span><br><span class="line"><span class="constant">PUBLIC_BRIDGE</span>=br-ex</span><br><span class="line"><span class="constant">OVS_BRIDGE_MAPPINGS</span>=public:br-ex</span><br><span class="line"><span class="comment">#FLOATING_RANGE="172.18.161.0/24"</span></span><br><span class="line"><span class="comment">#Q_FLOATING_ALLOCATION_POOL=start=172.18.161.250,end=172.18.161.254</span></span><br><span class="line"><span class="comment">#PUBLIC_NETWORK_GATEWAY="172.18.161.1"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Swift</span></span><br><span class="line"><span class="comment">#enable_service s-proxy s-object s-container s-accounts</span></span><br><span class="line"><span class="comment">#SWIFT_HASH=66a3d6b56c1f479c8b4e70ab5c2000f5</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Cinder</span></span><br><span class="line"><span class="constant">VOLUME_GROUP</span>="cinder-volumes"</span><br><span class="line"><span class="constant">ENABLED_SERVICES</span>+=,cinder,c-api,c-vol,c-sch,c-bak</span><br><span class="line"></span><br><span class="line"><span class="comment"># Ceilometer</span></span><br><span class="line"><span class="comment">#enable_service ceilometer-acompute ceilometer-acentral ceilometer-anotification ceilometer-collector ceilometer-api</span></span><br><span class="line"><span class="comment">#enable_service ceilometer-alarm-notifier ceilometer-alarm-evaluator</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Heat</span></span><br><span class="line">enable_service heat h-api h-api-cfn h-api-cw h-eng</span><br><span class="line">enable_service tempest</span><br><span class="line"></span><br><span class="line"><span class="comment"># Trove</span></span><br><span class="line">enable_service trove tr-api tr-tmgr tr-cond</span><br><span class="line"></span><br><span class="line"><span class="comment"># Sahara</span></span><br><span class="line">enable_service sahara"&gt;local.conf</span><br></pre></td></tr></table></figure></p>
+<h1 id="一些问题">一些问题</h1><h2 id="重新安装">重新安装</h2><p>安装失败时，可以再次执行安装命令。<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line">./unstack.<span class="keyword">sh</span> &amp;&amp; ./<span class="keyword">stack</span>.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="设置代理">设置代理</h2><p>可能需要配置一下代理，不然部分资源无法下载。<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line"><span class="keyword">export</span> http_proxy=http:<span class="comment">//192.178.102.30:1080</span></span><br><span class="line"><span class="keyword">export</span> https_proxy=http:<span class="comment">//192.178.102.30:1080</span></span><br><span class="line"><span class="preprocessor">#排除不需要代理的IP地址(可选)</span></span><br><span class="line"><span class="keyword">export</span> no_proxy=<span class="string">"127.0.0.1,192.178.102.249"</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="更换系统源">更换系统源</h2><p>修改Base、epel源为阿里的，我自己的网络，使用阿里源基本能满速。<br><figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line">mv /etc/yum.repos.d/<span class="constant">CentOS</span>-<span class="constant">Base</span>.repo /etc/yum.repos.d/<span class="constant">CentOS</span>-<span class="constant">Base</span>.repo.backup</span><br><span class="line">curl <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.com/repo</span><span class="regexp">/Centos-7.repo -o /etc</span><span class="regexp">/yum.repos.d/</span><span class="constant">CentOS</span>-<span class="constant">Base</span>.repo</span><br><span class="line">curl  <span class="symbol">http:</span>/<span class="regexp">/mirrors.aliyun.com/repo</span><span class="regexp">/epel-7.repo -o /etc</span><span class="regexp">/yum.repos.d/epel</span>.repo</span><br><span class="line">yum clean all  &amp;&amp; yum makecache</span><br></pre></td></tr></table></figure></p>
+<h2 id="更换pip源">更换pip源</h2><p>同样修改pip源为阿里的。<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line"><span class="keyword">mkdir</span> ~/.pip</span><br><span class="line"><span class="keyword">cat</span> &lt;&lt; EOF &gt; ~/.pip/pip.<span class="keyword">conf</span></span><br><span class="line">[<span class="keyword">global</span>]</span><br><span class="line">index-url = http:<span class="comment">//mirrors.aliyun.com/pypi/simple/</span></span><br><span class="line">trusted-host = mirrors.aliyun.com</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></p>
+<h2 id="更换git源">更换git源</h2><p>在执行devstack的过程中，要去clone官方的源码，默认用的是git://协议，如果你配置了https的代理，可以更换为<a href="https://协议。" target="_blank" rel="external">https://协议。</a><br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="title">sed</span> -i <span class="string">'/git:/s/git:/https:/'</span> stackrc</span><br></pre></td></tr></table></figure></p>
+<h2 id="缺少相关的包">缺少相关的包</h2><p>在安装过程中会提示缺少zookeeper的依赖包，CentOS 7下已经无法直接yum安装zookeeper，我们可以先注释掉。这个问题今天已经修复了。<br><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">Complete!</span><br><span class="line">++ die <span class="number">1251</span> <span class="string">'Missing packages detected'</span></span><br><span class="line">++ local exitcode=<span class="number">1</span></span><br><span class="line">++ set +o xtrace</span><br><span class="line">[Call Trace]</span><br><span class="line">./stack.<span class="string">sh:</span><span class="number">708</span>:source</span><br><span class="line"><span class="regexp">/opt/</span>devstack<span class="regexp">/tools/</span>install_prereqs.<span class="string">sh:</span><span class="number">72</span>:install_package</span><br><span class="line"><span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1195</span>:real_install_package</span><br><span class="line"><span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1183</span>:yum_install</span><br><span class="line"><span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1251</span>:die</span><br><span class="line">[ERROR] <span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1251</span> Missing packages detected</span><br><span class="line">Error on exit</span><br><span class="line">World dumping... see <span class="regexp">/opt/</span>stack<span class="regexp">/logs/</span>worlddump-<span class="number">2015</span>-<span class="number">11</span>-<span class="number">13</span>-<span class="number">141036.</span>txt <span class="keyword">for</span> details</span><br><span class="line"></span><br><span class="line">No <span class="keyword">package</span> zookeeper available.</span><br><span class="line">Nothing to do</span><br><span class="line">++ die <span class="number">1251</span> <span class="string">'Missing packages detected'</span></span><br><span class="line">++ local exitcode=<span class="number">1</span></span><br><span class="line">++ set +o xtrace</span><br><span class="line">[Call Trace]</span><br><span class="line">./stack.<span class="string">sh:</span><span class="number">708</span>:source</span><br><span class="line"><span class="regexp">/opt/</span>devstack<span class="regexp">/tools/</span>install_prereqs.<span class="string">sh:</span><span class="number">72</span>:install_package</span><br><span class="line"><span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1195</span>:real_install_package</span><br><span class="line"><span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1183</span>:yum_install</span><br><span class="line"><span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1251</span>:die</span><br><span class="line">[ERROR] <span class="regexp">/opt/</span>devstack/functions-<span class="string">common:</span><span class="number">1251</span> Missing packages detected</span><br><span class="line">Error on exit</span><br><span class="line">World dumping... see <span class="regexp">/opt/</span>stack<span class="regexp">/logs/</span>worlddump-<span class="number">2015</span>-<span class="number">11</span>-<span class="number">13</span>-<span class="number">141445.</span>txt <span class="keyword">for</span> details</span><br></pre></td></tr></table></figure></p>
+<p>解决办法：<br>暂时注释屌stackrc文件的zookeeper：</p>
+<figure class="highlight fix"><table><tr><td class="code"><pre><span class="line"><span class="attribute">ENABLED_SERVICES+</span>=<span class="string">,rabbit,tempest,mysql,dstat,zookeeper</span></span><br></pre></td></tr></table></figure>
+<h2 id="AttributeError:_‘module’_object_has_no_attribute_‘PY2’错误">AttributeError: ‘module’ object has no attribute ‘PY2’错误</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">+ local xtrace</span><br><span class="line">++ <span class="operator"><span class="keyword">set</span> +o</span><br><span class="line">++ grep xtrace</span><br><span class="line">+ xtrace=<span class="string">'set -o xtrace'</span></span><br><span class="line">+ <span class="keyword">set</span> +o xtrace</span><br><span class="line">+ sudo chown -R stack /opt/stack/horizon/horizon.egg-info</span><br><span class="line">+ cd /opt/stack/horizon</span><br><span class="line">+ ./run_tests.sh -<span class="keyword">N</span> <span class="comment">--compilemessages</span></span><br><span class="line">Traceback (most recent <span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/opt/stack/horizon/manage.py"</span>, line <span class="number">23</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    execute_from_command_line(<span class="keyword">sys</span>.argv)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/django/core/management/__init__.py"</span>, line <span class="number">354</span>, <span class="keyword">in</span> execute_from_command_line</span><br><span class="line">    utility.<span class="keyword">execute</span>()</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/django/core/management/__init__.py"</span>, line <span class="number">303</span>, <span class="keyword">in</span> <span class="keyword">execute</span></span><br><span class="line">    <span class="keyword">settings</span>.INSTALLED_APPS</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/django/conf/__init__.py"</span>, line <span class="number">48</span>, <span class="keyword">in</span> __getattr__</span><br><span class="line">    <span class="keyword">self</span>._setup(<span class="keyword">name</span>)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/django/conf/__init__.py"</span>, line <span class="number">44</span>, <span class="keyword">in</span> _setup</span><br><span class="line">    <span class="keyword">self</span>._wrapped = <span class="keyword">Settings</span>(settings_module)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/django/conf/__init__.py"</span>, line <span class="number">92</span>, <span class="keyword">in</span> __init__</span><br><span class="line">    <span class="keyword">mod</span> = importlib.import_module(<span class="keyword">self</span>.SETTINGS_MODULE)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib64/python2.7/importlib/__init__.py"</span>, line <span class="number">37</span>, <span class="keyword">in</span> import_module</span><br><span class="line">    __import__(<span class="keyword">name</span>)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/opt/stack/horizon/openstack_dashboard/settings.py"</span>, line <span class="number">27</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> openstack_dashboard <span class="keyword">import</span> <span class="keyword">exceptions</span></span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/opt/stack/horizon/openstack_dashboard/exceptions.py"</span>, line <span class="number">20</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> glanceclient.common <span class="keyword">import</span> <span class="keyword">exceptions</span> <span class="keyword">as</span> glanceclient</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/glanceclient/__init__.py"</span>, line <span class="number">18</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">import</span> glanceclient.<span class="keyword">client</span></span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/glanceclient/client.py"</span>, line <span class="number">18</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> glanceclient.common <span class="keyword">import</span> utils</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/glanceclient/common/utils.py"</span>, line <span class="number">36</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> oslo_utils <span class="keyword">import</span> strutils</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_utils/strutils.py"</span>, line <span class="number">26</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> oslo_utils._i18n <span class="keyword">import</span> _</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_utils/_i18n.py"</span>, line <span class="number">21</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">import</span> oslo_i18n</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_i18n/__init__.py"</span>, line <span class="number">13</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> ._factory <span class="keyword">import</span> *</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_i18n/_factory.py"</span>, line <span class="number">26</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">from</span> oslo_i18n <span class="keyword">import</span> _message</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_i18n/_message.py"</span>, line <span class="number">38</span>, <span class="keyword">in</span> &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    <span class="keyword">class</span> Message(six.text_type):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/usr/lib/python2.7/site-packages/oslo_i18n/_message.py"</span>, line <span class="number">232</span>, <span class="keyword">in</span> Message</span><br><span class="line">    <span class="keyword">if</span> six.PY2:</span><br><span class="line">AttributeError: <span class="string">'module'</span> <span class="keyword">object</span> has <span class="keyword">no</span> <span class="keyword">attribute</span> <span class="string">'PY2'</span></span><br><span class="line">+ exit_trap</span><br><span class="line">+ <span class="keyword">local</span> r=<span class="number">1</span></span><br><span class="line">++ jobs -<span class="keyword">p</span></span><br><span class="line">+ jobs=</span><br><span class="line">+ [[ -<span class="keyword">n</span> <span class="string">''</span> ]]</span><br><span class="line">+ kill_spinner</span><br><span class="line">+ <span class="string">'['</span> <span class="string">'!'</span> -z <span class="string">''</span> <span class="string">']'</span></span><br><span class="line">+ [[ <span class="number">1</span> -ne <span class="number">0</span> ]]</span><br><span class="line">+ echo <span class="string">'Error on exit'</span></span><br><span class="line"><span class="keyword">Error</span> <span class="keyword">on</span> <span class="keyword">exit</span></span><br><span class="line">+ [[ -z /opt/stack/<span class="keyword">logs</span> ]]</span><br><span class="line">+ /opt/devstack/tools/worlddump.py -<span class="keyword">d</span> /opt/stack/<span class="keyword">logs</span></span><br><span class="line">World dumping... see /opt/stack/<span class="keyword">logs</span>/worlddump-<span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span>-<span class="number">104018.</span>txt <span class="keyword">for</span> details</span><br><span class="line">+ <span class="keyword">exit</span> <span class="number">1</span></span><br><span class="line">[stack@localhost devstack]$</span></span><br></pre></td></tr></table></figure>
+<p>解决方法：<br>重复安装一些即可。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line">yum reinstall python-<span class="constant">six</span></span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/devstack/" rel="tag">#devstack</a>
+          
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/07/openstack-log/" rel="next">openstack之kilo安装 日志</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/11/08/openstack-devstack/"
+                   data-title="openstack之devstack" data-url="zhugaoxiao.github.io/2015/11/08/openstack-devstack/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境说明"><span class="nav-number">1.</span> <span class="nav-text">环境说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关设置"><span class="nav-number">2.</span> <span class="nav-text">相关设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些问题"><span class="nav-number">4.</span> <span class="nav-text">一些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重新安装"><span class="nav-number">4.1.</span> <span class="nav-text">重新安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置代理"><span class="nav-number">4.2.</span> <span class="nav-text">设置代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换系统源"><span class="nav-number">4.3.</span> <span class="nav-text">更换系统源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换pip源"><span class="nav-number">4.4.</span> <span class="nav-text">更换pip源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换git源"><span class="nav-number">4.5.</span> <span class="nav-text">更换git源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缺少相关的包"><span class="nav-number">4.6.</span> <span class="nav-text">缺少相关的包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AttributeError:_‘module’_object_has_no_attribute_‘PY2’错误"><span class="nav-number">4.7.</span> <span class="nav-text">AttributeError: ‘module’ object has no attribute ‘PY2’错误</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp
+您是第<span id="busuanzi_value_site_uv"></span>个来到的小伙伴
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
