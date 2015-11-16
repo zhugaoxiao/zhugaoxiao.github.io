@@ -45,7 +45,7 @@
 <meta property="og:url" content="zhugaoxiao.github.io/2015/11/04/openstack-cmd-service/index.html">
 <meta property="og:site_name" content="高校的小站">
 <meta property="og:description" content="OpenStack一些常用命令整理。">
-<meta property="og:updated_time" content="2015-11-10T07:47:38.447Z">
+<meta property="og:updated_time" content="2015-11-16T01:01:00.083Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack之kilo安装 常用命令">
 <meta name="twitter:description" content="OpenStack一些常用命令整理。">
@@ -253,8 +253,8 @@
       
         <span itemprop="articleBody"><p>OpenStack一些常用命令整理。</p>
 <a id="more"></a>
-<h1 id="配置_stack_用户">配置 stack 用户</h1><p>创建 stack 用户+</p>
-<p>sudo groupadd stack<br>sudo useradd -g stack -s /bin/bash -d /opt/stack -m stack<br>添加 stack 用户权限。<br>sudo echo “stack ALL=(ALL) NOPASSWD: ALL” &gt;&gt; /etc/sudoers<br>切换到 stack 用户<br>sudo su - stack</p>
+<h1 id="配置_stack_用户">配置 stack 用户</h1><p>创建 stack 用户</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">#</span><br><span class="line">groupadd <span class="keyword">stack</span></span><br><span class="line">useradd -<span class="keyword">g</span> <span class="keyword">stack</span> -s /bin/bash -<span class="keyword">d</span> /opt/<span class="keyword">stack</span> -<span class="keyword">m</span> <span class="keyword">stack</span></span><br><span class="line">echo <span class="string">"stack ALL=(ALL) NOPASSWD: ALL"</span> &gt;&gt; /etc/sudoers</span><br><span class="line"><span class="keyword">su</span> - <span class="keyword">stack</span></span><br></pre></td></tr></table></figure>
 <p>Source the admin credentials to gain access to admin-only CLI commands:<br><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$</span><br><span class="line"><span class="keyword">source</span> admin-openrc.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure></p>
 <h1 id="openstack相关">openstack相关</h1><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#</span></span><br><span class="line">openstack-status</span><br></pre></td></tr></table></figure>
 <h1 id="glance相关">glance相关</h1><p>上传image（public）</p>
