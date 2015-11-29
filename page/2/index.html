@@ -194,6 +194,212 @@
           
           
             
+              <a class="post-title-link" href="/2015/10/31/openstack-object-service/" itemprop="url">
+                openstack之kilo安装 对象存储服务
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-31T00:00:00+08:00" content="2015-10-31">
+            2015-10-31
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/31/openstack-object-service/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/31/openstack-object-service/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>OpenStack对象存储是一个多租户的对象存储系统，它支持大规模扩展，可以以低成本来管理大型的非结构化数据，通过RESTful HTTP 应用程序接口。</p>
+<p>它包含下列组件：</p>
+<ul>
+<li>Proxy servers (swift-proxy-server)<br>接收OpenStack对象存储API和纯粹的HTTP请求以上传文件，更改元数据，以及创建容器。它可服务于在web浏览器下显示文件和容器列表。为了改进性能，代理服务可以使用可选的缓存，通常部署的是memcache。</li>
+<li>Account servers (swift-account-server)<br>管理由对象存储定义的账户。</li>
+<li>Container servers (swift-container-server)<br>管理容器或文件夹的映射，对象存储内部。</li>
+<li>Object servers (swift-object-server)<br>在存储节点管理实际的对象，诸如文件。</li>
+<li>Various periodic processes<br>为了驾驭大型数据存储的任务，复制服务需要在集群内确保一致性和可用性，其他定期进程有审计，更新和reaper。</li>
+<li>WSGI middleware<br>掌控认证，使用OpenStack认证服务。</li>
+</ul>
+<blockquote>
+<p>参考：<a href="http://docs.openstack.org/kilo/install-guide/install/yum/content/ch_swift.html">Chapter 9. Add Object Storage</a></p>
+</blockquote>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/10/31/openstack-object-service/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/10/30/openstack-block-service/" itemprop="url">
+                openstack之kilo安装 块设备存储服务
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-10-30T00:00:00+08:00" content="2015-10-30">
+            2015-10-30
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/openstack/" itemprop="url" rel="index">
+                  <span itemprop="name">openstack</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/10/30/openstack-block-service/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/30/openstack-block-service/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>OpenStack块存储服务(cinder)为虚拟机添加持久的存储，块存储提供一个基础设施为了管理卷，以及和OpenStack计算服务交互，为实例提供卷。此服务也会激活管理卷的快照和卷<br>类型的功能。</p>
+<p>块存储服务通常包含下列组件：</p>
+<ul>
+<li>cinder-api<br>接收API请求，然后将之路由到cinder-volume这里执行。</li>
+<li>cinder-volume<br>直接和块存储的服务交互，以及诸如 cinder-scheduler这样的流程交互，它和这些流程交互是通过消息队列。cinder-volume<br>服务响应那些发送到块存储服务的读写请求以维护状态，它可以可多个存储供应商通过driver架构作交互。</li>
+<li>cinder-scheduler守护进程<br>选择最佳的存储节点来创建卷，和它类似的组件是novascheduler。</li>
+<li>消息队列<br>在块存储的进程之间路由信息。</li>
+</ul>
+<blockquote>
+<p>参考：<a href="http://docs.openstack.org/kilo/install-guide/install/yum/content/ch_cinder.html">Chapter 8. Add the Block Storage service</a></p>
+</blockquote>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/10/30/openstack-block-service/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/10/29/openstack-dashboad-service/" itemprop="url">
                 openstack之kilo安装 dashboard服务
               </a>
@@ -938,190 +1144,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/10/cloudstack-templates/" itemprop="url">
-                CloudStack 创建模版
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-10T20:46:25+08:00" content="2015-10-10">
-            2015-10-10
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/云计算/" itemprop="url" rel="index">
-                  <span itemprop="name">云计算</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/10/10/cloudstack-templates/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/10/cloudstack-templates/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>CloudStack在实验室实践过程，创建模版部分。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/10/cloudstack-templates/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/10/09/cloudstack-performance/" itemprop="url">
-                CloudStack系列 调优
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-10-09T20:46:25+08:00" content="2015-10-09">
-            2015-10-09
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/云计算/" itemprop="url" rel="index">
-                  <span itemprop="name">云计算</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/10/09/cloudstack-performance/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/09/cloudstack-performance/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>CloudStack在实验室实践过程，本节提示如何提高云性能。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/09/cloudstack-performance/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1160,7 +1182,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1174,7 +1196,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

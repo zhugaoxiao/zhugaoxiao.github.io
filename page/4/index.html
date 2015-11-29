@@ -194,6 +194,195 @@
           
           
             
+              <a class="post-title-link" href="/2015/09/25/vsphere-vsan/" itemprop="url">
+                vsphere系列 VSAN配置
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-25T20:46:25+08:00" content="2015-09-25">
+            2015-09-25
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/vsphere/" itemprop="url" rel="index">
+                  <span itemprop="name">vsphere</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/25/vsphere-vsan/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/25/vsphere-vsan/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><p>1、vsan网络配置<br>2、vsan存储配置<br>3、虚拟机存储策略<br>4、应用虚拟机存储策略</p>
+</span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/09/23/vsphere-esxi/" itemprop="url">
+                vsphere系列 嵌套虚拟化
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-23T20:46:25+08:00" content="2015-09-23">
+            2015-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/vsphere/" itemprop="url" rel="index">
+                  <span itemprop="name">vsphere</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/23/vsphere-esxi/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/23/vsphere-esxi/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><p>虚拟化嵌套：顾名思义就是在虚拟化环境中在嵌套一层虚拟化。</p>
+<ul>
+<li><p>虚拟机-编辑设置-选项-常规选项。版本选择其他。</p>
+</li>
+<li><p>虚拟机-虚拟硬件-CPU-选项-CPU/MMU虚拟化-选择“硬件CPU和MMU”。</p>
+</li>
+<li><p>虚拟机-编辑设置-虚拟硬件-CPU-硬件虚拟化-勾选“向客户机操作系统公开硬件辅助的虚拟化”。</p>
+</li>
+<li><p>确认虚拟机版本为最新，esxi 5.5u2版本是vm10，如果不是vm9.升级虚拟机兼容性。</p>
+</li>
+<li><p>点击宿主ESXI主机-右边配置-网络-属性，找到你ESXI虚拟机连接的端口组，点击编辑，在安全选项中，把混杂模式、伪传输勾选，选择接受！</p>
+</li>
+</ul>
+<p>否则会出现在嵌套环境下的虚拟机操作系统安装完成后，IP能获取，但是上不了外网。</p>
+</span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/09/13/tran-red-hat-teams-with-black-duck-to-keep-containers-secure/" itemprop="url">
                 翻译：红帽团队与Black Duck一起让容器更安全
               </a>
@@ -926,193 +1115,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/06/sys-linux-timedatectl/" itemprop="url">
-                Linux 7中timedatectl命令
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-06-06T20:46:25+08:00" content="2015-06-06">
-            2015-06-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/linux/" itemprop="url" rel="index">
-                  <span itemprop="name">linux</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/06/06/sys-linux-timedatectl/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/06/sys-linux-timedatectl/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>timedatectl是用来查询和修改系统时间和配置的Linux应用程序。它是systemd 系统服务管理的一部分，并且允许你检查和修改系统时钟的配置。</p>
-<blockquote>
-<p>参考：<a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/chap-Configuring_the_Date_and_Time.html">redhat手册部分</a></p>
-</blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/06/sys-linux-timedatectl/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/05/sys-linux-tcpdump/" itemprop="url">
-                Linux-tcpdump
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-06-05T00:00:00+08:00" content="2015-06-05">
-            2015-06-05
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/linux/" itemprop="url" rel="index">
-                  <span itemprop="name">linux</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/06/05/sys-linux-tcpdump/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/05/sys-linux-tcpdump/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h1 id="tcpdump简介">tcpdump简介</h1>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/05/sys-linux-tcpdump/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1151,7 +1153,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">47</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1165,7 +1167,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
