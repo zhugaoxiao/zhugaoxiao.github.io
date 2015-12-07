@@ -1,0 +1,748 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="ceph,docker," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="【编者的话】">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译：在Docker里运行Ceph集群">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/12/05/trans-bootstrap-your-ceph-cluster-in-docker/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="【编者的话】">
+<meta property="og:image" content="http://sebastien-han.fr/images/bootstrap-ceph-cluster-docker.jpg">
+<meta property="og:updated_time" content="2015-12-06T09:17:57.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翻译：在Docker里运行Ceph集群">
+<meta name="twitter:description" content="【编者的话】">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 翻译：在Docker里运行Ceph集群 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'C7zDme1dExGhEGz8vgSx','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              翻译：在Docker里运行Ceph集群
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-05T00:00:00+08:00" content="2015-12-05">
+            2015-12-05
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/翻译/" itemprop="url" rel="index">
+                  <span itemprop="name">翻译</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/05/trans-bootstrap-your-ceph-cluster-in-docker/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/05/trans-bootstrap-your-ceph-cluster-in-docker/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+        <span>&nbsp; | &nbsp;
+        <span id="busuanzi_value_page_pv" ></span>次阅读
+        </span>
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>【编者的话】</p>
+<a id="more"></a>
+<p><img src="http://sebastien-han.fr/images/bootstrap-ceph-cluster-docker.jpg" alt=""><br>自从我第一次尝试在<a href="http://www.sebastien-han.fr/blog/2013/09/19/how-I-barely-got-my-first-ceph-mon-running-in-docker/" target="_blank" rel="external">Docker中运行Ceph</a>已经过去快两年了。时光飞逝，直到最近我才有时间重新开始这项工作。在过去的几个月中，我把业余时间都用在<a href="https://github.com/ceph/ceph-docker" target="_blank" rel="external">Docker中部署Ceph</a>上了。在我们开始之前，我想说明一下如果不是<a href="http://www.cycoresys.com/" target="_blank" rel="external">Seán C. McCord</a>的帮助，这项工作根本不可能。事实上，目前github上的ceph-docker项目就是基于Seán的早期工作。让我们来看看怎么把它跑起来吧！</p>
+<h1 id="原理">原理</h1><p>在Docker中运行Ceph是存在一些争议的，很多人可能认为完全没必要这样做。虽然将Monitors, Metadata Server和Rados Gateway容器化没什么问题，但当涉及到OSD时，事情就变得棘手。Ceph的OSD与它运行的主机紧密相关，与底层硬件的强烈关系和寻常的软件不同。如果OSD依赖的硬盘损坏，OSD也无法工作，这也是容器化场景中的问题所在。</p>
+<p>坦白的说，我经常这样想：</p>
+<blockquote>
+<p>我也不知道我为什么做这个。我只知道人们需要（是的，他们也不知道为什么）。我只是觉得这样很有必要，所以就让我们试试看吧。</p>
+</blockquote>
+<p>我知道这听起来一点都不乐观，但在某种程度上就是真相。我的观点后来也有所变化，所以让我来解释一下为什么值得这样做。希望这也能改变你的看法。是的我的解释不仅仅是：Docker很酷，所以让我们Dockerize一切。</p>
+<p>人们已经投入了很多努力，在自己的平台上运行容器化的软件。因此，他们在使用各种工具来构建和编排他们的环境。而且看到Kubernetes成为这类的编排工具，我一点都不吃惊。有些人还喜欢在生产环境尝试最新的技术，不然会觉得自己的工作很无聊（Seán，对吗?）。所以，在containerize一切的道路上，他们看到自己喜欢的开源存储解决方案也容器化了会非常高兴:)。</p>
+<p>凡是与<code>yum</code>或者<code>apt-get</code>相关的，都不容易回滚，这与容器不同。容器使得升级和回滚都变得非常容易，因为你可以很容易地用<code>docker stop</code>和<code>docker run</code>来运行程序的新版本。你也可以在一台机器上运行多个相互隔离的集群。这也是开发模式的最理想状态。</p>
+<h1 id="项目">项目</h1><p>如前所述，一切都源于Seán C. McCord的工作，我们都是在他的基础上进行完善的。现在，如果你使用ceph-docker，你可以在Ubuntu或者CentOS上运行单个的Ceph守护进程。<br>在<a href="https://hub.docker.com/" target="_blank" rel="external">Docker Hub</a>上我们有很多可用的镜像。我们使用Ceph的命名空间，所以我们镜像的前缀是<code>ceph/&lt;daemon&gt;</code>。我们使用了自动构建，因此每次合并一个新补丁就会触发构建，并生成一个新版本的容器镜像。由于我们目前正处于重构过程中，你会看到大量可用的镜像。历史的原因，每个守护进程都有一个镜像（在合并这个<a href="https://github.com/ceph/ceph-docker/pull/94" target="_blank" rel="external">补丁</a>前，我们会一直这样做 ）。因此monitor，OSD，MDS和radosgw各有一个容器镜像。这不是最理想的而且也没必要这样。这也是我们为什么开始<code>daemon</code>镜像工作的原因。这个镜像包含了Ceph所有的守护程序和调用<code>docker run</code>命令时你想使用的参数。也就是说，如果你准备开始，我建议直接使用<code>ceph/daemon</code>镜像。在下一节我举例说明如何运行。</p>
+<h1 id="容器化CEPH">容器化CEPH</h1><h2 id="MONITORS">MONITORS</h2><p>由于monitors不能在NAT过的网络进行通信，我们需要使用<code>--net=host</code>暴露Docker主机网络：</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">$ sudo docker run -d --net=host \</span><br><span class="line">-<span class="ruby">v /etc/<span class="symbol">ceph:</span>/etc/ceph \</span><br><span class="line"></span>-<span class="ruby">v /var/lib/ceph/<span class="symbol">:/var/lib/ceph</span> \</span><br><span class="line"></span>-<span class="ruby">e <span class="constant">MON_IP</span>=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">20</span> \</span><br><span class="line"></span>-<span class="ruby">e <span class="constant">CEPH_PUBLIC_NETWORK</span>=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">0</span>/<span class="number">24</span> \</span><br><span class="line"></span>ceph/daemon mon</span><br></pre></td></tr></table></figure>
+<p>可用选项列表：</p>
+<ul>
+<li><code>MON_IP</code>是你运行Docker的主机IP地址</li>
+<li><code>MON_NAME</code>是你的monitor名称（默认：$(hostname)）</li>
+<li><code>CEPH_PUBLIC_NETWORK</code>是你运行Docker的主机CIDR，应该与<code>MON_IP</code>是相同的网络</li>
+<li><code>CEPH_CLUSTER_NETWORK</code>是你运行Docker的主机的第二块网卡CIDR，用于OSD复制流量</li>
+</ul>
+<h2 id="OBJECT_STORAGE_DAEMON">OBJECT STORAGE DAEMON</h2><p>按照微服务的理念，我们不应该在容器中运行多个服务，当前的实现允许你在每个容器运行一个OSD进程。在我们的例子中，一个容器中运行多个OSD进程打破了这种理念，是不可取的行为。也增加了方案安装和维护的复杂性。</p>
+<p>在这个配置中，<code>--privileged=true</code>是必须的，因为我们需要完全访问<code>/dev/</code>和其他内核功能。不过在简单的开放OSD目录基础上支持另外的配置，其中operators会对设备做适当的准备工作。然后只要简单的开放OSD目录并由entrypoint来完成OSD(<code>ceph-osd mkfs</code>)配置。现在我介绍的配置方法比较简单，因为你只需要指定一个块设备，然后entrypoint会完成剩下的所有工作。</p>
+<p>对于那些不希望使用<code>--privileged=true</code>的，请退回到第二个例子。</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line">$ sudo docker run -d --net=host \</span><br><span class="line">-<span class="ruby">-privileged=<span class="keyword">true</span> \</span><br><span class="line"></span>-<span class="ruby">v /etc/<span class="symbol">ceph:</span>/etc/ceph \</span><br><span class="line"></span>-<span class="ruby">v /var/lib/ceph/<span class="symbol">:/var/lib/ceph</span> \</span><br><span class="line"></span>-<span class="ruby">v /dev/<span class="symbol">:/dev/</span> \</span><br><span class="line"></span>-<span class="ruby">e <span class="constant">OSD_DEVICE</span>=<span class="regexp">/dev/vdd</span> \</span><br><span class="line"></span>ceph-daemon osd_ceph_disk</span><br></pre></td></tr></table></figure>
+<p>如果你不希望使用<code>--privileged=true</code>，你也可以使用你选择的配置管理工具手动配置OSD。</p>
+<p>没有特权模式的例子，在这个例子中假设你已经分区和配置了文件系统并挂载了OSD分区。要创建OSD，只需运行下面的命令：</p>
+<figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">$ sudo docker <span class="keyword">exec</span> &lt;mon-<span class="keyword">container</span>-id&gt; ceph osd create.</span><br></pre></td></tr></table></figure>
+<p>然后运行您的容器，如下所示：</p>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line">docker run -v /osds/<span class="number">1</span><span class="symbol">:/var/lib/ceph/osd/ceph-</span><span class="number">1</span> -v /osds/<span class="number">2</span><span class="symbol">:/var/lib/ceph/osd/ceph-</span><span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>sudo docker run -d --net=host \</span><br><span class="line">-v /etc/<span class="symbol">ceph:</span>/etc/ceph \</span><br><span class="line">-v /var/<span class="class"><span class="keyword">lib</span>/<span class="title">ceph</span>/:/<span class="title">var</span>/<span class="title">lib</span>/<span class="title">ceph</span> \</span></span><br><span class="line">-v /osds/<span class="number">1</span><span class="symbol">:/var/lib/ceph/osd/ceph-</span><span class="number">1</span> \</span><br><span class="line">ceph-daemon osd_disk_directory</span><br></pre></td></tr></table></figure>
+<p>可用选项列表：</p>
+<ul>
+<li><code>OSD_DEVICE</code>是OSD设备，如：/dev/sdb</li>
+<li><code>OSD_JOURNAL</code>是将用于存储OSD日志的设备，如：/dev/sdz</li>
+<li><code>HOSTNAME</code>是运行OSD容器主机的主机名（默认：$(hostname)）</li>
+<li><code>OSD_FORCE_ZAP</code>将强制指定设备内容zapping（默认值：0，1是开启）</li>
+<li><code>OSD_JOURNAL_SIZE</code>是OSD日志大小（默认值：100）</li>
+</ul>
+<h2 id="METADATA_SERVER">METADATA SERVER</h2><p>这个是非常直观和容易实现的。目前唯一要注意的是Docker中需要Ceph管理员密钥。这个密钥将被用来创建CephFS池和文件系统。如果你运行旧版本的Ceph（0.87之前的版本）你不用这个。但是最好运行最新版本，所以你还是需要！</p>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="variable">$ </span>sudo docker run -d --net=host \</span><br><span class="line">-v /var/<span class="class"><span class="keyword">lib</span>/<span class="title">ceph</span>/:/<span class="title">var</span>/<span class="title">lib</span>/<span class="title">ceph</span> \</span></span><br><span class="line">-v /etc/<span class="symbol">ceph:</span>/etc/ceph \</span><br><span class="line">-e <span class="constant">CEPHFS_CREATE</span>=<span class="number">1</span> \</span><br><span class="line">ceph-daemon mds</span><br></pre></td></tr></table></figure>
+<p>可用选项列表：</p>
+<ul>
+<li><code>MDS_NAME</code>是元数据服务的名称（默认：mds-$(hostname)）</li>
+<li><code>CEPHFS_CREATE</code>会为元数据服务创建一个文件系统（默认值：0，1是启用）</li>
+<li><code>CEPHFS_NAME</code>是元数据文件系统的名称（默认：cephfs）</li>
+<li><code>CEPHFS_DATA_POOL</code>是元数据服务的数据池名称（默认：cephfs_data）</li>
+<li><code>CEPHFS_DATA_POOL_PG</code>是数据池placement groups的数量（默认值：8）</li>
+<li><code>CEPHFS_DATA_POOL</code>是元数据服务的元数据池名称（默认：cephfs_metadata）</li>
+<li><code>CEPHFS_METADATA_POOL_PG</code>是元数据池placement groups的数量（默认值：8）</li>
+</ul>
+<h2 id="RADOS_GATEWAY">RADOS GATEWAY</h2><p>对于Rados Gateway，我们部署时会默认开启<code>civetweb</code>。也可以通过简单地指定远程地址和端口以使用不同的CGI前端。</p>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="variable">$ </span>sudo docker run -d --net=host \</span><br><span class="line">-v /var/<span class="class"><span class="keyword">lib</span>/<span class="title">ceph</span>/:/<span class="title">var</span>/<span class="title">lib</span>/<span class="title">ceph</span> \</span></span><br><span class="line">-v /etc/<span class="symbol">ceph:</span>/etc/ceph \</span><br><span class="line">ceph-daemon rgw</span><br></pre></td></tr></table></figure>
+<p>可用选项列表：</p>
+<ul>
+<li><code>RGW_REMOTE_CGI</code>指定是否使用Rados Gateway嵌入的Web服务（默认值：0，1是不使用）</li>
+<li><code>RGW_REMOTE_CGI_HOST</code>指定运行CGI进程的远程主机</li>
+<li><code>RGW_REMOTE_CGI_PORT</code>运行CGI进程的远程主机端口</li>
+<li><code>RGW_CIVETWEB_PORT</code>是civetweb的监听端口（默认：80）</li>
+<li><code>RGW_NAME</code>是Rados Gateway实例名称（默认：$(hostname)）</li>
+</ul>
+<h1 id="后续工作">后续工作</h1><h2 id="配置存储后端">配置存储后端</h2><p>缺省情况下，在初始化monitor启动时，会生成<code>ceph.conf</code>和所有的CEPH密钥。此过程假设你会将集群扩展到多个节点，你必须分发这些配置到所有节点。这一点都不灵活，我们希望改善这一点。我马上提出的一个方案是使用Ansible生成配置/密钥并分发他们到所有机器。另外，我们也希望能够在不同的后端KV存储上存储所有配置文件，例如<a href="https://github.com/coreos/etcd" target="_blank" rel="external">etcd</a>和<a href="https://www.consul.io/" target="_blank" rel="external">consul</a>。</p>
+<h2 id="编排部署">编排部署</h2><p>最简单的方法是使用<a href="https://github.com/ceph/ceph-ansible" target="_blank" rel="external">ceph-ansible</a>，其中主要的逻辑已经完成了。我只需要再提交一些修改，大部分的工作已经完成。<a href="http://kubernetes.io/" target="_blank" rel="external">Kubernetes</a>也发布了<a href="https://github.com/ceph/ceph-docker/tree/master/examples/kubernetes" target="_blank" rel="external">可用的</a>运行monitors的预览版。</p>
+<h2 id="Rocket等其他容器技术延伸">Rocket等其他容器技术延伸</h2><p>你可以简单地将你的Docker镜像放到Rocket容器环境中并启动他们（这里一语双关，你懂了没？）。</p>
+<h1 id="福利视频">福利视频</h1><p>这里有一个视频demo：</p>
+<p><iframe width="1072" height="604" src="https://www.youtube.com/embed/FUSTjTBA8f8" frameborder="0" allowfullscreen></iframe></p>
+<blockquote>
+<p>我想借此机会再次感谢Seán C. McCord，是他让这一切成为可能。Seán是一个很好的工作伙伴，我期待着与他一起为ceph-docker贡献！</p>
+</blockquote>
+<p>原文链接：<a href="http://ceph.com/planet/bootstrap-your-ceph-cluster-in-docker/" target="_blank" rel="external">BOOTSTRAP YOUR CEPH CLUSTER IN DOCKER</a> （翻译：朱高校）</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ceph/" rel="tag">#ceph</a>
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/07/trans-containers,clouds and code/" rel="prev">翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/17/trans-Unikernels, meet Docker!/" rel="next">翻译：当Unikernels遇上Docker！</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/12/05/trans-bootstrap-your-ceph-cluster-in-docker/"
+                   data-title="翻译：在Docker里运行Ceph集群" data-url="zhugaoxiao.github.io/2015/12/05/trans-bootstrap-your-ceph-cluster-in-docker/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目"><span class="nav-number">2.</span> <span class="nav-text">项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#容器化CEPH"><span class="nav-number">3.</span> <span class="nav-text">容器化CEPH</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MONITORS"><span class="nav-number">3.1.</span> <span class="nav-text">MONITORS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OBJECT_STORAGE_DAEMON"><span class="nav-number">3.2.</span> <span class="nav-text">OBJECT STORAGE DAEMON</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#METADATA_SERVER"><span class="nav-number">3.3.</span> <span class="nav-text">METADATA SERVER</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RADOS_GATEWAY"><span class="nav-number">3.4.</span> <span class="nav-text">RADOS GATEWAY</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后续工作"><span class="nav-number">4.</span> <span class="nav-text">后续工作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置存储后端"><span class="nav-number">4.1.</span> <span class="nav-text">配置存储后端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编排部署"><span class="nav-number">4.2.</span> <span class="nav-text">编排部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rocket等其他容器技术延伸"><span class="nav-number">4.3.</span> <span class="nav-text">Rocket等其他容器技术延伸</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#福利视频"><span class="nav-number">5.</span> <span class="nav-text">福利视频</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp
+您是第<span id="busuanzi_value_site_uv"></span>个来到的小伙伴
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

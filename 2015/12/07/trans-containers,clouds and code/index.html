@@ -1,0 +1,713 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="docker,yelp," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="【编者的话】为了解决Yelp的基础设施问题，Eaton带领团队对容器进行调研并寻求解决方法，最终决定使用Apache Mesos和Mesosphere。基于Mesosphere构建了PaasTA服务，为测试环境开发了Seagull平台。本文对Yelp公司采取容器方案前的困境以及采取容器方案后的好处分别进行了说明。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/12/07/trans-containers,clouds and code/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="【编者的话】为了解决Yelp的基础设施问题，Eaton带领团队对容器进行调研并寻求解决方法，最终决定使用Apache Mesos和Mesosphere。基于Mesosphere构建了PaasTA服务，为测试环境开发了Seagull平台。本文对Yelp公司采取容器方案前的困境以及采取容器方案后的好处分别进行了说明。">
+<meta property="og:image" content="https://mesosphere.com/wp-content/uploads/2015/06/learn-utilization-datacenter-dcos-e1433812992866.jpg">
+<meta property="og:image" content="https://mesosphere.com/wp-content/uploads/2015/06/architecture-1.png">
+<meta property="og:updated_time" content="2015-12-07T16:14:42.438Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？">
+<meta name="twitter:description" content="【编者的话】为了解决Yelp的基础设施问题，Eaton带领团队对容器进行调研并寻求解决方法，最终决定使用Apache Mesos和Mesosphere。基于Mesosphere构建了PaasTA服务，为测试环境开发了Seagull平台。本文对Yelp公司采取容器方案前的困境以及采取容器方案后的好处分别进行了说明。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？ | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'C7zDme1dExGhEGz8vgSx','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-07T00:00:00+08:00" content="2015-12-07">
+            2015-12-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/翻译/" itemprop="url" rel="index">
+                  <span itemprop="name">翻译</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/07/trans-containers,clouds and code/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/07/trans-containers,clouds and code/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+        <span>&nbsp; | &nbsp;
+        <span id="busuanzi_value_page_pv" ></span>次阅读
+        </span>
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>【编者的话】为了解决Yelp的基础设施问题，Eaton带领团队对容器进行调研并寻求解决方法，最终决定使用Apache Mesos和Mesosphere。基于Mesosphere构建了PaasTA服务，为测试环境开发了Seagull平台。本文对Yelp公司采取容器方案前的困境以及采取容器方案后的好处分别进行了说明。</p>
+<a id="more"></a>
+<p>2013年底，Yelp的运营总监Sam Eaton意识到公司基础设施存在问题。对开发和运维人员来说，在Yelp自己的数据中心和亚马逊云服务上扩展网站已经变得十分复杂并要消耗大量资源。</p>
+<p>Eaton解释到：“现在的问题是我们如何在自己的数据中心和AWS云上统一管理部署服务，并且不增加开发人员负担”。</p>
+<h1 id="选择太多">选择太多</h1><p>讽刺的是，Yelp的问题与缺乏创新无关。Yelp已经为裸机部署开发了自己的系统，并且使用<a href="https://github.com/Netflix/asgard" target="_blank" rel="external">开源的Asgard系统</a>用于AWS部署。为了实现持续部署，每天都要对网站进行多次更新。</p>
+<p>Yelp正饱受各种方案的煎熬而且不得不忍受每个方案的优缺点。为AWS构建新的虚拟机映像（即“黄金映像”）可能需要长达一个小时，即便这些镜像可以快速启动。在裸机上启动业务，管理方便，不过扩展性是个大问题。Yelp的开发者尝试在本地部署服务和在云中也部署服务时，处理AWS实例和Yelp硬件之间的差异对他们来说真是糟透了。</p>
+<p>Eaton说：“他们不得不为裸机采取一种配置，为AWS采取完全不同的配置，开发人员的感觉真是糟透了！”。</p>
+<p>除了服务部署复杂性，Yelp还存在测试问题。Eaton说开发人员每天都会发布很多版本，不过因为进行一次完整的测试需要90分钟，整个速度被大幅耽搁。并行化的测试也存在问题，Eaton的研究小组发现想要不浪费资源，完成所有依赖关系分析并找到测试计划的最佳方案真是太难了。</p>
+<p>他说：“对我们来说，这是一个‘装箱’问题，而且更多的虚拟机或硬件也无法解决”。</p>
+<p><img src="https://mesosphere.com/wp-content/uploads/2015/06/learn-utilization-datacenter-dcos-e1433812992866.jpg" alt=""></p>
+<h1 id="Docker来了">Docker来了</h1><p>Eaton和他的团队为了解决云和本地不断增长的服务池问题考察了很多方案。他们曾经打算部署OpenStack也曾考虑Eucalyptus（一个创业公司，专注与AWS兼容性，后被惠普收购）的方案，就为了建立一个横跨云和本地的混合环境。</p>
+<p>不过，Yelp的技术团队最终决定今后的方向是<a href="https://github.com/docker/docker" target="_blank" rel="external">Docker容器</a>而不是虚拟机。Docker可以解决一些Yelp的服务部署问题，因为开发人员可以管理自己的容器，不用等到构建最终镜像就可以迅速处理依赖问题并打包。</p>
+<h1 id="Running_millions_of_containers_means_Mesosphere_and_Mesos">Running millions of containers means Mesosphere and Mesos</h1><p>Eaton和他的团队经过研究，认定<a href="http://mesos.apache.org/" target="_blank" rel="external">Apache Mesos</a>的Mesosphere是满足Yelp业务扩展运行容器的最佳方案。Mesos在不停掉服务器相关组件的情况下就完成了Yelp的机器集群（不管虚拟还是物理）资源池聚合给Eaton留下了深刻印象。开发人员可以任意启动容器，再也不用担心服务器配置了。</p>
+<p>除了Apache Mesos的基础功能，Eaton还选择对Mesosphere的所有功能进行测试，其中包括Marathon工具。Eaton喜欢Mesosphere 在<a href="https://mesosphere.github.io/marathon/" target="_blank" rel="external">Marathon这个PAAS框架</a>中提供的原生hooks，Yelp用他们来计划和编排计算作业。此外，Mesosphere对数据中心操作系统（DCOS）的理念也与Yelp的目标一致，Yelp的愿景就是在本地和云中创建一个单一的开发环境，工具链和DevOps过程。</p>
+<p>（* Mesophere仍然提供开源源码下载，但现在还提供作为商业软件产品的<a href="https://mesosphere.com/product/" target="_blank" rel="external">数据中心操作系统（DCOS）</a>。DCOS产品包括许多重要组件和附加功能，将大大改善部署和管理分布式服务的体验。）</p>
+<p>Yelp能够在三个月内打造一个Mesosphere集群，并完成生产环境要求。</p>
+<p><img src="https://mesosphere.com/wp-content/uploads/2015/06/architecture-1.png" alt=""></p>
+<h1 id="PaaSTA服务">PaaSTA服务</h1><p>在Mesosphere上，Eaton的团队构建了一个以Docker为基础的微服务架构，它被称为PaaSTA，使得容器级的作业在任意计算平台上都可以运行。</p>
+<p>Eaton解释道：</p>
+<blockquote>
+<p>我们非常喜欢Docker，在整个过程中带给开发人员一个一致的环境。Marathon和PaaSTA的工具，让他们有一个更好的方式来安排适当的容器运行他们的服务，并向开发人员屏蔽底层基础设施。他们不必关心自己的业务是运行在自己的数据中心或者AWS还是其他一些云服务提供商。 如果根据PaaSTA平台规则编写服务并正确的配置Docker容器，那么PaaSTA会通过资源发现并启动容器完成剩下所有服务部署工作。</p>
+</blockquote>
+<p>整个Yelp的工程团队都感受到了PaaSTA和Mesos的好处。基础架构服务技术主管John Billings是这样说的：</p>
+<blockquote>
+<p>我们曾经花了大量时间手动分配服务到独立机器。当推出新服务时就遇到了瓶颈。如果有一台机器出现故障，那么我们不得不单独联系所有受影响的用户，并要求他们把服务迁移到新的硬件上。当业务量增加的时候我们必须保证服务正常。当生产服务已经发展到数以万计时，这已经成为了一个不可能的任务。</p>
+</blockquote>
+<p>“PaaSTA通过允许内部数据库和AWS上的硬件自动配置和服务迁移，将我们从这些繁琐耗时的任务中解放出来。开发人员和运维人员完全爱上了这种技术。”</p>
+<iframe src="https://player.vimeo.com/video/121183491" width="500" height="281" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<h1 id="与Seagull一起起飞">与Seagull一起起飞</h1><p>除了提供的核心PaaSTA平台服务，Yelp也用Mesospher来改进测试基础设施，开发了全新的测试平台Seagull。</p>
+<p>通过使用Mesos和一个自定义调度，Yelp为单元测试建立一个更高效的并行和快速系统。Yelp公司目前每天运行约1700万独立测试，有的直接在机器上进行，有的在容器上，这些全部由Mesos管理。Eaton说，Yelp已经每天启动100万个容器，随着公司继续将测试转移到容器中这个数字还会继续增加。</p>
+<p>Mesosphere也给了Yelp的一个意想不到的好处：提高资源利用率​​意味着Eaton的团队可以更积极的应对AWS spot market计算能力来节省资金。</p>
+<p>他解释说：“随着测试数量增加，我们购买的用于测试的AWS实例已远超保留的实例数量，如果我们使用动态方式购买实例，这些实例在测试过程中可能就释放了。Mesos能够通过重新安排测试到新的实例且无需中断作业，这样就能把这类实例保留下来。”</p>
+<p>Eaton说：“Mesosphere和Marathon的结合，为我们的开发人员提供了一个更有弹性计算能力并可以快速部署的环境，他们可以将更多精力放在编程上而不用太关注不同平台的影响。对开发人员来说Mesosphere很好，对Yelp而言这就够了。”</p>
+<p>原文链接：<a href="https://mesosphere.com/blog/2015/06/09/containers-clouds-and-code-how-yelp-built-a-hybrid-cloud-using-mesos-and-docker/" target="_blank" rel="external">CONTAINERS, CLOUDS AND CODE: HOW YELP BUILT A HYBRID CLOUD USING MESOS AND DOCKER</a> （翻译：朱高校）</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+            <a href="/tags/yelp/" rel="tag">#yelp</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/05/trans-bootstrap-your-ceph-cluster-in-docker/" rel="next">翻译：在Docker里运行Ceph集群</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/12/07/trans-containers,clouds and code/"
+                   data-title="翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？" data-url="zhugaoxiao.github.io/2015/12/07/trans-containers,clouds and code/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#选择太多"><span class="nav-number">1.</span> <span class="nav-text">选择太多</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker来了"><span class="nav-number">2.</span> <span class="nav-text">Docker来了</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Running_millions_of_containers_means_Mesosphere_and_Mesos"><span class="nav-number">3.</span> <span class="nav-text">Running millions of containers means Mesosphere and Mesos</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PaaSTA服务"><span class="nav-number">4.</span> <span class="nav-text">PaaSTA服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#与Seagull一起起飞"><span class="nav-number">5.</span> <span class="nav-text">与Seagull一起起飞</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp
+您是第<span id="busuanzi_value_site_uv"></span>个来到的小伙伴
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
