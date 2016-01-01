@@ -194,6 +194,316 @@
           
           
             
+              <a class="post-title-link" href="/2015/12/27/kubernetes-install/" itemprop="url">
+                CentOS 7 安装kubernetes
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-27T20:46:25+08:00" content="2015-12-27">
+            2015-12-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/容器/" itemprop="url" rel="index">
+                  <span itemprop="name">容器</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/27/kubernetes-install/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/27/kubernetes-install/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>Kubernetes is an open source container management system that allows the deployment, orchestration, and scaling of container applications and micro-services across multiple hosts. This tutorial will describe the installation and configuration of a multi-node Kubernetes cluster on CentOS 7.</p>
+<p>A single master host will manage the cluster and run several core Kubernetes services.</p>
+<ul>
+<li>API Server - The REST API endpoint for managing most aspects of the Kubernetes cluster.</li>
+<li>Replication Controller - Ensures the number of specified pod replicas are always running by starting or shutting down pods.</li>
+<li>Scheduler - Finds a suitable host where new pods will be reside.<br>etcd - A distributed key value store where Kubernetes stores information about itself, pods, services, etc.</li>
+<li>Flannel - A network overlay that will allow containers to communicate across multiple hosts.</li>
+</ul>
+<p>The minion hosts will run the following services to manage containers and their network.</p>
+<ul>
+<li>Kubelet - Host level pod management; determines the state of pod containers based on the pod manifest received from the Kubernetes master.</li>
+<li>Proxy - Manages the container network (IP addresses and ports) based on the network service manifests received from the Kubernetes master.</li>
+<li>Docker - An API and framework built around Linux Containers (LXC) that allows for the easy management of containers and their images.</li>
+<li>Flannel - A network overlay that will allow containers to communicate across multiple hosts.</li>
+</ul>
+<blockquote>
+<p>Note: Flannel, or another network overlay service, is required to run on the minions when there is more than one minion host. This allows the containers which are typically on their own internal subnet to communicate across multiple hosts. As the Kubernetes master is not typically running containers, the Flannel service is not required to run on the master.<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/27/kubernetes-install/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/12/24/redis-install/" itemprop="url">
+                Redis之安装
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-24T20:46:25+08:00" content="2015-12-24">
+            2015-12-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/黑科技/" itemprop="url" rel="index">
+                  <span itemprop="name">黑科技</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/24/redis-install/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/24/redis-install/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>Redis is a an Open Source advanced key-value cache and store .</p>
+<p>Redis Defualt port number : 6379</p>
+<p>Redis Source Package Version : Redis 3.0.2 Stable Version (Release Notes)<br>Redis Download URL : <a href="http://redis.io/download">http://redis.io/download</a></p>
+<p>What’s new in Redis 3.0 compared to Redis 2.8?</p>
+<ol>
+<li>Redis Cluster: a distributed implementation of a subset of Redis.</li>
+<li>New “embedded string” object encoding resulting in less cache misses. Big speed gain under certain work loads.</li>
+<li>AOF child -&gt; parent final data transmission to minimize latency due to “last write” during AOF rewrites.</li>
+<li>Much improved LRU approximation algorithm for keys eviction.</li>
+<li>WAIT command to block waiting for a write to be transmitted to<br>the specified number of slaves.</li>
+<li>MIGRATE connection caching. Much faster keys migraitons.</li>
+<li>MIGRATE new options COPY and REPLACE.</li>
+<li>CLIENT PAUSE command: stop processing client requests for a specified amount of time.</li>
+<li>BITCOUNT performance improvements.</li>
+<li>CONFIG SET accepts memory values in different units (for example you can use “CONFIG SET maxmemory 1gb”).</li>
+<li>Redis log format slightly changed reporting in each line the role of the instance (master/slave) or if it’s a saving child log.</li>
+<li>INCR performance improvements.</li>
+</ol>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/24/redis-install/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/12/17/docker-registry/" itemprop="url">
+                Docker私有仓库Registry
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-17T20:46:25+08:00" content="2015-12-17">
+            2015-12-17
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/容器/" itemprop="url" rel="index">
+                  <span itemprop="name">容器</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/17/docker-registry/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/17/docker-registry/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="关于Registry">关于Registry</h1><p>在Docker生态圈中，Docker仓库用于存储Docker镜像。官方的Docker hub存储了大量镜像，但是对于实际生产环境中，考虑到pull/push速度和保密性等因素，我们往往需要建立自己的镜像仓库服务。官方（docker-registry github ）提供了一个registry images,使用这个images就可以快速完成本地镜像仓库的建立。</p>
+<p>Registry在github上有两份代码：老代码库和新代码库。老代码是采用python编写的，存在pull和push的性能问题，出到0.9.1版本之后就标志为deprecated，不再继续开发。从2.0版本开始就到在新代码库进行开发，新代码库是采用go语言编写，修改了镜像id的生成算法、registry上镜像的保存结构，大大优化了pull和push镜像的效率。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/17/docker-registry/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/12/07/trans-containers,clouds and code/" itemprop="url">
                 翻译：容器，云和代码：Yelp如何使用Mesos和Docker构建混合云？
               </a>
@@ -829,290 +1139,11 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/11/05/openstack-port/" itemprop="url">
-                openstack之kilo安装 常用端口
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-11-05T00:00:00+08:00" content="2015-11-05">
-            2015-11-05
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/openstack/" itemprop="url" rel="index">
-                  <span itemprop="name">openstack</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/11/05/openstack-port/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/05/openstack-port/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>有些情况下，可能网络安全限制比较严格，你可能需要手动的配置防火墙来允许OpenStack服务。</p>
-<blockquote>
-<p>参考：<a href="http://docs.openstack.org/kilo/config-reference/content/firewalls-default-ports.html">Appendix B. Firewalls and default ports</a></p>
-</blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/05/openstack-port/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/11/04/openstack-cmd-service/" itemprop="url">
-                openstack之kilo安装 常用命令
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-11-04T00:00:00+08:00" content="2015-11-04">
-            2015-11-04
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/openstack/" itemprop="url" rel="index">
-                  <span itemprop="name">openstack</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/11/04/openstack-cmd-service/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/04/openstack-cmd-service/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>OpenStack一些常用命令整理。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/04/openstack-cmd-service/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/11/03/openstack-FAQ/" itemprop="url">
-                openstack之kilo安装 FAQ
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-11-03T00:00:00+08:00" content="2015-11-03">
-            2015-11-03
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/openstack/" itemprop="url" rel="index">
-                  <span itemprop="name">openstack</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/11/03/openstack-FAQ/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/03/openstack-FAQ/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-
-        
-
-
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>这周在折腾openstack，下面是过程中问题小记。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/03/openstack-FAQ/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
   </nav>
 
  </div>
@@ -1146,21 +1177,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">52</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">48</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -1204,7 +1235,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp; 
-  <span itemprop="copyrightYear">2015</span>
+  <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

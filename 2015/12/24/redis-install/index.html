@@ -1,0 +1,771 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="Redis is a an Open Source advanced key-value cache and store .
+Redis Defualt port number : 6379
+Redis Source Package Version : Redis 3.0.2 Stable Version (Release Notes)Redis Download URL : http://red">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis之安装">
+<meta property="og:url" content="zhugaoxiao.github.io/2015/12/24/redis-install/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="Redis is a an Open Source advanced key-value cache and store .
+Redis Defualt port number : 6379
+Redis Source Package Version : Redis 3.0.2 Stable Version (Release Notes)Redis Download URL : http://red">
+<meta property="og:updated_time" content="2015-12-27T13:50:06.279Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis之安装">
+<meta name="twitter:description" content="Redis is a an Open Source advanced key-value cache and store .
+Redis Defualt port number : 6379
+Redis Source Package Version : Redis 3.0.2 Stable Version (Release Notes)Redis Download URL : http://red">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> Redis之安装 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'C7zDme1dExGhEGz8vgSx','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Redis之安装
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-24T20:46:25+08:00" content="2015-12-24">
+            2015-12-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/黑科技/" itemprop="url" rel="index">
+                  <span itemprop="name">黑科技</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/24/redis-install/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/24/redis-install/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+        <span>&nbsp; | &nbsp;
+        <span id="busuanzi_value_page_pv" ></span>次阅读
+        </span>
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>Redis is a an Open Source advanced key-value cache and store .</p>
+<p>Redis Defualt port number : 6379</p>
+<p>Redis Source Package Version : Redis 3.0.2 Stable Version (Release Notes)<br>Redis Download URL : <a href="http://redis.io/download" target="_blank" rel="external">http://redis.io/download</a></p>
+<p>What’s new in Redis 3.0 compared to Redis 2.8?</p>
+<ol>
+<li>Redis Cluster: a distributed implementation of a subset of Redis.</li>
+<li>New “embedded string” object encoding resulting in less cache misses. Big speed gain under certain work loads.</li>
+<li>AOF child -&gt; parent final data transmission to minimize latency due to “last write” during AOF rewrites.</li>
+<li>Much improved LRU approximation algorithm for keys eviction.</li>
+<li>WAIT command to block waiting for a write to be transmitted to<br>the specified number of slaves.</li>
+<li>MIGRATE connection caching. Much faster keys migraitons.</li>
+<li>MIGRATE new options COPY and REPLACE.</li>
+<li>CLIENT PAUSE command: stop processing client requests for a specified amount of time.</li>
+<li>BITCOUNT performance improvements.</li>
+<li>CONFIG SET accepts memory values in different units (for example you can use “CONFIG SET maxmemory 1gb”).</li>
+<li>Redis log format slightly changed reporting in each line the role of the instance (master/slave) or if it’s a saving child log.</li>
+<li>INCR performance improvements.</li>
+</ol>
+<a id="more"></a>
+<h1 id="Follow_the_given_below_steps_to_install_redis_server_on_CentOS_7_and_Red_Hat_Enterprise_Linux_7-">Follow the given below steps to install redis server on CentOS 7 and Red Hat Enterprise Linux 7.</h1><p>Install wget utility</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">yum <span class="keyword">install</span> wget</span><br></pre></td></tr></table></figure>
+<p>Install EPEL repo</p>
+<p>First we will install the EPEL repo. For more detail on EPEL repo, we suggest you to read our this post.</p>
+<p>Because our system has x86_64 Operating System architecture, we will use only epel repo package for x86_64 . Search epel repo package as per your Operating System architecture(EPEL URL)</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">wget -r --no-parent -A <span class="string">'epel-release-*.rpm'</span> http:<span class="comment">//dl.fedoraproject.org/pub/epel/7/x86_64/e/</span></span><br><span class="line"></span><br><span class="line">rpm -Uvh <span class="tag">dl</span><span class="class">.fedoraproject</span><span class="class">.org</span>/pub/epel/<span class="number">7</span>/x86_64/e/epel-release-*.rpm</span><br></pre></td></tr></table></figure>
+<p>Install redis server</p>
+<p>Now use yum command to install redis server</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">yum <span class="keyword">install</span> redis</span><br></pre></td></tr></table></figure>
+<p>Two important redis server configuration file’s path</p>
+<ol>
+<li>/etc/redis.conf</li>
+<li>/etc/redis-sentinel.conf</li>
+</ol>
+<p>Now start the redis server after this.</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">systemctl start redis<span class="class">.service</span></span><br><span class="line">systemctl status redis<span class="class">.service</span></span><br><span class="line">systemctl stop redis<span class="class">.service</span></span><br><span class="line">systemctl restart redis.service</span><br></pre></td></tr></table></figure>
+<p>To test the installation of Redis, use below given command</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line">redis-<span class="keyword">cli</span> <span class="built_in">ping</span></span><br></pre></td></tr></table></figure>
+<p>If the response output is PONG, it means installation is completed successfully.</p>
+<figure class="highlight autoit"><table><tr><td class="code"><pre><span class="line">[root<span class="constant">@localhost</span> ~]<span class="preprocessor"># redis-cli ping</span></span><br><span class="line">PONG</span><br><span class="line">[root<span class="constant">@localhost</span> ~]<span class="preprocessor">#</span></span><br></pre></td></tr></table></figure>
+<p>To enable redis server at system’s booting time.To disable redis server at system’s booting time.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> redis.service</span><br><span class="line">systemctl <span class="built_in">disable</span> redis.service</span><br></pre></td></tr></table></figure>
+<h1 id="Install_Redis_3-0_On_Ubuntu_14-04_/_CentOS_7_/_RHEL_7">Install Redis 3.0 On Ubuntu 14.04 / CentOS 7 / RHEL 7</h1><p>Let’s quickly start the installation of Redis Server from source on Ubuntu/CentOS/Debian/RHEL .<br>You can follow the given below steps in Ubuntu/CentOS/RHEL as per defined commands.<br>Note: yum command is used in RHEL/CentOS and apt-get command used in Ubuntu/Debian .</p>
+<h2 id="Install_prerequisite_for_Redis">Install prerequisite for Redis</h2><p>Make and GCC packages are used for compiling the source package. Whereas, we are installing wget for downloading the redis source package.</p>
+<h3 id="In_CentOS_7_/_RHEL_7">In CentOS 7 / RHEL 7</h3><figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">yum <span class="keyword">install</span> make gcc wget</span><br></pre></td></tr></table></figure>
+<h3 id="In_Ubuntu">In Ubuntu</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">sudo apt-get <span class="operator"><span class="keyword">update</span></span><br><span class="line">sudo apt-<span class="keyword">get</span> <span class="keyword">install</span> <span class="keyword">install</span> make gcc wget</span></span><br></pre></td></tr></table></figure>
+<p>SPECIAL NOTE TO UBUNTU USER : Login as super user and follow the below given steps. To become superuser, use the below given command .</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">sudo <span class="keyword">su</span> -</span><br><span class="line"></span><br><span class="line">or</span><br><span class="line"></span><br><span class="line"><span class="keyword">su</span> -</span><br></pre></td></tr></table></figure>
+<h2 id="Download_Redis_3_stable_Source_package">Download Redis 3 stable Source package</h2><p>Use wget command to download the stable release Redis 3.0.2 . We recommend you to always install stable release, which you can search in Redis Download URL</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">wget <span class="string">http:</span><span class="comment">//download.redis.io/releases/redis-3.0.2.tar.gz</span></span><br></pre></td></tr></table></figure>
+<p>Untar downloaded Redis Tar ball</p>
+<p>Use the tar command to extract out the Redis from the downloaded tarball file.</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="tag">tar</span> <span class="tag">-xvzf</span> <span class="tag">redis-3</span><span class="class">.0</span><span class="class">.2</span><span class="class">.tar</span><span class="class">.gz</span></span><br></pre></td></tr></table></figure>
+<p>Compiling of Redis from source</p>
+<p>Once you extract the Redis Package from tarball, you will get the Redis directory.<br>In our case, we got directory with name called redis-3.0.2 .</p>
+<p>Change to extracted out redis directory. Now you will do most of the command activity inside redis package directory ( i.e redis-3.0.2)</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">cd redis-<span class="number">3.0</span><span class="number">.2</span></span><br></pre></td></tr></table></figure>
+<p>Now compiling the dependencies of Redis , available inside extracted out redis directory.</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> deps</span><br><span class="line"><span class="keyword">make</span> hiredis <span class="keyword">lua</span> jemalloc linenoise</span><br></pre></td></tr></table></figure>
+<p>Once the dependencies are compiled, now start compiling the redis. For this you have to change to one level back. Means go back to Redis installation directory.</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> ..</span><br><span class="line"><span class="keyword">make</span></span><br><span class="line"><span class="keyword">make</span> install</span><br></pre></td></tr></table></figure>
+<p>The redis server is installed only with binaries in your system. In next section we will install init script.</p>
+<h2 id="Install_init_script">Install init script</h2><p>In this section we will install init script to manage the process of Redis.<br>You can use this method in CentOS 7/ RHEL 7 / Ubuntu 14.04 .</p>
+<p>I hope you are still inside the Redis installation Directory. Inside the directory you will see utils directory . We have to change to utils directory and run the install_server.sh script.</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> utils</span><br><span class="line">./install_server.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
+<p>Now you script will ask some question. When you hit only ENTER, the system will take default value or answer.</p>
+<p>Given below is reference from our server.</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">[root@localhost redis-3.0.2]# cd utils/</span><br><span class="line">[root@localhost utils]# ./install_server.sh</span><br><span class="line">Welcome to the redis service installer</span><br><span class="line">This script will <span class="operator"><span class="keyword">help</span> you easily <span class="keyword">set</span> up a running redis <span class="keyword">server</span></span><br><span class="line"></span><br><span class="line">Please <span class="keyword">select</span> the redis port <span class="keyword">for</span> this <span class="keyword">instance</span>: [<span class="number">6379</span>]</span><br><span class="line">Selecting <span class="keyword">default</span>: <span class="number">6379</span></span><br><span class="line">Please <span class="keyword">select</span> the redis config <span class="keyword">file</span> <span class="keyword">name</span> [/etc/redis/<span class="number">6379.</span>conf]</span><br><span class="line">Selected <span class="keyword">default</span> - /etc/redis/<span class="number">6379.</span>conf</span><br><span class="line">Please <span class="keyword">select</span> the redis <span class="keyword">log</span> <span class="keyword">file</span> <span class="keyword">name</span> [/<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span>]</span><br><span class="line">Selected <span class="keyword">default</span> - /<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span></span><br><span class="line">Please <span class="keyword">select</span> the <span class="keyword">data</span> <span class="keyword">directory</span> <span class="keyword">for</span> this <span class="keyword">instance</span> [/<span class="keyword">var</span>/lib/redis/<span class="number">6379</span>]</span><br><span class="line">Selected <span class="keyword">default</span> - /<span class="keyword">var</span>/lib/redis/<span class="number">6379</span></span><br><span class="line">Please <span class="keyword">select</span> the redis executable <span class="keyword">path</span> [/usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-<span class="keyword">server</span>]</span><br><span class="line">Selected config:</span><br><span class="line">Port           : <span class="number">6379</span></span><br><span class="line">Config <span class="keyword">file</span>    : /etc/redis/<span class="number">6379.</span>conf</span><br><span class="line"><span class="keyword">Log</span> <span class="keyword">file</span>       : /<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span></span><br><span class="line"><span class="keyword">Data</span> dir       : /<span class="keyword">var</span>/lib/redis/<span class="number">6379</span></span><br><span class="line">Executable     : /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-<span class="keyword">server</span></span><br><span class="line">Cli Executable : /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-cli</span><br><span class="line"><span class="keyword">Is</span> this ok? <span class="keyword">Then</span> press ENTER <span class="keyword">to</span> <span class="keyword">go</span> <span class="keyword">on</span> <span class="keyword">or</span> Ctrl-<span class="keyword">C</span> <span class="keyword">to</span> <span class="keyword">abort</span>.</span><br><span class="line">Copied /tmp/<span class="number">6379.</span>conf =&gt; /etc/init.<span class="keyword">d</span>/redis_6379</span><br><span class="line">Installing service...</span><br><span class="line">Successfully added <span class="keyword">to</span> chkconfig!</span><br><span class="line">Successfully added <span class="keyword">to</span> runlevels <span class="number">345</span>!</span><br><span class="line"><span class="keyword">Starting</span> Redis <span class="keyword">server</span>...</span><br><span class="line">Installation successful!</span><br><span class="line">[root@localhost utils]#</span><br><span class="line">Redis <span class="keyword">start</span>/<span class="keyword">stop</span>/restart/<span class="keyword">status</span></span></span><br></pre></td></tr></table></figure>
+<p>Once the all above steps are done, we can start/stop/restart the Redis Server and also check its status.</p>
+<p>In CentOS 7 / RHEL 7</p>
+<h2 id="To_check_status_of_Redis_Server">To check status of Redis Server</h2><figure class="highlight fortran"><table><tr><td class="code"><pre><span class="line">systemctl <span class="keyword">stop</span> redis_6379</span><br></pre></td></tr></table></figure>
+<h2 id="To_start_Redis_Server">To start Redis Server</h2><figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">start</span> redis_6379</span><br></pre></td></tr></table></figure>
+<h2 id="To_stop_Redis_Server">To stop Redis Server</h2><figure class="highlight fortran"><table><tr><td class="code"><pre><span class="line">systemctl <span class="keyword">stop</span> redis_6379</span><br></pre></td></tr></table></figure>
+<h2 id="To_restart_the_Redis_Server">To restart the Redis Server</h2><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">systemctl</span> restart redis_6379</span><br></pre></td></tr></table></figure>
+<p>In Ubuntu</p>
+<h2 id="To_check_the_status_Redis_Server">To check the status Redis Server</h2><figure class="highlight fortran"><table><tr><td class="code"><pre><span class="line">service redis_6379 <span class="keyword">status</span></span><br></pre></td></tr></table></figure>
+<h2 id="To_start_Redis_Server-1">To start Redis Server</h2><figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">service redis_6379 <span class="built_in">start</span></span><br></pre></td></tr></table></figure>
+<h2 id="To_stop_Redis_Server-1">To stop Redis Server</h2><figure class="highlight fortran"><table><tr><td class="code"><pre><span class="line">service redis_6379 <span class="keyword">stop</span></span><br></pre></td></tr></table></figure>
+<h2 id="To_restart_Redis_Server">To restart Redis Server</h2><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">service</span> redis_6379 restart</span><br></pre></td></tr></table></figure>
+<h1 id="Login_into_Redis_Server">Login into Redis Server</h1><p>To login into redis server is quite easy. The command is applicable in CentOS 7/RHEL 7/ Ubuntu (as per this post, we only only selected these 3 Operating system)</p>
+<p>Use below given command to login into redis server from localhost .</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line">redis-<span class="keyword">cli</span></span><br></pre></td></tr></table></figure>
+<p>See below given reference.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="preprocessor"># redis-cli</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="built_in">exit</span></span><br><span class="line">[root@localhost ~]<span class="preprocessor">#</span></span><br></pre></td></tr></table></figure>
+<p>To check help of redis-cli command.</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">redis-<span class="keyword">cli</span> --<span class="keyword">help</span></span><br></pre></td></tr></table></figure>
+<p>Check listening ports by redis</p>
+<p>Use ss command to find the listening port.</p>
+<p>ss -tanp|grep 6379<br>Given below is reference,</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="preprocessor"># ss -tanp|grep <span class="number">6379</span></span></span><br><span class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>                       *:<span class="number">6379</span>                     *:*      users:((<span class="string">"redis-server"</span>,<span class="number">8032</span>,<span class="number">5</span>))</span><br><span class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>                      :::<span class="number">6379</span>                    :::*      users:((<span class="string">"redis-server"</span>,<span class="number">8032</span>,<span class="number">4</span>))</span><br><span class="line">[root@localhost ~]<span class="preprocessor">#</span></span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag">#redis</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/27/kubernetes-install/" rel="prev">CentOS 7 安装kubernetes</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/17/docker-registry/" rel="next">Docker私有仓库Registry</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2015/12/24/redis-install/"
+                   data-title="Redis之安装" data-url="zhugaoxiao.github.io/2015/12/24/redis-install/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Follow_the_given_below_steps_to_install_redis_server_on_CentOS_7_and_Red_Hat_Enterprise_Linux_7-"><span class="nav-number">1.</span> <span class="nav-text">Follow the given below steps to install redis server on CentOS 7 and Red Hat Enterprise Linux 7.</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Install_Redis_3-0_On_Ubuntu_14-04_/_CentOS_7_/_RHEL_7"><span class="nav-number">2.</span> <span class="nav-text">Install Redis 3.0 On Ubuntu 14.04 / CentOS 7 / RHEL 7</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Install_prerequisite_for_Redis"><span class="nav-number">2.1.</span> <span class="nav-text">Install prerequisite for Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#In_CentOS_7_/_RHEL_7"><span class="nav-number">2.1.1.</span> <span class="nav-text">In CentOS 7 / RHEL 7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In_Ubuntu"><span class="nav-number">2.1.2.</span> <span class="nav-text">In Ubuntu</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Download_Redis_3_stable_Source_package"><span class="nav-number">2.2.</span> <span class="nav-text">Download Redis 3 stable Source package</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install_init_script"><span class="nav-number">2.3.</span> <span class="nav-text">Install init script</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_check_status_of_Redis_Server"><span class="nav-number">2.4.</span> <span class="nav-text">To check status of Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_start_Redis_Server"><span class="nav-number">2.5.</span> <span class="nav-text">To start Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_stop_Redis_Server"><span class="nav-number">2.6.</span> <span class="nav-text">To stop Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_restart_the_Redis_Server"><span class="nav-number">2.7.</span> <span class="nav-text">To restart the Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_check_the_status_Redis_Server"><span class="nav-number">2.8.</span> <span class="nav-text">To check the status Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_start_Redis_Server-1"><span class="nav-number">2.9.</span> <span class="nav-text">To start Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_stop_Redis_Server-1"><span class="nav-number">2.10.</span> <span class="nav-text">To stop Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#To_restart_Redis_Server"><span class="nav-number">2.11.</span> <span class="nav-text">To restart Redis Server</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Login_into_Redis_Server"><span class="nav-number">3.</span> <span class="nav-text">Login into Redis Server</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp
+您是第<span id="busuanzi_value_site_uv"></span>个来到的小伙伴
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
