@@ -1,0 +1,770 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="大自然的搬运工" />
+
+
+
+  <meta name="keywords" content="Kubernetes,NGINX," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="【编者的话】此篇文章是Nginx的Michael Pleshakov发表在Nginx官方博客的一篇博文，通过这篇文章概括回顾了Kubernetes暴露服务相关的解决方案，并对最新的Ingreess API进行了说明，最后给出了Kubernetes通过集成NGINX Plus来暴露服务到互联网的解决方案。这个方案解决了目前Kubernetes暴露服务的短板，整个实现过程也比较简单，步骤清晰，具有很强">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译：使用NGINX Plus负载均衡Kubernetes服务">
+<meta property="og:url" content="zhugaoxiao.github.io/2016/01/14/trans-Load Balancing Kubernetes Services with NGINX Plus/index.html">
+<meta property="og:site_name" content="高校的小站">
+<meta property="og:description" content="【编者的话】此篇文章是Nginx的Michael Pleshakov发表在Nginx官方博客的一篇博文，通过这篇文章概括回顾了Kubernetes暴露服务相关的解决方案，并对最新的Ingreess API进行了说明，最后给出了Kubernetes通过集成NGINX Plus来暴露服务到互联网的解决方案。这个方案解决了目前Kubernetes暴露服务的短板，整个实现过程也比较简单，步骤清晰，具有很强">
+<meta property="og:image" content="https://www.nginx.com/wp-content/uploads/2015/11/nginx-plus-dashboard-showing-upstreams.png">
+<meta property="og:image" content="https://www.nginx.com/wp-content/uploads/2015/11/nginx-welcome-page.png">
+<meta property="og:updated_time" content="2016-01-14T15:44:19.139Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翻译：使用NGINX Plus负载均衡Kubernetes服务">
+<meta name="twitter:description" content="【编者的话】此篇文章是Nginx的Michael Pleshakov发表在Nginx官方博客的一篇博文，通过这篇文章概括回顾了Kubernetes暴露服务相关的解决方案，并对最新的Ingreess API进行了说明，最后给出了Kubernetes通过集成NGINX Plus来暴露服务到互联网的解决方案。这个方案解决了目前Kubernetes暴露服务的短板，整个实现过程也比较简单，步骤清晰，具有很强">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 翻译：使用NGINX Plus负载均衡Kubernetes服务 | 高校的小站 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">高校的小站</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu menu-left">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'C7zDme1dExGhEGz8vgSx','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              翻译：使用NGINX Plus负载均衡Kubernetes服务
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-01-14T00:00:00+08:00" content="2016-01-14">
+            2016-01-14
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/翻译/" itemprop="url" rel="index">
+                  <span itemprop="name">翻译</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/01/14/trans-Load Balancing Kubernetes Services with NGINX Plus/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/14/trans-Load Balancing Kubernetes Services with NGINX Plus/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+
+        
+        <span>&nbsp; | &nbsp;
+        <span id="busuanzi_value_page_pv" ></span>次阅读
+        </span>
+        
+
+
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>【编者的话】<br>此篇文章是Nginx的Michael Pleshakov发表在Nginx官方博客的一篇博文，通过这篇文章概括回顾了Kubernetes暴露服务相关的解决方案，并对最新的Ingreess API进行了说明，最后给出了Kubernetes通过集成NGINX Plus来暴露服务到互联网的解决方案。这个方案解决了目前Kubernetes暴露服务的短板，整个实现过程也比较简单，步骤清晰，具有很强的参考性。我们华三目前也在调研这方面的工作，希望此文能对大家有所帮助。</p>
+<a id="more"></a>
+<p>Kubernetes是由谷歌开发的一个开源系统，用于在集群内运行和管理以容器微服务为基础的应用。使用Kubernetes的人经常需要确保可以从Kubernetes集群外部访问在Kubernetes内创建的服务。</p>
+<p>虽然<a href="http://kubernetes.io/" target="_blank" rel="external">Kubernetes</a>提供了内置暴露服务解决方案，正像在下面<a href="https://www.nginx.com/blog/load-balancing-kubernetes-services-nginx-plus/#built-in-solutions" target="_blank" rel="external">Kubernetes内置暴露服务解决方案</a>中所描述的，这些解决方案会局限你在4层负载均衡或循环HTTP负载平衡。</p>
+<p>这篇文章会告诉你如何使用<a href="https://www.nginx.com/products/" target="_blank" rel="external">NGINX Plus</a>作为高级7层负载均衡解决方案，用于暴露Kubernetes服务到互联网上，无论你是在云服务还是在自有基础设施上运行Kubernetes。</p>
+<p>我们假定你对Kubernetes有所了解（pods, services, replication controllers, and labels）并且有一个运行的Kubernetes集群。要了解更多Kubernetes，请访问官方<a href="http://kubernetes.io/v1.0/docs/user-guide/overview.html" target="_blank" rel="external">Kubernetes用户指南</a>。</p>
+<h1 id="Kubernetes内置暴露服务解决方案">Kubernetes内置暴露服务解决方案</h1><p>Kubernetes为暴露<a href="http://kubernetes.io/v1.1/docs/user-guide/services.html" target="_blank" rel="external">服务</a>提供了多种选择。其中两种是NodePort和负载平衡器，分别对应不同类型的服务。Ingress API在Kubernetes1.1版本开始作为beta测试版供使用，已经成为第三种选择。</p>
+<h2 id="NodePort">NodePort</h2><p>指定服务类型为<a href="http://kubernetes.io/v1.1/docs/user-guide/services.html#type-nodeport" target="_blank" rel="external">NodePort</a>，会使得服务在每个Kubernetes节点上在相同的端口可用。为了暴露服务到互联网，你在这个端口上暴露一个或多个节点。为了高可用性，你可以暴露多个节点并使用基于DNS的负载均衡在它们中分布流量，或者你把这些节点放在你选择的负载均衡后。</p>
+<p>当传入流量访问端口的一个节点时，它会被在服务的pods之间负载平衡。负载平衡由每个节点上的<a href="http://kubernetes.io/v1.0/docs/design/architecture.html#kube-proxy" target="_blank" rel="external">Kubernetes代理</a>完成，并且仅限于TCP/UDP负载均衡。</p>
+<h2 id="LoadBalancer">LoadBalancer</h2><p>指定服务类型为<a href="http://kubernetes.io/v1.1/docs/user-guide/services.html#type-loadbalancer" target="_blank" rel="external">负载平衡</a>会分配用于在服务pods之间分布传入流量的云负载平衡器。</p>
+<p>只有特定的云服务供应商和<a href="https://cloud.google.com/container-engine/" target="_blank" rel="external">Google Container Engineand</a>支持负载均衡器解决方案，如果你在你自己的基础设施上运行Kubernetes，它是不可用的。此外，Kubernetes只允许你配置循环TCP负载均衡，即使云负载均衡器有高级功能，例如会话持久或请求映射。</p>
+<h2 id="Ingress_API">Ingress API</h2><p>创建<a href="http://kubernetes.io/v1.1/docs/user-guide/ingress.html" target="_blank" rel="external">Ingress</a>资源使得你可以通过自定义URL（例如，服务A在URL /foo和服务B在URL /bar）和多个虚拟主机名（例如，一组服务是foo.example.com而另一组服务是bar.example.com）暴露服务到互联网。Ingress控制器依赖Ingress资源并建立一个外部负载平衡器。</p>
+<p>Ingress控制器不是Kubernetes标准部署的一部分：你需要选择最适合你的控制器或自己实现一个，并把它添加到你的Kubernetes集群。预计很快会出现各种各样的控制器，但目前唯一可用的还是<a href="https://github.com/kubernetes/contrib/tree/master/Ingress/controllers/gce" target="_blank" rel="external">Google Compute Engine HTTP负载平衡控制器</a>，而且是只有当你在<a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a>或者<a href="https://cloud.google.com/container-engine/" target="_blank" rel="external">Google Container Engine</a>中运行Kubernetes时。Ingress API仅支持循环HTTP负载均衡，即使实际负载均衡器支持高级功能。</p>
+<p>在撰写本文时，无论是Ingress API还是Google Compute Engine HTTP Load Balancer控制器都还在测试阶段。</p>
+<p>尽管上面提到的解决方案配置简单并且马上就可以使用，他们没有提供任何高级功能，特别是7层负载均衡相关的功能。</p>
+<h1 id="使用NGINX_Plus暴露Kubernetes服务">使用NGINX Plus暴露Kubernetes服务</h1><p>为了集成NGINX Plus到Kubernetes上，我们需要确保NGINX Plus配置与Kubernetes保持同步，可以反映像pods添加或删除这样的Kubernetes服务变更。 使用开源的NGINX软件，你需要手动修改NGINX配置文件并重新加载配置。使用NGINX Plus，有两种方法<a href="https://www.nginx.com/products/on-the-fly-reconfiguration/" target="_blank" rel="external">动态</a>更新配置：</p>
+<ul>
+<li><p>With APIs – 此方法使用NGINX Plus的<a href="https://www.nginx.com/resources/admin-guide/load-balancer/#upstream_conf" target="_blank" rel="external">on-the-fly reconfiguration API </a>添加和删除Kubernetes pods在NGINX Plus配置中的条目，并使用Kubernetes API来获取pods的IP地址。这种方法需要我们写一些代码，这里我们也不进行深入讨论。有关详细信息，可以看Kelsey Hightower的网络研讨会，<a href="https://www.nginx.com/resources/webinars/bringing-kubernetes-to-the-edge-with-nginx-plus/" target="_blank" rel="external">Bringing Kubernetes to the Edge with NGINX Plus</a>，他在其中探讨了API并新建了利用他们的应用。</p>
+</li>
+<li><p>通过<a href="http://nginx.org/en/docs/http/ngx_http_upstream_module.html?&amp;_ga=1.186029609.1836587780.1451486089#resolve" target="_blank" rel="external">重新解析DNS名称</a> -这个方法像在以下章节描述的一样仅仅需要对NGINX Plus的一次恰当配置。</p>
+</li>
+</ul>
+<h2 id="Utilizing_DNS-Based_Reconfiguration">Utilizing DNS-Based Reconfiguration</h2><p>我们假设你已经有一个正在运行的Kubernetes集群并有一个可以使用kubectl工具的主机用于管理集群；有关说明，请参阅有关你群集类型的<a href="http://kubernetes.io/v1.1/docs/getting-started-guides/README.html" target="_blank" rel="external">Kubernetes入门指南</a>。你还需要编译一个NGINX Plus容器镜像，创建的命令就在这篇<a href="https://www.nginx.com/blog/deploying-nginx-nginx-plus-docker/" target="_blank" rel="external">博客文章</a>。</p>
+<p>下面是我们怎么做的一个概括：</p>
+<ol>
+<li>配置一个NGINX Plus pod用于暴露和负载均衡我们在步骤2中创建的服务。</li>
+<li>创建一个提供静态网页的简单服务，。</li>
+<li>扩展或者缩减服务，查看NGINX Plus如何自动重新配置。<blockquote>
+<p>注：我们使用运行在Google Compute Engine的<a href="https://github.com/kubernetes/kubernetes/releases/tag/v1.0.6" target="_blank" rel="external">Kubernetes 1.0.6</a>版本测试了这个博客所描述的解决方案，而我们下面使用的是一个本地配置的<a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>。<br>在命令的斜体字中，你Kubernetes设置中的值可能不同。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="配置_NGINX_Plus_Pod">配置 NGINX Plus Pod</h2><p>我们把NGINX Plus放在要暴露到互联网节点的Kubernetes pod内。我们的pod通过复制控制器创建，我们同样进行配置。我们Kubernetes相关的NGINX Plus配置文件放在NGINX Plus pod和节点的共享目录内，这样更加方便维护。</p>
+<h3 id="选择运行NGINX_Plus_Pod的节点">选择运行NGINX Plus Pod的节点</h3><p>为了指定NGINX Plus pod运行的节点，我们添加一个标签到该节点。运行下面命令，查询运行的所有节点列表：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ kubectl get nodes</span><br><span class="line">NAME         LABELS                              STATUS</span><br><span class="line"><span class="number">10.245</span><span class="number">.1</span><span class="number">.3</span>   Kubernetes.io/hostname=<span class="number">10.245</span><span class="number">.1</span><span class="number">.3</span>   Ready</span><br><span class="line"><span class="number">10.245</span><span class="number">.1</span><span class="number">.4</span>   Kubernetes.io/hostname=<span class="number">10.245</span><span class="number">.1</span><span class="number">.4</span>   Ready</span><br><span class="line"><span class="number">10.245</span><span class="number">.1</span><span class="number">.5</span>   Kubernetes.io/hostname=<span class="number">10.245</span><span class="number">.1</span><span class="number">.5</span>   Ready</span><br></pre></td></tr></table></figure>
+<p>我们选择第一个节点，并通过下面命令添加一个标签给它：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ kubectl label node <span class="number">10.245</span><span class="number">.1</span><span class="number">.3</span> role=nginxplus</span><br></pre></td></tr></table></figure></p>
+<h3 id="为NGINX_Plus_Pod配置Replication_Controller">为NGINX Plus Pod配置Replication Controller</h3><p>我们不会直接创建NGINX Plus pod而是通过复制控制器。我们在Kubernetes的nginxplus-rc.yaml文件配置NGINX Plus pod 复制控制器。</p>
+<ul>
+<li>我们设置replicas的数量是1，就是说Kubernetes会确保始终有1个NGINX Plus pod在运行：如果pod出现故障，它会被新的pod替换。</li>
+<li>在nodeSelector处我们指定NGINX Plus pod在标记角色: nginxplus的节点上创建。</li>
+<li>我们的NGINX Plus容器暴露两个端口，80和8080，并且我们配置他们与节点端口80和8080之间的映射。</li>
+<li>我们的NGINX Plus容器共享节点的/etc/nginx/conf.d文件夹。作为下面<a href="https://www.nginx.com/blog/load-balancing-kubernetes-services-nginx-plus/#configure-nginx-plus" target="_blank" rel="external">配置NGINX Plus</a>的进一步解释，共享文件夹让我们可以不用重建容器镜像而重新配置NGINX Plus。</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: ReplicationController</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: nginxplus-rc</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">replicas</span>: <span class="number">1</span></span><br><span class="line">  <span class="attribute">selector</span>:</span><br><span class="line">    <span class="attribute">app</span>: nginxplus</span><br><span class="line">  <span class="attribute">template</span>:</span><br><span class="line">    <span class="attribute">metadata</span>:</span><br><span class="line">      <span class="attribute">labels</span>:</span><br><span class="line">        <span class="attribute">app</span>: nginxplus</span><br><span class="line">    <span class="attribute">spec</span>:</span><br><span class="line">      <span class="attribute">nodeSelector</span>:</span><br><span class="line">        <span class="attribute">role</span>: nginxplus</span><br><span class="line">      <span class="attribute">containers</span>:</span><br><span class="line">      - <span class="attribute">name</span>: nginxplus</span><br><span class="line">        <span class="attribute">image</span>: nginxplus</span><br><span class="line">        <span class="attribute">ports</span>:</span><br><span class="line">          - <span class="attribute">name</span>: http</span><br><span class="line">            <span class="attribute">containerPort</span>: <span class="number">80</span></span><br><span class="line">            <span class="attribute">hostPort</span>: <span class="number">80</span></span><br><span class="line">          - <span class="attribute">name</span>: http-alt</span><br><span class="line">            <span class="attribute">containerPort</span>: <span class="number">8080</span></span><br><span class="line">            <span class="attribute">hostPort</span>: <span class="number">8080</span></span><br><span class="line">        <span class="attribute">volumeMounts</span>:</span><br><span class="line">          - <span class="attribute">mountPath</span>: <span class="string">"/etc/nginx/conf.d"</span></span><br><span class="line">            <span class="attribute">name</span>: etc-nginx-confd</span><br><span class="line">      <span class="attribute">volumes</span>:</span><br><span class="line">        - <span class="attribute">hostPath</span>:</span><br><span class="line">            <span class="attribute">path</span>: <span class="string">"/etc/nginx/conf.d"</span></span><br><span class="line">          <span class="attribute">name</span>: etc-nginx-confd</span><br></pre></td></tr></table></figure>
+<h3 id="在节点上使NGINX_Plus_Docker_Image可用">在节点上使NGINX Plus Docker Image可用</h3><p>正如我们上面所说，我们已经建立了一个NGINX Plus Docker镜像。 现在我们让它在节点上可用。为简单起见，我们不使用私有Docker repository，我们只是在节点上手动加载镜像。</p>
+<p>在我们编译Docker镜像的主机上，运行以下命令将镜像保存成文件：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">$ docker save -o nginxplus<span class="class">.tar</span> nginxplus</span><br></pre></td></tr></table></figure>
+<p>我们把nginxplus.tar传送到节点，在节点上运行以下命令从文件加载镜像：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ docker <span class="operator"><span class="keyword">load</span> -<span class="keyword">i</span> nginxplus.tar</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置NGINX_Plus">配置NGINX Plus</h3><p>在NGINX Plus容器的/etc/nginx文件夹中，我们保留随NGINX Plus包默认的主nginx.conf中的配置文件。 在默认文夹include指令读取来自/etc/nginx/conf.d文件夹中的其他配置文件。正向在NGINX Plus复制控制器文件（nginxplus-rc.yaml）中表明的一样，我们与NGINX Plus节点上的容器共享/etc/nginx/conf.d文件夹。 共享意味着我们可以修改存储在文件夹（节点上）中的配置文件，而无需重建NGINX Plus容器镜像，而如果我们直接在容器中创建的文件夹这是我们必须做的。我们把我们的Kubernetes特定配置文件（backend.conf）放在共享目录。</p>
+<p>首先，让我们在节点上创建/etc/nginx/conf.d文件夹。</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">mkdir</span> /etc/nginx/<span class="keyword">conf</span>.<span class="literal">d</span></span><br></pre></td></tr></table></figure>
+<p>然后，我们创建backend.conf文件，其中包括以下指令：</p>
+<ul>
+<li><p>resolver -定义Kubernetes DNS解析的IP地址，使用默认的IP地址，10.0.0.10。valid参数告诉NGINX Plus每五秒钟解析所有DNS名称。 您的Kubernetes DNS服务IP地址可能会有所不同。运行此命令查看：</p>
+<figure class="highlight cs"><table><tr><td class="code"><pre><span class="line">$ kubectl <span class="keyword">get</span> svc kube-dns --<span class="keyword">namespace</span>=kube-system</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>upstream -创建一个名为后端的Kubernetes服务，我们揭露上游组。我们确定了服务器在上游组主机名，包括了resolve指令告诉NGINX重新解析主机名在运行时。</p>
+</li>
+<li>server （两次） -定义两个虚拟服务器：</li>
+<li>第一个服务器监听端口80并且负载均衡在我们服务pods中的/nginx-service传入请求。我们还配置积极的健康检查 。</li>
+<li>第二个服务器监听端口8080。这里的我们成立了现场活动的监控NGINX Plus。稍后我们将用它来检查 NGINX Plus 是否被正确地重新配置。</li>
+</ul>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">resolver <span class="number">10.0.0.10</span> valid=5s<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">upstream backend &#123;</span><br><span class="line">    zone upstream-backend 64k<span class="comment">;</span></span><br><span class="line">    server nginx-service.default.svc.cluster.local resolve<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 80<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    status_zone backend-servers<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    location /nginx-service/ &#123;</span><br><span class="line">        proxy_pass http://backend/<span class="comment">;</span></span><br><span class="line">        health_check<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 8080<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    root /usr/share/nginx/html<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    location = /status.html &#123; &#125;</span><br><span class="line"></span><br><span class="line">    location /status &#123;</span><br><span class="line">        status<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="创建Replication_Controller">创建Replication Controller</h3><p>现在，我们已经准备好在我们的节点上运行此命令创建复制器：<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ kubectl <span class="operator"><span class="keyword">create</span> -<span class="keyword">f</span> nginxplus-rc.yaml</span></span><br></pre></td></tr></table></figure></p>
+<p>为了验证创建NGINX Plus pod，运行：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ kubectl get pods</span><br><span class="line">NAME                 READY     STATUS    RESTARTS   AGE</span><br><span class="line">nginxplus-rc-<span class="number">0</span>ts5t   <span class="number">1</span>/<span class="number">1</span>       Running   <span class="number">0</span>          <span class="number">17</span>s</span><br></pre></td></tr></table></figure></p>
+<p>我们在本地Vagrant 设定运行Kubernetes，所以我们知道，我们的节点的外部IP地址为10.245.1.3，在这个例子中的剩下部分我们将使用该地址。如果你在一个云服务提供商运行Kubernetes，您可以通过运行下面命令得到您节点的外部IP地址：<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$ kubectl <span class="keyword">get</span> nodes node-<span class="property">name</span> -o json | grep -i externalIP -A <span class="number">1</span></span><br><span class="line">                <span class="string">"type"</span>: <span class="string">"ExternalIP"</span>,</span><br><span class="line">                <span class="string">"address"</span>: XXX.XXX.XXX.XXX</span><br></pre></td></tr></table></figure></p>
+<p>如果您在云服务中运行，别忘了设置防火墙规则允许NGINX Plus节点接收传入的流量。请参阅您的云服务提供商文档。</p>
+<p>通过查看NGINX Plus实时活动监控仪表板可以检查我们的NGINXPlus pod是否 起来并运行了，它节点的外部IP地址在端口8080上是否可用（在我们的例子中是<a href="http://10.245.1.3:8080/status.html）。" target="_blank" rel="external">http://10.245.1.3:8080/status.html）。</a> 如果我们这时候访问，不过我们是看不到我们服务的任何服务器，因为我们还没有创建它。</p>
+<h2 id="创建一个简单Kubernetes_Service">创建一个简单Kubernetes Service</h2><p>现在是时候创建Kubernetes服务了。我们的服务包括两个（开源）NGINX 服务器提供静态web页面。</p>
+<h3 id="为服务创建Replication_Controller">为服务创建Replication Controller</h3><p>首先，我们创建一个Replication Controller，这样Kubernetes会确保指定数量的NGINX Web服务器副本（pods）始终在群集中运行。以下是声明文件（nginx-rc.yaml）：<br><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: ReplicationController</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: nginx-rc</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">replicas</span>: <span class="number">2</span></span><br><span class="line">  <span class="attribute">selector</span>:</span><br><span class="line">    <span class="attribute">app</span>: nginx</span><br><span class="line">  <span class="attribute">template</span>:</span><br><span class="line">    <span class="attribute">metadata</span>:</span><br><span class="line">      <span class="attribute">labels</span>:</span><br><span class="line">        <span class="attribute">app</span>: nginx</span><br><span class="line">    <span class="attribute">spec</span>:</span><br><span class="line">      <span class="attribute">containers</span>:</span><br><span class="line">      - <span class="attribute">name</span>: nginx</span><br><span class="line">        <span class="attribute">image</span>: nginx</span><br><span class="line">        <span class="attribute">ports</span>:</span><br><span class="line">        - <span class="attribute">containerPort</span>: <span class="number">80</span></span><br></pre></td></tr></table></figure></p>
+<p>我们的控制器由两个NGINX Web服务器组成。我们声明一个控制器包含单个NGINX容器pods用于暴露端口80。Nginx的镜像将从Docker Hub下载。</p>
+<p>要创建复制控制器，我们在节点上运行以下命令：<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ kubectl <span class="operator"><span class="keyword">create</span> -<span class="keyword">f</span> nginx-rc.yaml</span></span><br></pre></td></tr></table></figure></p>
+<p>要检查是否已创建pods，我们可以运行下面的命令。我们使用标签选择app=nginx获得仅在上一步的replication controller中创建的pods：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ kubectl get pods -l app=nginx</span><br><span class="line">NAME             READY     STATUS    RESTARTS   AGE</span><br><span class="line">nginx-rc-<span class="number">544f</span>1   <span class="number">1</span>/<span class="number">1</span>       Running   <span class="number">0</span>          <span class="number">2</span>m</span><br><span class="line">nginx-rc-uk6pm   <span class="number">1</span>/<span class="number">1</span>       Running   <span class="number">0</span>          <span class="number">2</span>m</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建Service">创建Service</h3><p>接下来，我们为replication controller创建的pods创建服务。我们使用下列文件（nginx-service.yaml）创建服务：<br><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: Service</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: nginx-service</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">ClusterIP</span>: None</span><br><span class="line">  <span class="attribute">ports</span>:</span><br><span class="line">  - <span class="attribute">port</span>: <span class="number">80</span></span><br><span class="line">    <span class="attribute">targetPort</span>: <span class="number">80</span></span><br><span class="line">    <span class="attribute">protocol</span>: TCP</span><br><span class="line">  <span class="attribute">selector</span>:</span><br><span class="line">    <span class="attribute">app</span>: nginx</span><br></pre></td></tr></table></figure></p>
+<p>这里我们通过设置ClusterIP字段为None来声明一个特殊的<a href="http://kubernetes.io/v1.1/docs/user-guide/services.html#headless-services" target="_blank" rel="external">headless service</a>。通过这类服务，不会分配集群的IP地址并且通过kube代理也无法使用服务。DNS查询Kubernetes DNS会返回多个A记录（我们pods的IP地址）。</p>
+<p>通过设置selector field为app: nginx，我们声明该pods属于服务，即使用NGINX replication controller 创建的pods（在nginx-rc.yaml中定义）。</p>
+<p>在节点上我们运行下面的命令创建服务：<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ kubectl <span class="operator"><span class="keyword">create</span> -<span class="keyword">f</span> nginx-service.yaml</span></span><br></pre></td></tr></table></figure></p>
+<p>现在，如果我们刷新仪表盘页面，并单击右上角的Upstreams tab，我们可以看到新加的两台服务器。<br><img src="https://www.nginx.com/wp-content/uploads/2015/11/nginx-plus-dashboard-showing-upstreams.png" alt=""></p>
+<p>我们还可以检查NGINX Plus是否已经在pods的服务间负载均衡流量。如果是，当我们在浏览器中访问<a href="http://10.245.1.3/nginx-service/时，我们可以看到默认NGINX的欢迎页面。" target="_blank" rel="external">http://10.245.1.3/nginx-service/时，我们可以看到默认NGINX的欢迎页面。</a><br><img src="https://www.nginx.com/wp-content/uploads/2015/11/nginx-welcome-page.png" alt=""></p>
+<p>如果我们刷新此页面几次，并查看仪表盘状态，我们可以看到请求是如何分布在两个上游服务器上的。</p>
+<h2 id="扩展Kubernetes服务">扩展Kubernetes服务</h2><p>现在，让我们再添加两个pods到我们的服务并确保NGINX Plus配置会再次自动更新。我们运行此命令扩展replication controller 把pods数量更改为4：</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$ kubectl scale rc nginx-rc <span class="comment">--replicas=4</span></span><br><span class="line">scaled</span><br></pre></td></tr></table></figure>
+<p>要检查NGINX Plus是否重新配置，我们可以再查看仪表盘，但这次我们使用NGINX Plus状态的API来替代。在我们的节点运行下面的命令，10.245.1.3是我们的NGINX Plus节点外部IP地址。为了格式化JSON输出，我们管道输出到<a href="https://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ curl -s <span class="number">10.245</span><span class="number">.1</span><span class="number">.3</span>:<span class="number">8080</span>/status/upstreams/backend | jq .</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"peers"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"id"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"server"</span>: <span class="string">"10.0.0.1:80"</span>,</span><br><span class="line">      <span class="string">"backup"</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="string">"weight"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"state"</span>: <span class="string">"unhealthy"</span>,</span><br><span class="line">      <span class="string">"active"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"requests"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="string">"responses"</span>: &#123;</span><br><span class="line">        <span class="string">"1xx"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"2xx"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"3xx"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"4xx"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"5xx"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"total"</span>: <span class="number">0</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"sent"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"received"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"fails"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"unavail"</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="string">"health_checks"</span>: &#123;</span><br><span class="line">        <span class="string">"checks"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"fails"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"unhealthy"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"last_passed"</span>: <span class="literal">false</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"downtime"</span>: <span class="number">33965</span>,</span><br><span class="line">      <span class="string">"downstart"</span>: <span class="number">1445378182275</span>,</span><br><span class="line">      <span class="string">"selected"</span>: <span class="number">1445378131000</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"id"</span>: <span class="number">2</span>,</span><br><span class="line">      <span class="string">"server"</span>: <span class="string">"10.246.1.6:80"</span>,</span><br><span class="line">      ...</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"id"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="string">"server"</span>: <span class="string">"10.246.3.2:80"</span>,</span><br><span class="line">       ...</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"id"</span>: <span class="number">4</span>,</span><br><span class="line">      <span class="string">"server"</span>: <span class="string">"10.0.0.2:80"</span>,</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"keepalive"</span>: <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在peers中的JSON输出数组正好有四个元素，对应每个NGINX Web服务器。</p>
+<p>现在，让我们减少pods的数量从4到1，再次检查NGINX Plus状态：<br><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">$ kubectl scale rc nginx-rc <span class="comment">--replicas=1</span></span><br><span class="line">scaled</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ curl -s <span class="number">10.245</span><span class="number">.1</span><span class="number">.3</span>:<span class="number">8080</span>/status/upstreams/backend | jq .</span><br></pre></td></tr></table></figure>
+<p>现在peers中的JSON输出数组只包含一个元素。</p>
+<p>现在，我们已经把NGINX Plus运行起来，我们就可以开始利用其高级功能，如<a href="https://www.nginx.com/products/session-persistence/" target="_blank" rel="external">会话持久性</a>，<a href="https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/" target="_blank" rel="external">SSL终止</a>，<a href="http://nginx.org/en/docs/http/ngx_http_core_module.html?&amp;_ga=1.81581335.1836587780.1451486089#location" target="_blank" rel="external">请求路由</a>，<a href="https://www.nginx.com/resources/admin-guide/logging-and-monitoring/#status" target="_blank" rel="external">高级监控</a>和<a href="https://www.nginx.com/products/" target="_blank" rel="external">更多</a>。</p>
+<h1 id="总结">总结</h1><p>NGINX Plus的on-the-fly reconfiguration让你的Kubernetes集成更轻松：不管是通过API编程还是完全使用DNS的方式。使用NGINX Plus暴露Kubernetes服务到互联网提供了许多当前Kubernetes内置负载均衡解决方案缺乏的功能。</p>
+<p>原文链接：<a href="https://www.nginx.com/blog/load-balancing-kubernetes-services-nginx-plus/" target="_blank" rel="external">Load Balancing Kubernetes Services with NGINX Plus</a> （翻译：朱高校）</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag">#Kubernetes</a>
+          
+            <a href="/tags/NGINX/" rel="tag">#NGINX</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/27/kubernetes-install/" rel="next">CentOS 7 安装kubernetes</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2016/01/14/trans-Load Balancing Kubernetes Services with NGINX Plus/"
+                   data-title="翻译：使用NGINX Plus负载均衡Kubernetes服务" data-url="zhugaoxiao.github.io/2016/01/14/trans-Load Balancing Kubernetes Services with NGINX Plus/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars2.githubusercontent.com/u/7880839?v=3&s=460" alt="zhugaoxiao" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">zhugaoxiao</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">大自然的搬运工</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhugaoxiao" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/unodba" target="_blank">twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kubernetes内置暴露服务解决方案"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes内置暴露服务解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NodePort"><span class="nav-number">1.1.</span> <span class="nav-text">NodePort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LoadBalancer"><span class="nav-number">1.2.</span> <span class="nav-text">LoadBalancer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ingress_API"><span class="nav-number">1.3.</span> <span class="nav-text">Ingress API</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用NGINX_Plus暴露Kubernetes服务"><span class="nav-number">2.</span> <span class="nav-text">使用NGINX Plus暴露Kubernetes服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Utilizing_DNS-Based_Reconfiguration"><span class="nav-number">2.1.</span> <span class="nav-text">Utilizing DNS-Based Reconfiguration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置_NGINX_Plus_Pod"><span class="nav-number">2.2.</span> <span class="nav-text">配置 NGINX Plus Pod</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选择运行NGINX_Plus_Pod的节点"><span class="nav-number">2.2.1.</span> <span class="nav-text">选择运行NGINX Plus Pod的节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为NGINX_Plus_Pod配置Replication_Controller"><span class="nav-number">2.2.2.</span> <span class="nav-text">为NGINX Plus Pod配置Replication Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在节点上使NGINX_Plus_Docker_Image可用"><span class="nav-number">2.2.3.</span> <span class="nav-text">在节点上使NGINX Plus Docker Image可用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置NGINX_Plus"><span class="nav-number">2.2.4.</span> <span class="nav-text">配置NGINX Plus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建Replication_Controller"><span class="nav-number">2.2.5.</span> <span class="nav-text">创建Replication Controller</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个简单Kubernetes_Service"><span class="nav-number">2.3.</span> <span class="nav-text">创建一个简单Kubernetes Service</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为服务创建Replication_Controller"><span class="nav-number">2.3.1.</span> <span class="nav-text">为服务创建Replication Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建Service"><span class="nav-number">2.3.2.</span> <span class="nav-text">创建Service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展Kubernetes服务"><span class="nav-number">2.4.</span> <span class="nav-text">扩展Kubernetes服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhugaoxiao</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp
+您是第<span id="busuanzi_value_site_uv"></span>个来到的小伙伴
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhugaoxiao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
